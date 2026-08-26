@@ -1,0 +1,88 @@
+# Platform.sh (now Upsun)
+
+> Platform.sh is a container-based Platform-as-a-Service: a single `git push` plus a few YAML files
+> provisions an entire cluster of applications and managed services, with byte-for-byte preview
+> environments cloned from production. The company rebranded to Upsun — platform.sh redirects to
+> upsun.com, the original Platform.sh product is documented as "Upsun Fixed", and the public REST API
+> still authenticates against auth.api.platform.sh.
+
+Generated: 2026-08-26
+Method: generated (from apis.yml and the artifacts in this repository; the provider publishes its own
+llms.txt at https://developer.upsun.com/llms.txt, https://docs.upsun.com/llms.txt and
+https://upsun.com/llms.txt — this file is the API Evangelist profile view, not a replacement)
+
+## Identity
+
+- Current brand: Upsun (https://upsun.com/)
+- Former brand: Platform.sh (https://platform.sh/ — 301 to upsun.com)
+- Legacy product name: Upsun Fixed (https://fixed.docs.upsun.com/)
+- Developer portal: https://developer.upsun.com/
+- API reference: https://developer.upsun.com/api
+- Console: https://console.upsun.com/ (legacy: https://console.platform.sh/)
+- Status: https://status.upsun.com/
+- GitHub org: https://github.com/platformsh (successor: https://github.com/upsun)
+
+## API
+
+- Platform.sh / Upsun REST API — https://api.upsun.com
+  - OpenAPI 3.0.1, 187 paths, 263 operations, 268 schemas
+  - Richest published spec: https://meta.upsun.com/openapi-spec
+  - Portal spec (declares the OAuth 2.0 flows): https://developer.upsun.com/openapi.json
+  - Local copies: openapi/platform.sh-rest-api-openapi.json, openapi/_original/
+  - Tag groups cover: Project, Environment, Environment Backups, Domain Management, Cert Management,
+    Routing, Deployment, Repository, Source Operations, Activity, Organizations, Teams, Users,
+    User Access, MFA, SSH Keys, API Tokens, Subscriptions, Orders, Invoices, Discounts, Alerts
+
+## Authentication
+
+- OAuth 2.0 bearer. Authorization server: https://auth.api.platform.sh
+  - authorization_code with PKCE (S256), and client_credentials with the `admin` scope
+  - API tokens are exchanged for a 900-second bearer token:
+    POST https://auth.upsun.com/oauth2/token with grant_type=api_token
+  - Discovery: /.well-known/openid-configuration, /.well-known/oauth-authorization-server,
+    /.well-known/oauth-protected-resource (all 200 on auth.api.platform.sh)
+- Artifacts: authentication/platform.sh-authentication.yml, scopes/platform.sh-scopes.yml
+
+## Runtime semantics an agent needs
+
+- Errors: RFC 9457 `application/problem+json` — errors/platform.sh-problem-types.yml
+- Pagination: cursor — `page[after]`, `page[before]`, `page[size]`, plus `sort` and `filter[...]`
+- Hypermedia: HAL `_links` with `self`, `#edit`, `#delete` entries carrying OpenAPI schema in `meta`
+- Idempotency: NOT supported. No Idempotency-Key header on any of the 115 write operations.
+- Rate limits: none published. No 429 responses and no RateLimit-* headers in the contract.
+- Long-running work: returns an Activity; poll it rather than holding the connection.
+- Reversibility: restore-backup reverses environment data loss. Automated backups are retained 2 days
+  under the default policy; manual backups until deleted. Environment and project DELETE have no
+  undelete operation.
+- Conventions artifact: conventions/platform.sh-conventions.yml
+
+## Agent surfaces
+
+- MCP server: https://mcp.upsun.com/mcp (remote, OAuth, anonymous tools/list returns 401)
+  - 35 published tools across projects, environments, organizations, activities, ssh-keys, domains,
+    routing, certificates, backups, configuration
+  - Read-only by default; send `enable-write: true` to allow writes
+  - mcp/platform.sh-mcp.yml, mcp/platform.sh-tool-crosswalk.yml
+- A2A agent card: NONE. /.well-known/agent-card.json and /.well-known/agent.json returned 404 or 301
+  on every platform.sh host probed on 2026-08-26.
+- Agent Skills: skills/_index.yml
+
+## Events
+
+- Webhooks via a `webhook` integration; payload is the full activity/project state.
+- Signed with `X-JWS-Signature` (JWS RFC 7515, detached unencoded payload RFC 7797, HS256).
+- No AsyncAPI document is published. asyncapi/platform.sh-webhooks.yml
+
+## Tooling
+
+- CLI: `platform` (platformsh/legacy-cli v4.30.0, 2026-01-28); successor `upsun` (upsun/cli v5.11.0)
+- SDKs: platformsh/client (PHP), platformsh-client (npm), platformsh/oauth2, config readers for
+  PHP / Node.js / Python, Symfony Flex and Laravel bridges — packages/platform.sh-packages.yml
+
+## Commercial
+
+- Pricing is provision-based (project fees, resources, user licenses, add-ons) rather than tiered:
+  https://upsun.com/pricing/ — plans/platform.sh-plans-pricing.yml
+- Trust center: https://upsun.com/trust-center/ — SOC 2 Type 2, PCI DSS Level 1, ISO 27001, HIPAA,
+  GDPR, CCPA/CPRA, Australian Privacy Act, PIPEDA (as published by the provider)
+- security.txt: https://platform.sh/.well-known/security.txt (200) — security@platform.sh

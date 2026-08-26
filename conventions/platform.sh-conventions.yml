@@ -1,0 +1,122 @@
+generated: '2026-08-26'
+method: searched
+source: https://developer.upsun.com/api (OpenAPI info.description), https://developer.upsun.com/cli/api-tokens,
+  https://docs.upsun.com/environments/backup.md, https://docs.upsun.com/environments/restore.md, and openapi/platform.sh-rest-api-openapi.json
+base_url: https://api.upsun.com
+legacy_base_note: api.platform.sh 301s to the developer portal; regional gateways still resolve on platform.sh
+  hosts (the spec description names eu-2.platform.sh as an example `_links.self.href` host).
+authentication:
+  style: OAuth 2.0 bearer
+  flows:
+  - authorization_code (interactive, PKCE S256)
+  - client_credentials (admin scope)
+  - api_token exchange
+  authorization_server: https://auth.api.platform.sh
+  token_exchange: POST https://auth.upsun.com/oauth2/token with grant_type=api_token&api_token=<token>, HTTP basic
+    user 'platform-api-user'
+  token_lifetime_seconds: 900
+  header: 'Authorization: Bearer <access_token>'
+  artifact: authentication/platform.sh-authentication.yml
+hypermedia:
+  style: HAL
+  field: _links
+  note: Most GET responses embed a `_links` object with a `self` entry and fragment-identifier action entries
+    (`#edit`, `#delete`). Each carries `href` plus a `meta` object holding the OpenAPI schema/operation object
+    for that action, so a client can drive the API without hardcoding paths.
+  source: https://developer.upsun.com/api (info.description, "HAL Links")
+pagination:
+  style: cursor
+  params:
+  - page[after]
+  - page[before]
+  - page[size]
+  sort_param: sort
+  filter_params: filter[<field>] (e.g. filter[updated_at], filter[status], filter[organization_id])
+  response_fields:
+  - _links.next.href
+  - _links.previous.href
+  note: Not applied uniformly — cursor params appear on 14 of 263 operations (mostly organization-scoped collections).
+field_expansion:
+  supported: false
+  note: No expand/fields parameter is declared anywhere in the spec.
+metadata:
+  supported: false
+  note: No generic user-metadata field; project/environment variables serve that role.
+request_id_tracing:
+  documented: false
+  note: The spec declares no request-id response header and the docs do not document one. Long-running work is
+    traced through the Activity resource (GET /projects/{projectId}/activities/{activityId}) rather than a correlation
+    header.
+async_model:
+  style: activity resource
+  note: Mutating deployment operations (branch, merge, activate, deploy, redeploy, backup, restore) return an
+    Activity; poll GET /projects/{projectId}/activities/{activityId} or the environment-scoped variant for state.
+    Activities can be cancelled with action-projects-activities-cancel.
+versioning:
+  style: unversioned path
+  current: info.version 1.0
+  note: No version segment in the path and no version header is documented; breaking changes are communicated
+    through the changelog.
+  artifact: lifecycle/platform.sh-lifecycle.yml
+error_envelope:
+  media_type: application/problem+json
+  standard: RFC 9457
+  artifact: errors/platform.sh-problem-types.yml
+rate_limit_signaling:
+  documented: false
+  artifact: rate-limits/platform.sh-rate-limits.yml
+  note: No X-RateLimit-* / RateLimit-* headers or 429 responses are declared in the spec, and no published limits
+    were found in the docs.
+idempotency:
+  supported: false
+  grade: not-documented
+  note: No Idempotency-Key (or equivalent) header is declared on any of the 115 write operations, and the docs
+    do not document one. Retrying a create is therefore not safe by contract.
+dry_run_mode:
+  supported: partial
+  note: There is no generic dry-run flag. Billing has genuine estimate-only operations (estimate-org, estimate-org-subscription,
+    estimate-new-org-subscription, can-create-new-org-subscription) that price a change without applying it; all
+    four are marked deprecated in this spec.
+reversibility:
+  grade: verified
+  note: Restore is a real reversal path and the retention window is stated in the provider documentation, which
+    is what raises this above "documented".
+  surfaces:
+  - write: backup-environment / delete/replace of environment data
+    reversal: restore-backup
+    operation: POST /projects/{projectId}/environments/{environmentId}/backups/{backupId}/restore
+    window: Manual backups are retained until you delete or replace them. Automated backups are retained for 2
+      days under the default backup policy (2 days worth of backups at any point); a custom data_retention schedule
+      changes that window.
+    docs: https://docs.upsun.com/environments/backup.md#data-retention
+    grade: verified
+  - write: deploy / branch / merge / redeploy (any long-running activity)
+    reversal: action-projects-activities-cancel
+    operation: POST /projects/{projectId}/activities/{activityId}/cancel
+    window: While the activity is still in progress; there is no stated grace period after completion.
+    docs: https://developer.upsun.com/api
+    grade: documented
+  - write: pause-environment
+    reversal: resume-environment
+    operation: POST /projects/{projectId}/environments/{environmentId}/resume
+    window: No stated expiry — a paused environment can be resumed.
+    docs: https://developer.upsun.com/api
+    grade: documented
+  - write: deactivate-environment
+    reversal: activate-environment
+    operation: POST /projects/{projectId}/environments/{environmentId}/activate
+    window: No stated expiry.
+    docs: https://developer.upsun.com/api
+    grade: documented
+  - write: delete-environment / delete-org-project
+    reversal: null
+    window: null
+    grade: none
+    note: Project and environment deletion have no undelete operation in the spec and no restore window is documented.
+      Recovery depends on an existing backup, and Upsun does not modify the Git repository.
+cross_links:
+  errors: errors/platform.sh-problem-types.yml
+  lifecycle: lifecycle/platform.sh-lifecycle.yml
+  authentication: authentication/platform.sh-authentication.yml
+  rate_limits: rate-limits/platform.sh-rate-limits.yml
+  scopes: scopes/platform.sh-scopes.yml

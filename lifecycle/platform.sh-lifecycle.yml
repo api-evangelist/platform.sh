@@ -1,0 +1,129 @@
+generated: '2026-08-26'
+method: searched
+source: https://developer.upsun.com/changelog, https://status.upsun.com/, https://upsun.com/blog/platform-sh-is-now-upsun-note-from-our-ceo/,
+  and openapi/platform.sh-rest-api-openapi.json
+versioning:
+  scheme: unversioned path
+  current_version: 1.0 (OpenAPI info.version)
+  note: No /v1 segment; the API surface evolves in place and changes are announced in the changelog.
+brand_lifecycle:
+  former_name: Platform.sh
+  current_name: Upsun
+  legacy_product_name: Upsun Fixed
+  evidence:
+  - platform.sh -> 301 -> upsun.com
+  - docs.platform.sh -> 301 -> fixed.docs.upsun.com
+  - api.platform.sh -> 301 -> developer.upsun.com/api
+  announcement: https://upsun.com/blog/platform-sh-is-now-upsun-note-from-our-ceo/
+deprecation_policy:
+  published: false
+  mechanism: 'OpenAPI `deprecated: true` flags on individual operations'
+  sunset_headers:
+    rfc8594: false
+    note: No Sunset or Deprecation response headers are declared in the spec.
+  note: No standalone deprecation-policy page was found; deprecation is signalled in the contract itself and in
+    changelog entries.
+deprecated_operations_count: 28
+deprecated_operations:
+- operationId: get-org-addons
+  method: GET
+  path: /organizations/{organization_id}/addons
+- operationId: list-org-discounts
+  method: GET
+  path: /organizations/{organization_id}/discounts
+- operationId: list-org-invoices
+  method: GET
+  path: /organizations/{organization_id}/invoices
+- operationId: get-org-invoice
+  method: GET
+  path: /organizations/{organization_id}/invoices/{invoice_id}
+- operationId: list-org-orders
+  method: GET
+  path: /organizations/{organization_id}/orders
+- operationId: get-org-order
+  method: GET
+  path: /organizations/{organization_id}/orders/{order_id}
+- operationId: create-authorization-credentials
+  method: POST
+  path: /organizations/{organization_id}/orders/{order_id}/authorize
+- operationId: estimate-org
+  method: GET
+  path: /organizations/{organization_id}/estimate
+- operationId: get-org-billing-alert-config
+  method: GET
+  path: /organizations/{organization_id}/alerts/billing
+- operationId: update-org-billing-alert-config
+  method: PATCH
+  path: /organizations/{organization_id}/alerts/billing
+- operationId: get-org-prepayment-info
+  method: GET
+  path: /organizations/{organization_id}/prepayment
+- operationId: list-org-prepayment-transactions
+  method: GET
+  path: /organizations/{organization_id}/prepayment/transactions
+- operationId: get-org-address
+  method: GET
+  path: /organizations/{organization_id}/address
+- operationId: update-org-address
+  method: PATCH
+  path: /organizations/{organization_id}/address
+- operationId: get-org-profile
+  method: GET
+  path: /organizations/{organization_id}/profile
+- operationId: update-org-profile
+  method: PATCH
+  path: /organizations/{organization_id}/profile
+- operationId: list-org-plan-records
+  method: GET
+  path: /organizations/{organization_id}/records/plan
+- operationId: list-org-usage-records
+  method: GET
+  path: /organizations/{organization_id}/records/usage
+- operationId: estimate-new-org-subscription
+  method: GET
+  path: /organizations/{organization_id}/subscriptions/estimate
+- operationId: can-create-new-org-subscription
+  method: GET
+  path: /organizations/{organization_id}/subscriptions/can-create
+- operationId: estimate-org-subscription
+  method: GET
+  path: /organizations/{organization_id}/subscriptions/{subscription_id}/estimate
+- operationId: get-org-subscription-current-usage
+  method: GET
+  path: /organizations/{organization_id}/subscriptions/{subscription_id}/current_usage
+- operationId: list-subscription-addons
+  method: GET
+  path: /organizations/{organization_id}/subscriptions/{subscription_id}/addons
+- operationId: get-subscription-usage-alerts
+  method: GET
+  path: /organizations/{organization_id}/alerts/subscriptions/{subscription_id}/usage
+- operationId: update-subscription-usage-alerts
+  method: PATCH
+  path: /organizations/{organization_id}/alerts/subscriptions/{subscription_id}/usage
+- operationId: get-current-user-deprecated
+  method: GET
+  path: /me
+- operationId: list-org-vouchers
+  method: GET
+  path: /organizations/{organization_id}/vouchers
+- operationId: apply-org-voucher
+  method: POST
+  path: /organizations/{organization_id}/vouchers/apply
+deprecation_theme: The deprecated set is almost entirely the organization billing surface (addons, discounts,
+  invoices, orders, prepayment, vouchers, usage records, subscription estimates) plus GET /me in favour of GET
+  /users/me.
+status_page:
+  url: https://status.upsun.com/
+  legacy_url: https://status.platform.sh/ (301 to status.upsun.com)
+  checked: '2026-08-26'
+  http_status: 200
+sla:
+  published_uptime: 99.99% uptime is advertised on upsun.com marketing pages
+  note: No machine-readable SLA document was found; contractual SLA sits behind the commercial agreement.
+support_tiers:
+- name: Standard
+  note: Included with every organization
+- name: Advanced
+  note: +15% (per upsun.com/llms.txt)
+- name: Premium
+  note: +19% (per upsun.com/llms.txt)

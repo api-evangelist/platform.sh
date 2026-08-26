@@ -1,0 +1,75 @@
+generated: '2026-08-26'
+method: derived
+source: openapi/platform.sh-rest-api-openapi.json 4xx/5xx and default responses
+format: rfc9457
+format_evidence: 84 error responses in the spec declare content type application/problem+json.
+envelope:
+  media_type: application/problem+json (RFC 9457) on documented error responses; application/json elsewhere
+  schema: components.schemas.Error
+  fields:
+  - name: status
+    type: string
+    note: Short machine label, e.g. "Invalid input"
+  - name: title
+    type: string
+    note: Human-readable summary, e.g. "Bad Request"
+  - name: message
+    type: string
+    note: Human-readable detail
+  - name: code
+    type: number
+    note: Mirrors the HTTP status code
+  - name: detail
+    type: object
+    note: 'Field-keyed validation errors, e.g. {"field": ["This field is required."]}'
+  example:
+    status: Invalid input
+    message: This field is required.
+    code: 400
+    detail:
+      field:
+      - This field is required.
+    title: Bad Request
+problem_types:
+- status: 400
+  title: Bad Request
+  occurrences: 69
+  meaning: Malformed request body or invalid parameter values.
+  remediation: Read `detail` for the per-field validation errors and correct the payload.
+- status: 402
+  title: Payment Required
+  occurrences: 2
+  meaning: The action exceeds what the subscription allows — e.g. adding a user beyond the subscription user limit.
+  remediation: Raise the subscription limit before retrying.
+- status: 403
+  title: Forbidden
+  occurrences: 137
+  meaning: The authenticated principal lacks the project, environment-type or organization role required.
+  remediation: Check the caller role; environment-type roles are granted per environment type (production/staging/development).
+- status: 404
+  title: Not Found
+  occurrences: 84
+  meaning: The project, environment or sub-resource does not exist or is not visible to the caller.
+  remediation: Confirm the project/environment identifier; a 404 is also returned in place of 403 for resources
+    the caller cannot see.
+- status: 409
+  title: Conflict
+  occurrences: 15
+  meaning: The resource is already in the requested state — e.g. a pending invitation already exists for the invitee.
+  remediation: List the existing resource before creating it again.
+- status: 422
+  title: Unprocessable Entity
+  occurrences: 1
+  meaning: Semantically invalid request that passed syntactic validation.
+  remediation: Read `detail` for the rejected fields.
+- status: 499
+  title: Client Closed Request
+  occurrences: 14
+  meaning: Declared on long-running/streaming operations when the client disconnects before the response completes.
+  remediation: Retry; for long operations poll the activity resource rather than holding the connection.
+- status: 503
+  title: Service Unavailable
+  occurrences: 3
+  meaning: The region gateway or backing service is temporarily unavailable.
+  remediation: Retry with backoff and check https://status.upsun.com/.
+unspecified_default_responses: 96

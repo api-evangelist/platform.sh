@@ -1,0 +1,65 @@
+generated: '2026-08-26'
+method: searched
+source: https://developer.upsun.com/docs/integrations/activity/webhooks.md and https://developer.upsun.com/docs/integrations/activity.md,
+  fetched 2026-08-26
+asyncapi_published: false
+asyncapi_note: No AsyncAPI document is published for the event surface. The webhook catalog below is captured
+  from the provider documentation instead; nothing here is fabricated.
+transport: HTTP POST to a subscriber-supplied URL
+registration:
+  mechanism: integration of type webhook
+  cli: upsun integration:add --type=webhook --url=<URL_TO_RECEIVE_JSON>
+  api: POST /projects/{projectId}/integrations (operationId create-projects-integrations)
+  filtering: The integration can be limited to specific activity types, activity states and branches; the default
+    is every event on every environment in the project.
+payload:
+  format: JSON
+  note: 'The webhook receives the same payload as an activity script: complete information about the entire state
+    of the project at the time of the activity.'
+  schema_hint: components.schemas.Activity in openapi/platform.sh-rest-api-openapi.json
+security:
+  signing: true
+  header: X-JWS-Signature
+  standard: JWS (RFC 7515) with detached unencoded payload (RFC 7797)
+  algorithm: HS256 (HMAC-SHA256 with a shared key)
+  protected_header: '{"alg":"HS256","b64":false,"crit":["b64"]}'
+  format: <base64url-encoded-header>..<base64url-encoded-signature> — two dots with an empty payload slot
+  configuration: upsun integration:add --type=webhook --url=<URL> --shared-key=<SECRET_KEY>
+  docs: https://developer.upsun.com/docs/integrations/activity/webhooks.md#authentication
+events:
+- name: environment.activate
+  description: An environment was activated.
+  source: docs example
+- name: environment.deactivate
+  description: An environment was deactivated.
+  source: docs example
+- name: environment.synchronize
+  description: An environment was synchronized from its parent.
+  source: docs example
+- name: environment.backup
+  description: An environment backup was taken.
+  source: docs example
+- name: environment.push
+  description: Default trigger — fires after a successful git push.
+  source: docs prose ("By default, it will activate only after a successful git push operation")
+  confidence: medium
+events_note: The provider documentation does not publish a complete enumerated event catalog; the entries above
+  are the activity types named verbatim in the docs. The full set is discoverable at runtime from the `type` field
+  of the Activity resource.
+activity_states:
+- pending
+- scheduled
+- staged
+- in_progress
+- complete
+- cancelled
+activity_results:
+- success
+- failure
+related_channels:
+- name: Activity scripts
+  description: Provider-hosted JavaScript triggered by the same events.
+  docs: https://developer.upsun.com/docs/integrations/activity.md
+- name: Health notifications
+  description: Disk-space and inode threshold alerts routed to email, Slack, PagerDuty or a webhook.
+  docs: https://developer.upsun.com/docs/integrations/notifications.md

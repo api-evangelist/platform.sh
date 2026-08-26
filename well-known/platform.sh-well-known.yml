@@ -1,0 +1,86 @@
+generated: '2026-08-26'
+method: probed
+source: direct HTTPS probes of /.well-known/* on every platform.sh and Upsun host, 2026-08-26
+note: platform.sh serves its own RFC 9116 security.txt even though / 301s to upsun.com. The OAuth 2.0 / OIDC discovery
+  documents for the REST API are still published on auth.api.platform.sh after the Upsun rebrand. console.platform.sh
+  answered 502 on every /.well-known/ path at probe time.
+hosts:
+- host: platform.sh
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: well-known/platform.sh-security.txt
+  - path: /.well-known/openid-configuration
+    status: 301
+  - path: /.well-known/oauth-authorization-server
+    status: 301
+  - path: /.well-known/oauth-protected-resource
+    status: 301
+  - path: /.well-known/api-catalog
+    status: 301
+  - path: /.well-known/ai-plugin.json
+    status: 301
+  - path: /.well-known/agent-card.json
+    status: 301
+  - path: /.well-known/agent.json
+    status: 301
+- host: auth.api.platform.sh
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: well-known/platform.sh-openid-configuration.json
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: well-known/platform.sh-oauth-authorization-server.json
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: well-known/platform.sh-oauth-protected-resource.json
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: mcp.upsun.com
+  documents:
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: well-known/platform.sh-mcp-oauth-protected-resource.json
+- host: api.platform.sh
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: console.platform.sh
+  documents:
+  - path: /.well-known/security.txt
+    status: 502
+  - path: /.well-known/agent-card.json
+    status: 502
+  - path: /.well-known/agent.json
+    status: 502
+- host: docs.platform.sh
+  documents:
+  - path: /.well-known/security.txt
+    status: 301
+  - path: /.well-known/agent-card.json
+    status: 301
+  - path: /.well-known/agent.json
+    status: 301

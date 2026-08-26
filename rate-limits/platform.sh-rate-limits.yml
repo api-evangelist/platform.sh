@@ -1,0 +1,15 @@
+generated: '2026-08-26'
+method: searched
+source: https://developer.upsun.com/api, https://developer.upsun.com/llms.txt, https://docs.upsun.com/, and openapi/platform.sh-rest-api-openapi.json
+limit_count: 0
+limits: []
+response_headers: []
+exhaustion_status: null
+note: 'Searched 2026-08-26: the provider publishes no numeric API rate limits. The OpenAPI declares no 429 response
+  on any of the 263 operations (429 present in spec: False) and no X-RateLimit-*, RateLimit-* or Retry-After header.
+  upsun.com/llms.txt mentions edge rate limiting as a WAF feature protecting customer applications, which is a
+  different surface from limits on the management API. An honest zero, not an un-checked field.'
+related:
+  edge_rate_limiting: Built-in WAF rate limiting for customer applications (https://upsun.com/trust-center/security/)
+  quota_dimensions: Commercial limits are provisioning-based (project fees, resources, user licenses) rather than
+    request-rate based — see plans/platform.sh-plans-pricing.yml

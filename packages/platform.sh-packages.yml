@@ -1,0 +1,112 @@
+generated: '2026-08-26'
+method: searched
+source: Packagist, npm registry and PyPI metadata endpoints plus github.com/platformsh, queried 2026-08-26
+note: First-party client libraries published under the `platformsh` namespace. After the Upsun rebrand new releases
+  move to the `upsun` namespace (github.com/upsun/cli), so the publication dates below are the decay signal for
+  the Platform.sh-branded line specifically.
+packages:
+- name: platformsh/client
+  registry: packagist
+  language: PHP
+  official: true
+  url: https://packagist.org/packages/platformsh/client
+  repository: https://github.com/platformsh/platformsh-client-php
+  version: 3.0.0-beta5
+  published: '2026-03-20'
+  downloads: 363837
+  description: Platform.sh API client for PHP
+- name: platformsh/cli
+  registry: packagist
+  language: PHP
+  official: true
+  url: https://packagist.org/packages/platformsh/cli
+  repository: https://github.com/platformsh/legacy-cli
+  version: v4.30.0
+  published: '2026-01-28'
+  downloads: 38758
+  description: Platform.sh CLI (legacy PHP CLI)
+- name: platformsh/config-reader
+  registry: packagist
+  language: PHP
+  official: true
+  url: https://packagist.org/packages/platformsh/config-reader
+  repository: https://github.com/platformsh/config-reader-php
+  version: 3.0.1
+  published: '2025-02-25'
+  downloads: 5623796
+  description: Reads Platform.sh environment variables inside a deployed container
+- name: platformsh/oauth2
+  registry: packagist
+  language: PHP
+  official: true
+  url: https://packagist.org/packages/platformsh/oauth2
+  repository: https://github.com/platformsh/platformsh-oauth2-php
+  version: 1.0.0-beta3
+  published: '2024-11-25'
+  downloads: 270270
+  description: PHP OAuth2 client for the Platform.sh API
+- name: platformsh/symfonyflex-bridge
+  registry: packagist
+  language: PHP
+  official: true
+  url: https://packagist.org/packages/platformsh/symfonyflex-bridge
+  repository: https://github.com/platformsh/symfonyflex-bridge
+  version: 2.7.2
+  published: '2022-10-14'
+  downloads: 1603918
+  description: Bridge library for running Symfony Flex on Platform.sh
+- name: platformsh/laravel-bridge
+  registry: packagist
+  language: PHP
+  official: true
+  url: https://packagist.org/packages/platformsh/laravel-bridge
+  repository: https://github.com/platformsh/laravel-bridge
+  version: 2.2.2
+  published: '2023-12-12'
+  downloads: 327691
+  description: Bridge library for running Laravel on Platform.sh
+- name: platformsh/console-form
+  registry: packagist
+  language: PHP
+  official: true
+  url: https://packagist.org/packages/platformsh/console-form
+  repository: https://github.com/platformsh/console-form
+  version: v1.0.0-beta1
+  published: '2024-11-25'
+  downloads: 84835
+  description: Symfony Console form helper used by the CLI
+- name: platformsh-client
+  registry: npm
+  language: JavaScript/TypeScript
+  official: true
+  url: https://www.npmjs.com/package/platformsh-client
+  repository: https://github.com/platformsh/platformsh-client-js
+  version: 0.2.40
+  published: '2025-09-25'
+  description: Platform.sh API client library for JavaScript
+- name: platformsh-config
+  registry: npm
+  language: JavaScript
+  official: true
+  url: https://www.npmjs.com/package/platformsh-config
+  repository: https://github.com/platformsh/config-reader-nodejs
+  version: 2.4.1
+  published: '2021-02-05'
+  description: Config reader for Node.js apps deployed on Platform.sh
+- name: platformshconfig
+  registry: pypi
+  language: Python
+  official: true
+  url: https://pypi.org/project/platformshconfig/
+  repository: https://github.com/platformsh/config-reader-python
+  version: 2.4.0
+  published: '2021-02-05'
+  description: Config reader for Python apps deployed on Platform.sh
+- name: platformsh-client (PyPI)
+  registry: pypi
+  language: Python
+  official: false
+  url: https://pypi.org/pypi/platformsh-client/json
+  version: null
+  note: 'Probed 2026-08-26: PyPI returned 404. github.com/platformsh/platformsh-client-python exists but was last
+    pushed 2017-05-16 and is not published to PyPI.'

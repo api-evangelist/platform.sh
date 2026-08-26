@@ -1,0 +1,469 @@
+generated: '2026-08-26'
+method: derived
+source: mcp/platform.sh-mcp.yml (tool names from the upsun-mcp-server README) bound to operationIds in openapi/platform.sh-rest-api-openapi.json
+note: The live MCP tools/list is auth-gated (401 invalid_token, probed 2026-08-26), so tool input schemas could
+  not be introspected. Bindings below are by name and documented semantics against verified operationIds; confidence
+  is recorded honestly per row.
+surfaces:
+  openapi:
+    file: openapi/platform.sh-rest-api-openapi.json
+    operations: 263
+    gated: false
+  mcp:
+    url: https://mcp.upsun.com/mcp
+    gated: true
+    probe_status: 401
+  graphql: null
+crosswalk:
+- tool: create-project
+  category: projects
+  rest:
+  - create-org-project
+  binding: '1:1'
+  confidence: high
+- tool: delete-project
+  category: projects
+  rest:
+  - delete-org-project
+  binding: '1:1'
+  confidence: high
+- tool: info-project
+  category: projects
+  rest:
+  - get-projects
+  binding: '1:1'
+  confidence: high
+- tool: list-project
+  category: projects
+  rest:
+  - list-org-projects
+  binding: '1:1'
+  confidence: high
+  note: Tool documents page_size/page_link, matching the spec cursor params page[size]/page[after].
+- tool: activate-environment
+  category: environments
+  rest:
+  - activate-environment
+  binding: '1:1'
+  confidence: high
+- tool: delete-environment
+  category: environments
+  rest:
+  - delete-environment
+  binding: '1:1'
+  confidence: high
+- tool: info-environment
+  category: environments
+  rest:
+  - get-environment
+  binding: '1:1'
+  confidence: high
+- tool: list-environment
+  category: environments
+  rest:
+  - list-projects-environments
+  binding: '1:1'
+  confidence: high
+- tool: merge-environment
+  category: environments
+  rest:
+  - merge-environment
+  binding: '1:1'
+  confidence: high
+- tool: pause-environment
+  category: environments
+  rest:
+  - pause-environment
+  binding: '1:1'
+  confidence: high
+- tool: resume-environment
+  category: environments
+  rest:
+  - resume-environment
+  binding: '1:1'
+  confidence: high
+- tool: redeploy-environment
+  category: environments
+  rest:
+  - redeploy-environment
+  binding: '1:1'
+  confidence: high
+- tool: urls-environment
+  category: environments
+  rest:
+  - list-projects-environments-routes
+  binding: derived
+  confidence: medium
+  note: No REST operation returns environment URLs directly; the URL set is the route list for the environment.
+- tool: info-organization
+  category: organizations
+  rest:
+  - get-org
+  binding: '1:1'
+  confidence: high
+- tool: list-organization
+  category: organizations
+  rest:
+  - list-orgs
+  binding: '1:1'
+  confidence: high
+- tool: list-activity
+  category: activities
+  rest:
+  - list-projects-activities
+  - list-projects-environments-activities
+  binding: 1:N
+  confidence: high
+  note: REST splits project-level and environment-level activity listing; the tool covers both.
+- tool: info-activity
+  category: activities
+  rest:
+  - get-projects-activities
+  - get-projects-environments-activities
+  binding: 1:N
+  confidence: high
+- tool: create-ssh
+  category: ssh-keys
+  rest:
+  - create-ssh-key
+  binding: '1:1'
+  confidence: high
+- tool: delete-ssh
+  category: ssh-keys
+  rest:
+  - delete-ssh-key
+  binding: '1:1'
+  confidence: high
+- tool: add-domain
+  category: domains
+  rest:
+  - create-projects-domains
+  - create-projects-environments-domains
+  binding: 1:N
+  confidence: high
+  note: REST separates project domains from environment domains.
+- tool: delete-domain
+  category: domains
+  rest:
+  - delete-projects-domains
+  - delete-projects-environments-domains
+  binding: 1:N
+  confidence: high
+- tool: info-domain
+  category: domains
+  rest:
+  - get-projects-domains
+  - get-projects-environments-domains
+  binding: 1:N
+  confidence: high
+- tool: list-domain
+  category: domains
+  rest:
+  - list-projects-domains
+  - list-projects-environments-domains
+  binding: 1:N
+  confidence: high
+- tool: update-domain
+  category: domains
+  rest:
+  - update-projects-domains
+  binding: '1:1'
+  confidence: medium
+  note: Mapped by name/semantics; operationId presence verified against the spec.
+- tool: info-route
+  category: routing
+  rest:
+  - get-projects-environments-routes
+  binding: '1:1'
+  confidence: high
+- tool: list-route
+  category: routing
+  rest:
+  - list-projects-environments-routes
+  binding: '1:1'
+  confidence: high
+- tool: add-certificate
+  category: certificates
+  rest:
+  - create-projects-certificates
+  binding: '1:1'
+  confidence: high
+- tool: delete-certificate
+  category: certificates
+  rest:
+  - delete-projects-certificates
+  binding: '1:1'
+  confidence: high
+- tool: info-certificate
+  category: certificates
+  rest:
+  - get-projects-certificates
+  binding: '1:1'
+  confidence: high
+- tool: list-certificate
+  category: certificates
+  rest:
+  - list-projects-certificates
+  binding: '1:1'
+  confidence: high
+- tool: create-backup
+  category: backups
+  rest:
+  - backup-environment
+  binding: '1:1'
+  confidence: high
+  note: REST names the create action backup-environment (POST .../backup), not create-backup.
+- tool: list-backup
+  category: backups
+  rest:
+  - list-projects-environments-backups
+  binding: '1:1'
+  confidence: high
+- tool: restore-backup
+  category: backups
+  rest:
+  - restore-backup
+  binding: '1:1'
+  confidence: high
+mcp_only:
+- tool: generate-config
+  reason: Client-side generator for Upsun project configuration YAML; no REST operation backs it.
+- tool: list-ssh
+  reason: The published spec exposes create-ssh-key, get-ssh-key and delete-ssh-key on /ssh_keys but no list operation;
+    the caller's keys are returned inside the user resource (GET /users/me), so there is no 1:1 REST operation
+    to bind.
+rest_only_count: 225
+rest_only:
+- action-projects-activities-cancel
+- action-projects-clear-build-cache
+- action-projects-environments-activities-cancel
+- action-projects-system-restart
+- apply-org-voucher
+- blackfire_php_server_caches
+- blackfire_profile_graph
+- blackfire_profile_profile
+- blackfire_profile_subprofiles
+- blackfire_profile_timeline
+- blackfire_profiles_list
+- blackfire_profiles_recommendations
+- blackfire_server_global
+- blackfire_server_top_spans
+- blackfire_server_transactions_breakdown
+- branch-environment
+- can-afford-subscription
+- can-create-new-org-subscription
+- can-update-subscription
+- cancel-org-invite
+- cancel-project-invite
+- confirm-phone-number
+- confirm-totp-enrollment
+- create-api-token
+- create-authorization-credentials
+- create-org
+- create-org-invite
+- create-org-member
+- create-org-subscription
+- create-profile-picture
+- create-project-invite
+- create-projects-deployments
+- create-projects-domain-claims
+- create-projects-environments-variables
+- create-projects-integrations
+- create-projects-variables
+- create-team
+- create-team-member
+- create-ticket
+- deactivate-environment
+- delete-api-token
+- delete-login-connection
+- delete-org
+- delete-org-member
+- delete-org-subscription
+- delete-profile-picture
+- delete-projects-deployments
+- delete-projects-domain-claims
+- delete-projects-environments-backups
+- delete-projects-environments-variables
+- delete-projects-integrations
+- delete-projects-variables
+- delete-team
+- delete-team-member
+- deploy-environment
+- disable-org-mfa-enforcement
+- download-invoice
+- enable-org-mfa-enforcement
+- estimate-new-org-subscription
+- estimate-org
+- estimate-org-subscription
+- get-access-document
+- get-address
+- get-api-token
+- get-autoscaler-settings
+- get-current-user
+- get-current-user-deprecated
+- get-current-user-verification-status
+- get-current-user-verification-status-full
+- get-discount
+- get-environment-type
+- get-login-connection
+- get-org-addons
+- get-org-address
+- get-org-billing-alert-config
+- get-org-invoice
+- get-org-member
+- get-org-mfa-enforcement
+- get-org-order
+- get-org-prepayment-info
+- get-org-profile
+- get-org-project
+- get-org-subscription
+- get-org-subscription-current-usage
+- get-profile
+- get-project-team-access
+- get-project-user-access
+- get-projects-capabilities
+- get-projects-deployments
+- get-projects-domain-claims
+- get-projects-environments-backups
+- get-projects-environments-deployments
+- get-projects-environments-tasks
+- get-projects-environments-variables
+- get-projects-git-blobs
+- get-projects-git-commits
+- get-projects-git-refs
+- get-projects-git-trees
+- get-projects-integrations
+- get-projects-provisioners
+- get-projects-settings
+- get-projects-system
+- get-projects-variables
+- get-region
+- get-ssh-key
+- get-subscription-usage-alerts
+- get-team
+- get-team-member
+- get-team-project-access
+- get-totp-enrollment
+- get-type-allowance
+- get-usage-alerts
+- get-user
+- get-user-by-email-address
+- get-user-by-username
+- get-user-project-access
+- get_application_filter
+- get_application_merge
+- get_application_timeline
+- grant-project-team-access
+- grant-project-user-access
+- grant-team-project-access
+- grant-user-project-access
+- http_metrics_timeline_ips
+- http_metrics_timeline_urls
+- http_metrics_timeline_user_agents
+- initialize-environment
+- list-api-tokens
+- list-login-connections
+- list-org-discounts
+- list-org-invites
+- list-org-invoices
+- list-org-members
+- list-org-orders
+- list-org-plan-records
+- list-org-prepayment-transactions
+- list-org-project-history
+- list-org-subscriptions
+- list-org-usage-records
+- list-org-vouchers
+- list-profiles
+- list-project-invites
+- list-project-team-access
+- list-project-user-access
+- list-projects-deployments
+- list-projects-domain-claims
+- list-projects-environment-types
+- list-projects-environments-deployments
+- list-projects-environments-source-operations
+- list-projects-environments-tasks
+- list-projects-environments-variables
+- list-projects-git-diffs
+- list-projects-git-refs
+- list-projects-integrations
+- list-projects-provisioners
+- list-projects-variables
+- list-referenced-orgs
+- list-referenced-projects
+- list-referenced-regions
+- list-referenced-teams
+- list-referenced-users
+- list-regions
+- list-subscription-addons
+- list-team-members
+- list-team-project-access
+- list-teams
+- list-ticket-categories
+- list-ticket-priorities
+- list-tickets
+- list-user-extended-access
+- list-user-orgs
+- list-user-project-access
+- list-user-teams
+- list_applications
+- maintenance-redeploy-environment
+- maintenance-redeploy-project
+- observability_entrypoint
+- patch-autoscaler-settings
+- post-autoscaler-settings
+- query-organiation-carbon
+- query-project-carbon
+- recreate-recovery-codes
+- remove-project-team-access
+- remove-project-user-access
+- remove-team-project-access
+- remove-user-project-access
+- reset-email-address
+- reset-password
+- resources_by_service
+- resources_overview
+- resources_summary
+- run-operation
+- run-source-operation
+- run-task
+- send-org-mfa-reminders
+- stream-org-project-provisioning
+- synchronize-environment
+- update-address
+- update-environment
+- update-org
+- update-org-address
+- update-org-billing-alert-config
+- update-org-member
+- update-org-profile
+- update-org-project
+- update-org-subscription
+- update-profile
+- update-project-user-access
+- update-projects-certificates
+- update-projects-deployments
+- update-projects-domain-claims
+- update-projects-environments-domains
+- update-projects-environments-variables
+- update-projects-integrations
+- update-projects-provisioners
+- update-projects-settings
+- update-projects-variables
+- update-subscription-usage-alerts
+- update-team
+- update-ticket
+- update-usage-alerts
+- update-user
+- update-user-project-access
+- verify-phone-number
+- withdraw-totp-enrollment
+coverage:
+  mcp_tools: 35
+  mcp_tools_bound: 33
+  rest_operations: 263
+  rest_operations_bound: 38
+  rest_operations_unbound: 225
+  summary: 38 of 263 REST operations are reachable through the MCP server; the remaining 225 (billing, subscriptions,
+    teams, users, variables, integrations, source operations, observability) are REST-only.

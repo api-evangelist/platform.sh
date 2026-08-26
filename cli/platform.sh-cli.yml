@@ -1,0 +1,99 @@
+generated: '2026-08-26'
+method: searched
+source: https://developer.upsun.com/docs/core-concepts/get-support and https://github.com/platformsh/legacy-cli,
+  checked 2026-08-26
+name: Platform.sh CLI
+binary: platform
+note: The Platform.sh CLI is the PHP `legacy-cli` project (binary `platform`). After the rebrand the Go rewrite
+  lives at github.com/upsun/cli with the binary `upsun` (v5.11.0, 2026-08-10); the platformsh/cli repository README
+  states the project moved there. Both wrap the same REST API.
+repositories:
+- name: platformsh/legacy-cli
+  url: https://github.com/platformsh/legacy-cli
+  latest_release: v4.30.0
+  released: '2026-01-28'
+  language: PHP
+- name: upsun/cli
+  url: https://github.com/upsun/cli
+  latest_release: v5.11.0
+  released: '2026-08-10'
+  language: Go
+  note: Successor CLI under the Upsun brand.
+install:
+- method: homebrew
+  command: brew install platformsh/tap/platformsh-cli
+  source: https://github.com/platformsh/homebrew-tap
+- method: composer
+  command: composer require platformsh/cli
+  source: https://packagist.org/packages/platformsh/cli
+authentication:
+  interactive: platform login (OAuth 2.0 authorization code against auth.api.platform.sh)
+  automation: API token exchanged for a bearer access token via POST /oauth2/token with grant_type=api_token
+  docs: https://developer.upsun.com/cli/api-tokens
+command_groups:
+- group: project
+  commands:
+  - project:list
+  - project:info
+  - project:create
+  - project:delete
+  - project:curl
+- group: environment
+  commands:
+  - environment:list
+  - environment:branch
+  - environment:activate
+  - environment:pause
+  - environment:resume
+  - environment:merge
+  - environment:delete
+  - environment:redeploy
+- group: backup
+  commands:
+  - backup:create
+  - backup:list
+  - backup:restore
+  - backup:delete
+- group: variable
+  commands:
+  - variable:list
+  - variable:create
+  - variable:update
+  - variable:delete
+- group: domain
+  commands:
+  - domain:list
+  - domain:add
+  - domain:update
+  - domain:delete
+- group: certificate
+  commands:
+  - certificate:list
+  - certificate:add
+  - certificate:delete
+- group: user
+  commands:
+  - user:list
+  - user:add
+  - user:update
+  - user:delete
+- group: integration
+  commands:
+  - integration:list
+  - integration:add
+  - integration:delete
+  - integration:activities
+- group: ssh
+  commands:
+  - ssh
+  - ssh-key:list
+  - ssh-key:add
+  - ssh-key:delete
+  - tunnel:open
+  - tunnel:close
+- group: auth
+  commands:
+  - login
+  - logout
+  - auth:info
+  - auth:api-token-login

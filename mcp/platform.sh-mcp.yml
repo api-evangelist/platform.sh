@@ -1,0 +1,106 @@
+generated: '2026-08-26'
+method: probed
+source: https://mcp.upsun.com/.well-known/oauth-protected-resource (200) and https://developer.upsun.com/ai/mcp/overview,
+  probed 2026-08-26
+status: published
+note: The company ships its MCP server under the Upsun brand; there is no separately branded platform.sh MCP endpoint.
+  The server is the same control plane this profile documents (projects, environments, backups, domains, certificates).
+server:
+  name: Upsun MCP Server
+  transport: http
+  url: https://mcp.upsun.com/mcp
+  repository: https://github.com/upsun/upsun-mcp-server
+  docs: https://developer.upsun.com/ai/mcp/overview
+authentication:
+  type: oauth
+  authorization_servers:
+  - https://auth.upsun.com
+  scopes_supported:
+  - offline_access
+  discovery: well-known/platform.sh-mcp-oauth-protected-resource.json
+  notes: Anonymous POST tools/list returned 401 {"error":"invalid_token","error_description":"Missing Authorization
+    header"} on 2026-08-26, so the live tool schemas require authenticated introspection.
+deployment:
+  mode: remote
+  endpoint: https://mcp.upsun.com/mcp
+  auth: oauth
+  verified: probed
+  probe: gated
+  probe_status: 401
+  checked: '2026-08-26'
+tools_source: https://github.com/upsun/upsun-mcp-server README "Features" section, fetched 2026-08-26
+tools:
+- name: create-project
+  category: projects
+- name: delete-project
+  category: projects
+- name: info-project
+  category: projects
+- name: list-project
+  category: projects
+- name: activate-environment
+  category: environments
+- name: delete-environment
+  category: environments
+- name: info-environment
+  category: environments
+- name: list-environment
+  category: environments
+- name: merge-environment
+  category: environments
+- name: pause-environment
+  category: environments
+- name: redeploy-environment
+  category: environments
+- name: resume-environment
+  category: environments
+- name: urls-environment
+  category: environments
+- name: info-organization
+  category: organizations
+- name: list-organization
+  category: organizations
+- name: list-activity
+  category: activities
+- name: info-activity
+  category: activities
+- name: create-ssh
+  category: ssh-keys
+- name: delete-ssh
+  category: ssh-keys
+- name: list-ssh
+  category: ssh-keys
+- name: add-domain
+  category: domains
+- name: delete-domain
+  category: domains
+- name: info-domain
+  category: domains
+- name: list-domain
+  category: domains
+- name: update-domain
+  category: domains
+- name: info-route
+  category: routing
+- name: list-route
+  category: routing
+- name: add-certificate
+  category: certificates
+- name: delete-certificate
+  category: certificates
+- name: info-certificate
+  category: certificates
+- name: list-certificate
+  category: certificates
+- name: create-backup
+  category: backups
+- name: list-backup
+  category: backups
+- name: restore-backup
+  category: backups
+- name: generate-config
+  category: configuration
+write_posture:
+  default: read-only
+  enable: send the `enable-write` header set to "true"
+  source: https://github.com/upsun/upsun-mcp-server README "Enabling Write Operations"

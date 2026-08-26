@@ -1,0 +1,22 @@
+generated: '2026-08-26'
+method: derived
+source: openapi/platform.sh-rest-api-openapi.json
+schemes:
+- name: OAuth2
+  source: openapi/platform.sh-rest-api-openapi.json
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+    tokenUrl: https://auth.api.platform.sh/oauth2/token
+- name: OAuth2Admin
+  source: openapi/platform.sh-rest-api-openapi.json
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://auth.api.platform.sh/oauth2/token
+scopes:
+- scope: admin
+  description: administrative operations
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/platform.sh-rest-api-openapi.json

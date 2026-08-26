@@ -1,0 +1,12 @@
+generated: '2026-08-26'
+method: derived
+source: openapi/platform.sh-rest-api-openapi.json
+summary:
+  types:
+  - http
+schemes:
+- name: BearerAuth
+  type: http
+  scheme: bearer
+  sources:
+  - openapi/platform.sh-rest-api-openapi.json

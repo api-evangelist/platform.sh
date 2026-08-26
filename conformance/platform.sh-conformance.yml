@@ -1,0 +1,81 @@
+generated: '2026-08-26'
+method: searched
+source: https://upsun.com/trust-center/, https://upsun.com/llms.txt, https://auth.api.platform.sh/.well-known/openid-configuration,
+  https://auth.api.platform.sh/.well-known/oauth-authorization-server, and openapi/platform.sh-rest-api-openapi.json
+standards:
+- id: oauth2
+  conforms: true
+  evidence: components.securitySchemes declares OAuth2 (authorizationCode) and OAuth2Admin (clientCredentials)
+    against auth.api.platform.sh; /.well-known/oauth-authorization-server returns 200 with authorization, token,
+    revocation and jwks endpoints.
+- id: oauth2-pkce
+  conforms: true
+  evidence: 'code_challenge_methods_supported: ["S256"] in both discovery documents.'
+- id: rfc8414-as-metadata
+  conforms: true
+  evidence: https://auth.api.platform.sh/.well-known/oauth-authorization-server returned 200 (saved verbatim).
+- id: rfc9728-protected-resource-metadata
+  conforms: true
+  evidence: https://auth.api.platform.sh/.well-known/oauth-protected-resource returned 200; https://mcp.upsun.com/.well-known/oauth-protected-resource
+    returned 200 naming auth.upsun.com as the authorization server.
+- id: rfc8707-resource-indicators
+  conforms: true
+  evidence: 'resource_indicators_supported: true in the OIDC and OAuth AS discovery documents.'
+- id: oidc
+  conforms: partial
+  evidence: /.well-known/openid-configuration is served with issuer, authorization, token, jwks and end_session
+    endpoints, but response_types_supported is ["code"] only and no id_token flow or userinfo_endpoint is advertised
+    — the document is an OAuth AS profile published at the OIDC path.
+- id: rfc9457-problem-details
+  conforms: true
+  evidence: 84 error responses in the spec declare application/problem+json.
+- id: rfc9116-security-txt
+  conforms: true
+  evidence: https://platform.sh/.well-known/security.txt returned 200 with Contact, Expires, Policy, Preferred-Languages,
+    Canonical and Hiring fields.
+- id: hal
+  conforms: true
+  evidence: components.schemas.HalLinks; the spec description documents the `_links` object with `self` plus `#edit`/`#delete`
+    action links.
+- id: pagination
+  conforms: partial
+  evidence: Cursor pagination via page[after]/page[before]/page[size] on organization-scoped collections; most
+    collection endpoints declare no pagination parameters.
+- id: idempotency
+  conforms: false
+  evidence: No Idempotency-Key header is declared on any write operation and none is documented.
+- id: json:api
+  conforms: false
+  evidence: The filter[]/page[] bracket parameter style resembles JSON:API but responses are HAL, not JSON:API
+    documents, and no application/vnd.api+json media type appears.
+- id: mcp
+  conforms: true
+  evidence: Hosted MCP server at https://mcp.upsun.com/mcp; anonymous tools/list returns 401 invalid_token and
+    the RFC 9728 protected-resource document resolves.
+- id: a2a
+  conforms: false
+  evidence: /.well-known/agent-card.json and /.well-known/agent.json returned 404 or 301 on every platform.sh
+    host probed on 2026-08-26.
+- id: asyncapi
+  conforms: false
+  evidence: No AsyncAPI document and no webhook catalog were found; event-driven integration is via activity scripts
+    and third-party source integrations rather than provider-published webhooks.
+domain_standard:
+  applicable: false
+  note: Cloud application hosting has no market-wide machine-readable interop standard analogous to SCIM/FHIR/OpenRTB,
+    and the contract declares none. Recorded as not applicable rather than as a failure.
+compliance_program:
+  trust_center: https://upsun.com/trust-center/
+  http_status: 200
+  checked: '2026-08-26'
+  certifications:
+  - SOC 2 Type 2
+  - PCI DSS Level 1
+  - ISO 27001
+  - HIPAA
+  - GDPR
+  - CCPA/CPRA
+  - Australian Privacy Act
+  - PIPEDA
+  source: https://upsun.com/llms.txt "Security and Compliance" section, fetched 2026-08-26
+  note: Certification names are as published by the provider; no certificate documents were retrieved or verified.

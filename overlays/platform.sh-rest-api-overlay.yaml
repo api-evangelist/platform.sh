@@ -1,0 +1,99 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Platform.sh / Upsun REST API
+  version: 1.0.0
+  x-generated: '2026-08-26'
+  x-method: generated
+  x-source: openapi/platform.sh-rest-api-openapi.json
+  x-note: Overlay of API Evangelist enrichment findings. It never mutates the harvested spec; apply it to openapi/platform.sh-rest-api-openapi.json
+    to attach provenance, agent-facing semantics and the pointers to the derived artifacts in this repository.
+extends: openapi/platform.sh-rest-api-openapi.json
+actions:
+- target: $.info
+  description: Record the brand lineage on the contract itself.
+  update:
+    x-brand-lineage:
+      former-name: Platform.sh
+      current-name: Upsun
+      legacy-product-name: Upsun Fixed
+      evidence: info.description states "Upsun, formerly Platform.sh"; the OAuth endpoints remain on auth.api.platform.sh.
+    x-api-evangelist-profile: https://github.com/api-evangelist/platform.sh
+- target: $.info
+  description: Attach the cross-cutting runtime semantics an agent needs before calling.
+  update:
+    x-conventions:
+      artifact: conventions/platform.sh-conventions.yml
+      idempotency: not-supported
+      pagination: cursor (page[after]/page[before]/page[size])
+      hypermedia: HAL _links
+      error-format: RFC 9457 application/problem+json
+      rate-limit-signal: none published
+      async-model: activity resource polling
+- target: $.info
+  description: Attach the reversibility map derived from the write surface.
+  update:
+    x-reversibility:
+      artifact: conventions/platform.sh-conventions.yml#reversibility
+      grade: verified
+      strongest-path: 'restore-backup within the documented backup retention window (automated backups: 2 days
+        under the default policy)'
+      no-reversal:
+      - delete-environment
+      - delete-org-project
+- target: $.info
+  description: Point at the event surface, which the contract itself does not describe.
+  update:
+    x-event-surface:
+      artifact: asyncapi/platform.sh-webhooks.yml
+      transport: webhook integration
+      signature-header: X-JWS-Signature
+      asyncapi-published: false
+- target: $.info
+  description: Point at the MCP server and the tool-to-operation crosswalk.
+  update:
+    x-mcp:
+      endpoint: https://mcp.upsun.com/mcp
+      auth: oauth
+      gated: true
+      crosswalk: mcp/platform.sh-tool-crosswalk.yml
+      coverage: 33 of 35 published MCP tools bind to 38 of 263 REST operations
+- target: $.paths..*[?(@.deprecated == true)]
+  description: Flag the 28 operations the contract already marks deprecated so downstream tooling can surface
+    them; the provider publishes no Sunset/Deprecation headers.
+  update:
+    x-deprecation:
+      sunset-header: false
+      policy-published: false
+      note: Deprecated in the published contract. No sunset date is stated anywhere; treat as removable without
+        notice.
+- target: $.components.securitySchemes
+  description: Record that the richest published spec (meta.upsun.com/openapi-spec) collapses auth to a bearer
+    scheme while the developer-portal spec declares the underlying OAuth 2.0 flows.
+  update:
+    x-auth-provenance:
+      declared-here: BearerAuth (http/bearer)
+      actual-flows: authorizationCode + clientCredentials against https://auth.api.platform.sh
+      evidence:
+      - openapi/_original/platform.sh-developer-portal-openapi-original.json components.securitySchemes
+      - well-known/platform.sh-oauth-authorization-server.json
+      artifact: authentication/platform.sh-authentication.yml
+x-findings:
+  operations: 263
+  operations_without_summary: 14
+  deprecated_operations: 28
+  operations_without_summary_sample:
+  - create-projects-domain-claims
+  - delete-projects-domain-claims
+  - get-projects-domain-claims
+  - get-projects-environments-tasks
+  - get-projects-provisioners
+  - list-projects-domain-claims
+  - list-projects-environments-tasks
+  - list-projects-git-diffs
+  - list-projects-provisioners
+  - maintenance-redeploy-environment
+  - maintenance-redeploy-project
+  - run-task
+  - update-projects-domain-claims
+  - update-projects-provisioners
+  note: Reported, not patched. The scorer parses the original spec; this overlay improves derived artifacts only.

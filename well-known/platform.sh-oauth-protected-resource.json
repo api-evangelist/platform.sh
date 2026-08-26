@@ -1,0 +1,1 @@
+{"resource":"https://auth.api.platform.sh","authorization_servers":["https://auth.api.platform.sh"],"bearer_methods_supported":["header"],"resource_signing_alg_values_supported":["ES256"],"jwks_uri":"https://auth.api.platform.sh/.well-known/jwks.json"}

@@ -1,0 +1,481 @@
+generated: '2026-08-26'
+method: derived
+source: openapi/platform.sh-rest-api-openapi.json components.schemas ($ref links and *_id reference fields)
+schema_count: 268
+note: Entity graph derived mechanically from the published contract. `has_one`/`has_many` edges follow real $ref
+  links; `belongs_to` edges are inferred from *_id field names and are marked medium confidence. The API is HAL-based,
+  so runtime traversal is also available through the `_links` object on each response.
+root_hierarchy:
+- Organization -> Subscription -> Project -> Environment -> (Backup | Route | Domain | Variable | Deployment |
+  Activity | Task)
+- Organization -> Member/Team -> project access grants
+- User -> SSHKey / APIToken / Connection / Profile
+identifier_conventions:
+  project: string project ID, e.g. abcdefghij1234567890
+  environment: branch name used as environment ID
+  organization: UUID
+  user: UUID
+  activity: opaque string ID
+  backup: opaque string ID
+entities:
+- name: Subscription
+  fields: 24
+  field_names:
+  - agency_site
+  - created_at
+  - environments
+  - green
+  - hipaa
+  - id
+  - invoiced
+  - is_trial_plan
+  - owner
+  - owner_info
+  - plan
+  - project_endpoint
+  - project_id
+  - project_options
+  - project_region
+  - project_region_label
+  - project_title
+  - project_ui
+  - services
+  - status
+  - storage
+  - updated_at
+  - user_licenses
+  - vendor
+  relationships:
+  - kind: has_one
+    to: OwnerInfo
+    via: owner_info
+  - kind: belongs_to
+    to: project
+    via: project_id
+    confidence: medium
+    note: Inferred from an id-reference field name, not a $ref.
+  - kind: has_one
+    to: ProjectOptions
+    via: project_options
+- name: Organization
+  fields: 17
+  field_names:
+  - _links
+  - ai_agent_settings
+  - billing_legacy
+  - billing_profile_id
+  - capabilities
+  - country
+  - created_at
+  - id
+  - label
+  - name
+  - namespace
+  - owner_id
+  - security_contact
+  - status
+  - type
+  - updated_at
+  - vendor
+  relationships:
+  - kind: belongs_to
+    to: owner
+    via: owner_id
+    confidence: medium
+    note: Inferred from an id-reference field name, not a $ref.
+  - kind: belongs_to
+    to: billing_profile
+    via: billing_profile_id
+    confidence: medium
+    note: Inferred from an id-reference field name, not a $ref.
+- name: Team
+  fields: 7
+  field_names:
+  - counts
+  - created_at
+  - id
+  - label
+  - organization_id
+  - project_permissions
+  - updated_at
+  relationships:
+  - kind: belongs_to
+    to: organization
+    via: organization_id
+    confidence: medium
+    note: Inferred from an id-reference field name, not a $ref.
+- name: TeamMember
+  fields: 4
+  field_names:
+  - created_at
+  - team_id
+  - updated_at
+  - user_id
+  relationships:
+  - kind: belongs_to
+    to: team
+    via: team_id
+    confidence: medium
+    note: Inferred from an id-reference field name, not a $ref.
+  - kind: belongs_to
+    to: user
+    via: user_id
+    confidence: medium
+    note: Inferred from an id-reference field name, not a $ref.
+- name: User
+  fields: 16
+  field_names:
+  - company
+  - consent_method
+  - consented_at
+  - country
+  - created_at
+  - deactivated
+  - email
+  - email_verified
+  - first_name
+  - id
+  - last_name
+  - namespace
+  - picture
+  - updated_at
+  - username
+  - website
+  relationships: []
+- name: UserReference
+  fields: 8
+  field_names:
+  - email
+  - first_name
+  - id
+  - last_name
+  - mfa_enabled
+  - picture
+  - sso_enabled
+  - username
+  relationships: []
+- name: Project
+  fields: 17
+  field_names:
+  - attributes
+  - created_at
+  - default_branch
+  - default_domain
+  - description
+  - id
+  - maintenance
+  - namespace
+  - organization
+  - owner
+  - region
+  - repository
+  - status
+  - subscription
+  - timezone
+  - title
+  - updated_at
+  relationships: []
+- name: Environment
+  fields: 37
+  field_names:
+  - attributes
+  - can_rolling_deploy
+  - clone_parent_on_create
+  - created_at
+  - default_domain
+  - deployment_state
+  - deployment_target
+  - edge_hostname
+  - enable_smtp
+  - has_code
+  - has_deployment
+  - has_domains
+  - has_remote
+  - has_staged_activities
+  - head_commit
+  - http_access
+  - id
+  - is_dirty
+  - is_main
+  - is_pr
+  - last_active_at
+  - last_backup_at
+  - machine_name
+  - max_instance_count
+  relationships: []
+- name: Activity
+  fields: 22
+  field_names:
+  - cancelled_at
+  - commands
+  - completed_at
+  - completion_percent
+  - created_at
+  - description
+  - environments
+  - expires_at
+  - failure_reason
+  - id
+  - integration
+  - log
+  - parameters
+  - payload
+  - project
+  - result
+  - started_at
+  - state
+  - text
+  - timings
+  - type
+  - updated_at
+  relationships: []
+- name: SSHKey
+  fields: 6
+  field_names:
+  - changed
+  - fingerprint
+  - key_id
+  - title
+  - uid
+  - value
+  relationships:
+  - kind: belongs_to
+    to: key
+    via: key_id
+    confidence: medium
+    note: Inferred from an id-reference field name, not a $ref.
+- name: APIToken
+  fields: 7
+  field_names:
+  - created_at
+  - id
+  - last_used_at
+  - mfa_on_creation
+  - name
+  - token
+  - updated_at
+  relationships: []
+- name: Ticket
+  fields: 35
+  field_names:
+  - affected_url
+  - application_ticket_url
+  - assignee_id
+  - category
+  - collaborator_ids
+  - created
+  - description
+  - due
+  - environment
+  - followup_tid
+  - has_incidents
+  - infrastructure_ticket_url
+  - issue_type
+  - jira
+  - organization_id
+  - priority
+  - project_url
+  - queue
+  - recipient
+  - region
+  - requester_id
+  - resolution_time
+  - response_time
+  - status
+  relationships:
+  - kind: belongs_to
+    to: ticket
+    via: ticket_id
+    confidence: medium
+    note: Inferred from an id-reference field name, not a $ref.
+  - kind: belongs_to
+    to: requester
+    via: requester_id
+    confidence: medium
+    note: Inferred from an id-reference field name, not a $ref.
+  - kind: belongs_to
+    to: submitter
+    via: submitter_id
+    confidence: medium
+    note: Inferred from an id-reference field name, not a $ref.
+  - kind: belongs_to
+    to: assignee
+    via: assignee_id
+    confidence: medium
+    note: Inferred from an id-reference field name, not a $ref.
+  - kind: belongs_to
+    to: organization
+    via: organization_id
+    confidence: medium
+    note: Inferred from an id-reference field name, not a $ref.
+  - kind: belongs_to
+    to: subscription
+    via: subscription_id
+    confidence: medium
+    note: Inferred from an id-reference field name, not a $ref.
+- name: Region
+  fields: 12
+  field_names:
+  - available
+  - datacenter
+  - endpoint
+  - environmental_impact
+  - id
+  - label
+  - private
+  - project_label
+  - provider
+  - selection_label
+  - timezone
+  - zone
+  relationships: []
+- name: Alert
+  fields: 6
+  field_names:
+  - active
+  - alerts_sent
+  - config
+  - id
+  - last_alert_at
+  - updated_at
+  relationships: []
+- name: Discount
+  fields: 11
+  field_names:
+  - commitment
+  - config
+  - discount
+  - end_at
+  - id
+  - organization_id
+  - start_at
+  - status
+  - total_months
+  - type
+  - type_label
+  relationships:
+  - kind: belongs_to
+    to: organization
+    via: organization_id
+    confidence: medium
+    note: Inferred from an id-reference field name, not a $ref.
+- name: LineItem
+  fields: 9
+  field_names:
+  - components
+  - exclude_from_invoice
+  - license_id
+  - product
+  - project_id
+  - sku
+  - total
+  - total_formatted
+  - type
+  relationships:
+  - kind: belongs_to
+    to: license
+    via: license_id
+    confidence: medium
+    note: Inferred from an id-reference field name, not a $ref.
+  - kind: belongs_to
+    to: project
+    via: project_id
+    confidence: medium
+    note: Inferred from an id-reference field name, not a $ref.
+- name: Address
+  fields: 10
+  field_names:
+  - administrative_area
+  - country
+  - dependent_locality
+  - locality
+  - name_line
+  - postal_code
+  - premise
+  - sub_administrative_area
+  - sub_premise
+  - thoroughfare
+  relationships: []
+- name: Profile
+  fields: 23
+  field_names:
+  - billing_contact
+  - company_name
+  - company_role
+  - company_type
+  - created_at
+  - currency
+  - customer_type
+  - default_catalog
+  - display_name
+  - email
+  - id
+  - invoiced
+  - legal_entity_name
+  - marketing
+  - new_ui
+  - picture
+  - project_options_url
+  - type
+  - ui_colorscheme
+  - updated_at
+  - username
+  - vat_number
+  - website_url
+  relationships: []
+- name: Connection
+  fields: 7
+  field_names:
+  - created_at
+  - email_address
+  - is_mandatory
+  - provider
+  - provider_type
+  - subject
+  - updated_at
+  relationships: []
+- name: OrganizationInvitation
+  fields: 9
+  field_names:
+  - created_at
+  - email
+  - finished_at
+  - id
+  - organization_id
+  - owner
+  - permissions
+  - state
+  - updated_at
+  relationships:
+  - kind: belongs_to
+    to: organization
+    via: organization_id
+    confidence: medium
+    note: Inferred from an id-reference field name, not a $ref.
+  - kind: has_one
+    to: OrganizationPermissions
+    via: permissions
+- name: ProjectInvitation
+  fields: 10
+  field_names:
+  - created_at
+  - email
+  - environments
+  - finished_at
+  - id
+  - owner
+  - project_id
+  - role
+  - state
+  - updated_at
+  relationships:
+  - kind: belongs_to
+    to: project
+    via: project_id
+    confidence: medium
+    note: Inferred from an id-reference field name, not a $ref.
+- name: OrganizationMFAEnforcement
+  fields: 1
+  field_names:
+  - enforce_mfa
+  relationships: []

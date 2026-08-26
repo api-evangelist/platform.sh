@@ -1,0 +1,52 @@
+generated: '2026-08-26'
+method: generated
+source: openapi/platform.sh-rest-api-openapi.json plus conventions/platform.sh-conventions.yml
+note: >-
+  Packaged Agent Skills for the Platform.sh / Upsun REST API. Every operationId referenced below was
+  grepped out of the harvested spec before being written; none is invented. The provider publishes no
+  skills/ or AGENTS.md of its own (searched 2026-08-26), so these are generated, not harvested.
+api: Platform.sh REST API
+base_url: https://api.upsun.com
+skills:
+- name: platform.sh-create-preview-environment
+  file: skills/platform.sh-create-preview-environment.md
+  summary: Branch, activate and wait on a preview environment, then read its routes as URLs.
+  operations:
+  - list-orgs
+  - list-org-projects
+  - list-projects-environments
+  - branch-environment
+  - activate-environment
+  - get-projects-environments-activities
+  - list-projects-environments-routes
+- name: platform.sh-back-up-and-restore-environment
+  file: skills/platform.sh-back-up-and-restore-environment.md
+  summary: Take, list and restore an environment backup — the only reversal path for environment data.
+  operations:
+  - backup-environment
+  - list-projects-environments-backups
+  - get-projects-environments-backups
+  - restore-backup
+  - delete-projects-environments-backups
+  - get-projects-environments-activities
+- name: platform.sh-add-domain-and-certificate
+  file: skills/platform.sh-add-domain-and-certificate.md
+  summary: Attach a custom domain to a project and install or inspect its TLS certificate.
+  operations:
+  - list-projects-domains
+  - create-projects-domains
+  - get-projects-domains
+  - update-projects-domains
+  - delete-projects-domains
+  - list-projects-certificates
+  - create-projects-certificates
+  - get-projects-certificates
+  - delete-projects-certificates
+- name: platform.sh-authenticate-with-api-token
+  file: skills/platform.sh-authenticate-with-api-token.md
+  summary: Exchange an API token for a 900-second bearer token and manage a machine user's tokens.
+  operations:
+  - get-current-user
+  - list-api-tokens
+  - create-api-token
+  - delete-api-token

@@ -1,0 +1,34 @@
+generated: '2026-08-26'
+method: searched
+source: https://upsun.com/pricing/ and https://docs.upsun.com/administration/pricing.md, fetched 2026-08-26
+model: provision-based (pay for what you provision), not per-API-call
+plan_count: 0
+plans: []
+note: 'The provider publishes a pricing page and documents the pricing MODEL, but does not publish a fixed set
+  of named tiers with per-tier prices in a form that can be recorded as discrete plans. Recorded as plan_count:
+  0 rather than omitted — the honest statement is that the commercial surface is dimensional, not tiered. The
+  API itself is not separately metered or priced; access is included with a project.'
+pricing_dimensions:
+- dimension: Project fees
+  detail: A consistent monthly cost per project covering orchestration and provisioning, with baseline features
+    and limits such as infrastructure metrics and a build-minute allowance.
+- dimension: Project resources
+  detail: CPU, memory and disk (including backup disk) metered across organization, project and environment for
+    the billing period. Preview environments carry no creation fee, only the resources they use.
+- dimension: User licenses
+  detail: A per-user license fee per organization user. Viewers, and Viewers who manage billing, are not charged.
+    No cap on user count.
+- dimension: Feature add-ons
+  detail: Optional organization-level add-ons billed separately.
+support_add_on:
+- tier: Standard
+  price: included
+- tier: Advanced
+  price: +15%
+- tier: Premium
+  price: +19%
+support_add_on_source: https://upsun.com/llms.txt "Pricing" section
+billing_api:
+  note: Billing is exposed through the REST API (orders, invoices, subscriptions, usage records, estimates), though
+    most of those operations are flagged deprecated in the current spec.
+  artifact: lifecycle/platform.sh-lifecycle.yml

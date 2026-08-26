@@ -1,18 +1,83 @@
 aid: platform.sh
 name: Platform.sh
-description: 'Platform.sh is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: 'Platform.sh is the container-based Platform-as-a-Service (PaaS) founded in 2010 and headquartered
+  in Paris and San Francisco, best known for Git-driven deployments in which a single push plus a few YAML files
+  provisions an entire cluster of applications and managed services (PostgreSQL, MySQL, Redis, RabbitMQ, OpenSearch
+  and more) together with byte-for-byte preview environments cloned from production. The company rebranded to Upsun:
+  platform.sh now redirects to upsun.com, the original Platform.sh product is documented as ''Upsun Fixed'' at docs.upsun.com,
+  and the public REST API - whose own OpenAPI description reads ''Upsun, formerly Platform.sh'' - is still authenticated
+  by the OAuth 2.0 authorization server at auth.api.platform.sh with regional gateways on platform.sh hosts. That
+  API exposes 263 operations across projects, environments, backups, domains, certificates, variables, activities,
+  organizations, teams, subscriptions and billing, returns RFC 9457 application/problem+json errors, and is accompanied
+  by a first-party CLI, PHP/JavaScript API clients and language config readers published under the platformsh namespace.'
+image: https://upsun.com/default_social.png
 url: https://raw.githubusercontent.com/api-evangelist/platform.sh/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
+x-successor-brand: upsun
+x-successor-note: Platform.sh rebranded to Upsun. platform.sh 301s to upsun.com, docs.platform.sh 301s to fixed.docs.upsun.com
+  ('Upsun Fixed'), and api.platform.sh 301s to developer.upsun.com/api. The API Evangelist network also carries
+  all/upsun for the successor brand; this profile and that one describe the same company and the same REST API and
+  should be reconciled by the network de-duplication pass.
 specificationVersion: '0.20'
 created: '2026-08-26'
 modified: '2026-08-26'
 tags:
-- Company
-apis: []
+- Platform as a Service
+- Cloud Hosting
+- Application Hosting
+- Deployment
+- DevOps
+- Continuous Deployment
+- Containers
+- Managed Services
+- Developer Tools
+- Infrastructure
+- Multicloud
+- Web Hosting
+apis:
+- aid: platform.sh-rest-api
+  name: Platform.sh REST API
+  description: 'The public REST API for the Platform.sh / Upsun cloud application platform: 263 operations over
+    187 paths covering projects, environments, deployments, backups and restores, domains, TLS certificates, routes,
+    variables, activities, source operations, SSH keys, API tokens, organizations, teams, members, invitations,
+    subscriptions, orders, invoices, discounts and usage alerts. OAuth 2.0 authorization-code and client-credentials
+    flows, HAL `_links` hypermedia, cursor pagination via page[before]/page[after]/page[size], and RFC 9457 application/problem+json
+    error bodies.'
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Platform as a Service
+  - Deployment
+  - Environments
+  - Projects
+  - Organizations
+  - Billing
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-rest-api-openapi.json
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: Overlay
+    url: overlays/platform.sh-rest-api-overlay.yaml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: MCPServer
+    url: mcp/platform.sh-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +85,89 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://www.hiive.com/securities/platform.sh-stock
+  url: https://upsun.com/
+- type: DeveloperPortal
+  url: https://developer.upsun.com/
+- type: Documentation
+  url: https://docs.upsun.com/
+- type: APIReference
+  url: https://developer.upsun.com/api
+- type: GettingStarted
+  url: https://developer.upsun.com/docs/get-started
+- type: Support
+  url: https://developer.upsun.com/docs/core-concepts/get-support
+- type: Blog
+  url: https://upsun.com/blog/
+- type: GitHubOrganization
+  url: https://github.com/platformsh
+- type: StatusPage
+  url: https://status.upsun.com/
+- type: Pricing
+  url: https://upsun.com/pricing/
+- type: SignUp
+  url: https://console.upsun.com/
+- type: Console
+  url: https://console.platform.sh/
+- type: TermsOfService
+  url: https://upsun.com/trust-center/legal/tos/
+- type: PrivacyPolicy
+  url: https://upsun.com/trust-center/privacy/privacy-notice/
+- type: TrustCenter
+  url: https://upsun.com/trust-center/
+- type: Authentication
+  url: authentication/platform.sh-authentication.yml
+- type: OAuthScopes
+  url: scopes/platform.sh-scopes.yml
+- type: Packages
+  url: packages/platform.sh-packages.yml
+- type: SDKs
+  url: packages/platform.sh-packages.yml
+- type: CLI
+  url: cli/platform.sh-cli.yml
+- type: LLMsTxt
+  url: llms/platform.sh-llms.txt
+- type: WellKnown
+  url: well-known/platform.sh-well-known.yml
+- type: SecurityTxt
+  url: well-known/platform.sh-security.txt
+- type: Security
+  url: security/platform.sh-vulnerability-disclosure.yml
+- type: VulnerabilityDisclosure
+  url: security/platform.sh-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/platform.sh-domain-security.yml
+- type: Conformance
+  url: conformance/platform.sh-conformance.yml
+- type: Compliance
+  url: conformance/platform.sh-conformance.yml
+- type: Lifecycle
+  url: lifecycle/platform.sh-lifecycle.yml
+- type: Deprecation
+  url: lifecycle/platform.sh-lifecycle.yml
+- type: ChangeLog
+  url: changelog/platform.sh-changelog.yml
+- type: ErrorCatalog
+  url: errors/platform.sh-problem-types.yml
+- type: Conventions
+  url: conventions/platform.sh-conventions.yml
+- type: DataModel
+  url: data-model/platform.sh-data-model.yml
+- type: Overlay
+  url: overlays/platform.sh-rest-api-overlay.yaml
+- type: Plans
+  url: plans/platform.sh-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/platform.sh-rate-limits.yml
+- type: MCPServer
+  url: mcp/platform.sh-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Webhooks
+  url: asyncapi/platform.sh-webhooks.yml
+- type: ToolCrosswalk
+  url: mcp/platform.sh-tool-crosswalk.yml
+x-enrichment:
+  date: '2026-08-26'
+  status: enriched
+  artifacts_added: 33
+  pass: local-v1

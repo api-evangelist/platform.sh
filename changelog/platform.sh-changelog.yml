@@ -1,0 +1,49 @@
+generated: '2026-08-26'
+method: searched
+source: https://developer.upsun.com/changelog (markdown at https://developer.upsun.com/changelog.md), fetched
+  2026-08-26
+url: https://developer.upsun.com/changelog
+scheme: dated product changelog with Feature / UI / Image badges; not semantically versioned
+covers: The Upsun platform, which is the continuation of Platform.sh. There is no separate Platform.sh-branded
+  changelog; developer.upsun.com/changelog is where platform.sh changes are now announced.
+entries:
+- date: '2026-08-20'
+  type: Feature
+  title: Find performance bottlenecks faster
+  breaking: false
+  highlights: Performance Agent correlates Blackfire profiles, continuous profiling data, traffic and application
+    source from a deployed environment and returns a ranked report with a code diff.
+- date: '2026-08-12'
+  type: Feature
+  title: Task containers are now available to all
+  breaking: false
+  highlights: Ephemeral, API-triggered containers for run-once workloads (batch jobs, AI agents), billed only
+    while running, with CLI and Console support.
+- date: '2026-07-27'
+  type: Feature
+  title: Self-host Meilisearch on Upsun
+  breaking: false
+  highlights: First verified example of running a public Docker image as a self-hosted service without a Dockerfile.
+- date: '2026-07-21'
+  type: UI
+  title: See config changes in the activity log
+  breaking: false
+  highlights: Commit activities now expose a Config changes view showing added/removed lines in Upsun configuration
+    files.
+- date: '2026-06-08'
+  type: Feature
+  title: Task containers, now in prerelease access
+  breaking: false
+  highlights: Prerelease of the task-container primitive on Upsun Flex.
+- date: '2026-05-26'
+  type: Image
+  title: RabbitMQ 4.2 is now available
+  breaking: false
+  highlights: Quorum queues gain single active consumer; stream performance and observability improvements.
+- date: '2026-05-13'
+  type: Image
+  title: Solr 10.0 is now available
+  breaking: false
+  highlights: Expanded vector search, Java 21 support and platform upgrades.
+note: Recent window only, read from the provider changelog on 2026-08-26. No breaking-change entries appeared
+  in this window.
