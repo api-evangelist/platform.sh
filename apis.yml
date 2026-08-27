@@ -36,26 +36,16 @@ tags:
 - Multicloud
 - Web Hosting
 apis:
-- aid: platform.sh-rest-api
-  name: Platform.sh REST API
-  description: 'The public REST API for the Platform.sh / Upsun cloud application platform: 263 operations over
-    187 paths covering projects, environments, deployments, backups and restores, domains, TLS certificates, routes,
-    variables, activities, source operations, SSH keys, API tokens, organizations, teams, members, invitations,
-    subscriptions, orders, invoices, discounts and usage alerts. OAuth 2.0 authorization-code and client-credentials
-    flows, HAL `_links` hypermedia, cursor pagination via page[before]/page[after]/page[size], and RFC 9457 application/problem+json
-    error bodies.'
+- aid: platform.sh:platform.sh-add-ons-api
+  name: Platform.sh Add Ons API
+  description: The Add-ons API from Platform.sh — 1 operation(s) for add-ons.
   humanURL: https://developer.upsun.com/api
   baseURL: https://api.upsun.com
   tags:
-  - Platform as a Service
-  - Deployment
-  - Environments
-  - Projects
-  - Organizations
-  - Billing
+  - Add-ons
   properties:
   - type: OpenAPI
-    url: openapi/platform.sh-rest-api-openapi.json
+    url: openapi/platform.sh-add-ons-api-openapi.yml
   - type: Authentication
     url: authentication/platform.sh-authentication.yml
   - type: OAuthScopes
@@ -66,14 +56,1980 @@ apis:
     url: conventions/platform.sh-conventions.yml
   - type: DataModel
     url: data-model/platform.sh-data-model.yml
-  - type: Overlay
-    url: overlays/platform.sh-rest-api-overlay.yaml
   - type: RateLimits
     url: rate-limits/platform.sh-rate-limits.yml
   - type: Documentation
     url: https://developer.upsun.com/api
-  - type: MCPServer
-    url: mcp/platform.sh-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-alerts-api
+  name: Platform.sh Alerts API
+  description: The Alerts API from Platform.sh — 1 operation(s) for alerts.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Alerts
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-alerts-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-api-tokens-api
+  name: Platform.sh API Tokens API
+  description: The API Tokens API from Platform.sh — 2 operation(s) for api tokens.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - API Tokens
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-api-tokens-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-autoscaling-api
+  name: Platform.sh Autoscaling API
+  description: >-
+    Upsun provides native support for autoscaling, allowing your applications to automatically adjust
+    based on resource usage.
+
+    This ensures that your apps remain responsive under load while helping you optimize costs.
+
+    You can configure thresholds for metrics such as CPU, RAM, and request latency.
+
+    Resources will automatically scale to meet demand.
+
+    Each container profile assigned to an application or service provides a specific combination of CPU
+    and RAM, which you can select via the Upsun UI or CLI.
+
+
+    These endpoints manage autoscaling configurations that are tied to a
+
+    specific environment, and optionally to its child environments.
+
+    You can define scaling rules based on metrics like CPU, memory, or
+
+    request latency, and these rules will be applied at both build time
+
+    and runtime. For more information on configuring autoscaling for your
+
+    environments, see the [Autoscaling](https://docs.upsun.com/manage-resources/autoscaling.html) section
+
+    of the documentation.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Autoscaling
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-autoscaling-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-blackfire-monitoring-api
+  name: Platform.sh Blackfire Monitoring API
+  description: The Blackfire Monitoring API from Platform.sh — 4 operation(s) for blackfire monitoring.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Blackfire Monitoring
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-blackfire-monitoring-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-blackfire-profiling-api
+  name: Platform.sh Blackfire Profiling API
+  description: The Blackfire Profiling API from Platform.sh — 6 operation(s) for blackfire profiling.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Blackfire Profiling
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-blackfire-profiling-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-cert-management-api
+  name: Platform.sh Cert Management API
+  description: >-
+    User-supplied SSL/TLS certificates can be managed using these
+
+    endpoints. You can now list and modify certificate provisioners
+
+    using the `/projects/{projectId}/provisioners` and
+
+    `/projects/{projectId}/provisioners/{certificateProvisionerDocumentId}`
+
+    endpoints. For more information, see our
+
+    [Third-party TLS certificate](https://docs.upsun.com/anchors/domains/custom/custom-certificates/)
+
+    documentation. These endpoints are not for managing certificates
+
+    that are automatically supplied by Upsun via Let's Encrypt.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Cert Management
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-cert-management-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-connections-api
+  name: Platform.sh Connections API
+  description: The Connections API from Platform.sh — 2 operation(s) for connections.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Connections
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-connections-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-continuous-profiling-api
+  name: Platform.sh Continuous Profiling API
+  description: The Continuous Profiling API from Platform.sh — 4 operation(s) for continuous profiling.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Continuous Profiling
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-continuous-profiling-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-deployment-api
+  name: Platform.sh Deployment API
+  description: The Deployment API from Platform.sh — 2 operation(s) for deployment.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Deployment
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-deployment-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-deployment-target-api
+  name: Platform.sh Deployment Target API
+  description: >-
+    Upsun is capable of deploying the production environments of
+
+    projects in multiple topologies: both in clusters of containers, and
+
+    as dedicated virtual machines. This is an internal API that can
+
+    only be used by privileged users.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Deployment Target
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-deployment-target-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-diff-api
+  name: Platform.sh Diff API
+  description: The Diff API from Platform.sh — 1 operation(s) for diff.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Diff
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-diff-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-discounts-api
+  name: Platform.sh Discounts API
+  description: The Discounts API from Platform.sh — 3 operation(s) for discounts.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Discounts
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-discounts-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-domain-claim-api
+  name: Platform.sh Domain Claim API
+  description: >-
+    These endpoints can be used to add, modify, or remove domain claims from
+
+    a project. For more information on how domains function on
+
+    Upsun, see the [Domains](https://docs.upsun.com/anchors/domains/custom/)
+
+    section of our documentation.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Domain Claim
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-domain-claim-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-domain-management-api
+  name: Platform.sh Domain Management API
+  description: >-
+    These endpoints can be used to add, modify, or remove domains from
+
+    a project. For more information on how domains function on
+
+    Upsun, see the [Domains](https://docs.upsun.com/anchors/domains/custom/)
+
+    section of our documentation.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Domain Management
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-domain-management-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-entrypoint-api
+  name: Platform.sh Entrypoint API
+  description: The Entrypoint API from Platform.sh — 1 operation(s) for entrypoint.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Entrypoint
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-entrypoint-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-environment-activity-api
+  name: Platform.sh Environment Activity API
+  description: The Environment Activity API from Platform.sh — 3 operation(s) for environment activity.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Environment Activity
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-environment-activity-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-environment-api
+  name: Platform.sh Environment API
+  description: >-
+    On Upsun, an environment encompasses a single instance of your
+
+    entire application stack, the services used by the application,
+
+    the application's data storage, and the environment's backups.
+
+
+    In general, an environment represents a single branch or merge request
+
+    in the Git repository backing a project. It is a virtual cluster
+
+    of read-only application and service containers with read-write
+
+    mounts for application and service data.
+
+
+    On Upsun, the default branch is your production environment—thus,
+
+    merging changes to this branch will put those changes to production.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Environment
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-environment-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-environment-backups-api
+  name: Platform.sh Environment Backups API
+  description: >-
+    A snapshot is a complete backup of an environment, including all the
+
+    persistent data from all services running in an environment and all
+
+    files present in mounted volumes.
+
+
+    These endpoints can be used to trigger the creation of new backups,
+
+    get information about existing backups, delete existing backups or
+
+    restore a backup.
+
+    More information about backups can be found in our
+
+    [documentation](https://docs.upsun.com/anchors/environments/backup/).
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Environment Backups
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-environment-backups-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-environment-type-api
+  name: Platform.sh Environment Type API
+  description: >-
+    Environment Types is the way Upsun manages access. We currently have 3 environment types:
+
+    * Development
+
+    * Staging
+
+    * Production
+
+
+    Each environment type will contain a group of users and their accesses. We manage access,
+
+    adding, updating and removing users and their roles, here.
+
+
+    Each environment will have a type, pointing to one of these 3 environment types.
+
+    See `type` in [Environments](#tag/Environment).
+
+
+    In general:
+
+    * Production will be reserved for the default branch, and cannot be set manually.
+
+    * An environment can be set to be type `staging` or development manually and when branching.
+
+
+    Dedicated Generation 2 projects have different rules for environment types. If your project
+
+    contains at least one of those Dedicated Generation 2 environments, the rules are slightly different:
+
+    * All non-dedicated environments in your project can be `development` or `staging`, but never `production`.
+
+    * Dedicated Generation 2 environments can be set either to `staging` or `production`, but never `development`.
+
+    * The default branch is not considered to be a special case.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Environment Type
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-environment-type-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-environment-variables-api
+  name: Platform.sh Environment Variables API
+  description: >-
+    These endpoints manipulate user-defined variables which are bound to a
+
+    specific environment, as well as (optionally) the children of an
+
+    environment. These variables can be made available at both build time
+
+    and runtime. For more information on environment variables,
+
+    see the [Variables](https://docs.upsun.com/anchors/variables/set/environment/create/)
+
+    section of the documentation.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Environment Variables
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-environment-variables-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-grants-api
+  name: Platform.sh Grants API
+  description: The Grants API from Platform.sh — 2 operation(s) for grants.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Grants
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-grants-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-http-traffic-api
+  name: Platform.sh Http Traffic API
+  description: The Http Traffic API from Platform.sh — 3 operation(s) for http traffic.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Http Traffic
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-http-traffic-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-invoices-api
+  name: Platform.sh Invoices API
+  description: >-
+    These endpoints can be used to retrieve invoices from our billing system.
+
+    An invoice of type "invoice" is generated automatically every month, if the customer has active projects.
+
+    Invoices of type "credit_memo" are a result of manual action when there was a refund or an invoice
+    correction.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Invoices
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-invoices-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-mfa-api
+  name: Platform.sh MFA API
+  description: >-
+    Multi-Factor Authentication (MFA) requires the user to present two (or more) types of evidence (or
+    factors) to prove their identity.
+
+
+    For example, the evidence might be a password and a device-generated code, which show the user has
+    the knowledge factor ("something you know")
+
+    as well as the possession factor ("something you have"). In this way MFA offers good protection against
+    the compromise of any single factor,
+
+    such as a stolen password.
+
+
+    Using the MFA API you can set up time-based one-time passcodes (TOTP), which can be generated on a
+    single registered device ("something you have") such as a mobile phone.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - MFA
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-mfa-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-orders-api
+  name: Platform.sh Orders API
+  description: >-
+    These endpoints can be used to retrieve order information from our billing
+
+    system. Here you can view information about your bill for our services,
+
+    include the billed amount and a link to a PDF of the bill.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Orders
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-orders-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-organization-invitations-api
+  name: Platform.sh Organization Invitations API
+  description: >-
+    The Organization Invitations API from Platform.sh — 2 operation(s) for organization invitations.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Organization Invitations
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-organization-invitations-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-organization-management-api
+  name: Platform.sh Organization Management API
+  description: >-
+    The Organization Management API from Platform.sh — 4 operation(s) for organization management.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Organization Management
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-organization-management-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-organization-members-api
+  name: Platform.sh Organization Members API
+  description: The Organization Members API from Platform.sh — 2 operation(s) for organization members.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Organization Members
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-organization-members-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-organization-projects-api
+  name: Platform.sh Organization Projects API
+  description: >-
+    The Organization Projects API from Platform.sh — 4 operation(s) for organization projects.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Organization Projects
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-organization-projects-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-organizations-api
+  name: Platform.sh Organizations API
+  description: The Organizations API from Platform.sh — 4 operation(s) for organizations.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-organizations-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-phonenumber-api
+  name: Platform.sh Phone Number API
+  description: The PhoneNumber API from Platform.sh — 2 operation(s) for phonenumber.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - PhoneNumber
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-phonenumber-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-profiles-api
+  name: Platform.sh Profiles API
+  description: The Profiles API from Platform.sh — 2 operation(s) for profiles.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Profiles
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-profiles-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-project-activity-api
+  name: Platform.sh Project Activity API
+  description: The Project Activity API from Platform.sh — 3 operation(s) for project activity.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Project Activity
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-project-activity-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-project-api
+  name: Platform.sh Project API
+  description: >-
+    ## Project Overview
+
+
+    On Upsun, a Project is backed by a single Git repository
+
+    and encompasses your entire application stack, the services
+
+    used by your application, the application's data storage,
+
+    the production and staging environments, and the backups of those
+
+    environments.
+
+
+    When you create a new project, you start with a single
+
+    [Environment](#tag/Environment) called *Master*,
+
+    corresponding to the master branch in the Git repository of
+
+    the project—this will be your production environment.
+
+
+    If you connect your project to an external Git repo
+
+    using one of our [Third-Party Integrations](#tag/Third-Party-Integrations)
+
+    a new development environment can be created for each branch
+
+    or pull request created in the repository. When a new development
+
+    environment is created, the production environment's data
+
+    will be cloned on-the-fly, giving you an isolated, production-ready
+
+    test environment.
+
+
+    This set of API endpoints can be used to retrieve a list of projects
+
+    associated with an API key, as well as create and update the parameters
+
+    of existing projects.
+
+
+    > **Note**:
+
+    >
+
+    > To list projects or to create a new project, use [`/subscriptions`](#tag/Subscriptions).
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Project
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-project-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-project-invitations-api
+  name: Platform.sh Project Invitations API
+  description: The Project Invitations API from Platform.sh — 2 operation(s) for project invitations.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Project Invitations
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-project-invitations-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-project-settings-api
+  name: Platform.sh Project Settings API
+  description: >-
+    These endpoints can be used to retrieve and manipulate project-level
+
+    settings. Only the `initialize` property can be set by end users. It is used
+
+    to initialize a project from an existing Git repository.
+
+
+    The other properties can only be set by a privileged user.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Project Settings
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-project-settings-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-project-variables-api
+  name: Platform.sh Project Variables API
+  description: >-
+    These endpoints manipulate user-defined variables which are bound to an
+
+    entire project. These variables are accessible to all environments
+
+    within a single project, and they can be made available at both build
+
+    time and runtime. For more information on project variables,
+
+    see the [Variables](https://docs.upsun.com/anchors/variables/set/project/create/)
+
+    section of the documentation.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Project Variables
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-project-variables-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-projects-api
+  name: Platform.sh Projects API
+  description: The Projects API from Platform.sh — 1 operation(s) for projects.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Projects
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-projects-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-records-api
+  name: Platform.sh Records API
+  description: >-
+    These endpoints retrieve information about which plans were assigned to a particular
+
+    project at which time.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Records
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-records-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-references-api
+  name: Platform.sh References API
+  description: The References API from Platform.sh — 5 operation(s) for references.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - References
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-references-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-regions-api
+  name: Platform.sh Regions API
+  description: The Regions API from Platform.sh — 2 operation(s) for regions.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Regions
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-regions-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-repository-api
+  name: Platform.sh Repository API
+  description: >-
+    The Git repository backing projects hosted on Upsun can be
+
+    accessed in a **read-only** manner through the `/projects/{projectId}/git/*`
+
+    family of endpoints. With these endpoints, you can retrieve objects from
+
+    the Git repository in the same way that you would in a local environment.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Repository
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-repository-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-resources-api
+  name: Platform.sh Resources API
+  description: The Resources API from Platform.sh — 3 operation(s) for resources.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Resources
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-resources-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-routing-api
+  name: Platform.sh Routing API
+  description: >-
+    These endpoints modify an environment's `routes:` section of the `.upsun/config.yaml` file.
+
+    For routes to propagate to child environments, the child environments
+
+    must be synchronized with their parent.
+
+
+    More information about routing can be found in the [Routes](https://docs.upsun.com/anchors/routes/)
+
+    section of the documentation.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Routing
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-routing-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-runtime-operations-api
+  name: Platform.sh Runtime Operations API
+  description: The Runtime Operations API from Platform.sh — 1 operation(s) for runtime operations.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Runtime Operations
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-runtime-operations-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-source-operations-api
+  name: Platform.sh Source Operations API
+  description: >-
+    These endpoints interact with source code operations as defined in the `source.operations`
+
+    key in a project's `.upsun/config.yaml` configuration. More information
+
+    on source code operations is
+
+    [available in our user documentation](https://docs.upsun.com/anchors/app/source-operations/).
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Source Operations
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-source-operations-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-ssh-keys-api
+  name: Platform.sh SSH Keys API
+  description: The SSH Keys API from Platform.sh — 2 operation(s) for ssh keys.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - SSH Keys
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-ssh-keys-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-subscriptions-api
+  name: Platform.sh Subscriptions API
+  description: >-
+    Each project is represented by a subscription that holds the plan information.
+
+    These endpoints can be used to go to a larger plan, add more storage, or subscribe to
+
+    optional features.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Subscriptions
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-subscriptions-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-support-api
+  name: Platform.sh Support API
+  description: >-
+    These endpoints can be used to retrieve information about support ticket priority
+
+    and allow you to submit new ticket to the Upsun Support Team.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Support
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-support-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-system-information-api
+  name: Platform.sh System Information API
+  description: >-
+    These endpoints can be used to retrieve low-level information and interact with the
+
+    core component of Upsun infrastructure.
+
+
+    This is an internal API that can only be used by privileged users.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - System Information
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-system-information-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-task-api
+  name: Platform.sh Task API
+  description: >-
+    These endpoints can be used to manage tasks, which are one-off commands that can be run in the context
+    of
+
+    an environment. Tasks are useful for running database migrations, executing maintenance scripts, or
+    performing
+
+    any ad-hoc operations that need to be executed within the environment. For more information on how
+    to use tasks,
+
+    see the [Tasks](https://docs.upsun.com/anchors/environments/actions#environment-actions/) section
+    of the
+
+    documentation.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Task
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-task-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-team-access-api
+  name: Platform.sh Team Access API
+  description: The Team Access API from Platform.sh — 4 operation(s) for team access.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Team Access
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-team-access-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-teams-api
+  name: Platform.sh Teams API
+  description: The Teams API from Platform.sh — 5 operation(s) for teams.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Teams
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-teams-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-third-party-integrations-api
+  name: Platform.sh Third-Party Integrations API
+  description: >-
+    Upsun can easily integrate with many third-party services, including
+
+    Git hosting services (GitHub, GitLab, and Bitbucket),
+
+    health notification services (email, Slack, PagerDuty),
+
+    performance analytics platforms (New Relic, Blackfire, Tideways),
+
+    and webhooks.
+
+
+    For clarification about what information each field requires, see the
+
+    [External Integrations](https://docs.upsun.com/anchors/integrations/)
+
+    documentation. NOTE: The names of the CLI arguments listed in the
+
+    documentation are not always named exactly the same as the
+
+    required body fields in the API request.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Third-Party Integrations
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-third-party-integrations-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-tickets-api
+  name: Platform.sh Tickets API
+  description: The Tickets API from Platform.sh — 1 operation(s) for tickets.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Tickets
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-tickets-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-user-access-api
+  name: Platform.sh User Access API
+  description: The User Access API from Platform.sh — 4 operation(s) for user access.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - User Access
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-user-access-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-user-profiles-api
+  name: Platform.sh User Profiles API
+  description: The User Profiles API from Platform.sh — 4 operation(s) for user profiles.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - User Profiles
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-user-profiles-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-users-api
+  name: Platform.sh Users API
+  description: The Users API from Platform.sh — 9 operation(s) for users.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-users-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-vouchers-api
+  name: Platform.sh Vouchers API
+  description: >-
+    These endpoints can be used to retrieve vouchers associated with a particular
+
+    user as well as apply a voucher to a particular user.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Vouchers
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-vouchers-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
   - type: ToolCrosswalk
     url: mcp/platform.sh-tool-crosswalk.yml
   - type: Webhooks
