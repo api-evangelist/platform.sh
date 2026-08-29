@@ -1,0 +1,1646 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Organizations API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Organizations across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Organizations
+paths:
+  /users/{user_id}/organizations:
+    get:
+      summary: User organizations
+      description: Retrieves organizations that the specified user is a member of.
+      operationId: list-user-orgs
+      tags:
+      - Organizations
+      parameters:
+      - $ref: '#/components/parameters/UserID'
+      - in: query
+        name: filter[id]
+        description: Allows filtering by `id` using one or more operators.
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/StringFilter'
+      - in: query
+        name: filter[type]
+        description: Allows filtering by `type` using one or more operators.
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/StringFilter'
+      - in: query
+        name: filter[vendor]
+        description: 'Allows filtering by `vendor` using one or more operators.
+
+          '
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/StringFilter'
+      - in: query
+        name: filter[status]
+        description: 'Allows filtering by `status` using one or more operators.<br>
+
+          Defaults to `filter[status][in]=active,restricted,suspended`.
+
+          '
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/StringFilter'
+      - in: query
+        name: filter[updated_at]
+        description: Allows filtering by `updated_at` using one or more operators.
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/DateTimeFilter'
+      - in: query
+        name: page[size]
+        description: Determines the number of items to show.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: null
+      - in: query
+        name: page[before]
+        description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+        schema:
+          type: string
+      - in: query
+        name: page[after]
+        description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+        schema:
+          type: string
+      - in: query
+        name: sort
+        description: 'Allows sorting by a single field.<br>
+
+          Use a dash ("-") to sort descending.<br>
+
+          Supported fields: `name`, `label`, `created_at`, `updated_at`.
+
+          '
+        schema:
+          type: string
+          example: -updated_at
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Organization'
+                  _links:
+                    $ref: '#/components/schemas/ListLinks'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations:
+    get:
+      summary: List organizations
+      description: Non-admin users will only see organizations they are members of.
+      operationId: list-orgs
+      tags:
+      - Organizations
+      parameters:
+      - in: query
+        name: filter[id]
+        description: Allows filtering by `id` using one or more operators.
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/StringFilter'
+      - in: query
+        name: filter[type]
+        description: 'Allows filtering by `type` using one or more operators.
+
+          '
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/StringFilter'
+      - in: query
+        name: filter[owner_id]
+        description: Allows filtering by `owner_id` using one or more operators.
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/StringFilter'
+      - in: query
+        name: filter[name]
+        description: Allows filtering by `name` using one or more operators.
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/StringFilter'
+      - in: query
+        name: filter[label]
+        description: Allows filtering by `label` using one or more operators.
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/StringFilter'
+      - in: query
+        name: filter[vendor]
+        description: 'Allows filtering by `vendor` using one or more operators.
+
+          '
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/StringFilter'
+      - in: query
+        name: filter[capabilities]
+        description: Allows filtering by `capabilites` using one or more operators.
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/ArrayFilter'
+      - in: query
+        name: filter[status]
+        description: 'Allows filtering by `status` using one or more operators.<br>
+
+          Defaults to `filter[status][in]=active,restricted,suspended`.
+
+          '
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/StringFilter'
+      - in: query
+        name: filter[updated_at]
+        description: Allows filtering by `updated_at` using one or more operators.
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/DateTimeFilter'
+      - in: query
+        name: page[size]
+        description: Determines the number of items to show.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: null
+      - in: query
+        name: page[before]
+        description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+        schema:
+          type: string
+      - in: query
+        name: page[after]
+        description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+        schema:
+          type: string
+      - in: query
+        name: sort
+        description: 'Allows sorting by a single field.<br>
+
+          Use a dash ("-") to sort descending.<br>
+
+          Supported fields: `name`, `label`, `created_at`, `updated_at`.
+
+          '
+        schema:
+          type: string
+          example: -updated_at
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    description: Total number of items across pages.
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Organization'
+                  _links:
+                    $ref: '#/components/schemas/ListLinks'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    post:
+      summary: Create organization
+      description: Creates a new organization.
+      operationId: create-org
+      tags:
+      - Organizations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - label
+              properties:
+                type:
+                  type: string
+                  description: The type of the organization.
+                  enum:
+                  - fixed
+                  - flexible
+                owner_id:
+                  type: string
+                  format: uuid
+                  description: ID of the owner.
+                name:
+                  type: string
+                  description: A unique machine name representing the organization.
+                label:
+                  type: string
+                  description: The human-readable label of the organization.
+                country:
+                  type: string
+                  description: The organization country (2-letter country code).
+                  maxLength: 2
+                security_contact:
+                  type: string
+                  format: email
+                  description: The security contact email address for the organization.
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}:
+    get:
+      summary: Get organization
+      description: Retrieves the specified organization.
+      operationId: get-org
+      tags:
+      - Organizations
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIDName'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    patch:
+      summary: Update organization
+      description: Updates the specified organization.
+      operationId: update-org
+      tags:
+      - Organizations
+      parameters:
+      - $ref: '#/components/parameters/OrganizationID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: A unique machine name representing the organization.
+                label:
+                  type: string
+                  description: The human-readable label of the organization.
+                country:
+                  type: string
+                  description: The organization country (2-letter country code).
+                  maxLength: 2
+                security_contact:
+                  type: string
+                  format: email
+                  description: The security contact email address for the organization.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    delete:
+      summary: Delete organization
+      description: Deletes the specified organization.
+      operationId: delete-org
+      tags:
+      - Organizations
+      parameters:
+      - $ref: '#/components/parameters/OrganizationID'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}/metrics/carbon:
+    get:
+      summary: Query project carbon emissions metrics for an entire organization
+      description: Queries the carbon emission data for all projects owned by the specified organiation.
+      operationId: query-organiation-carbon
+      parameters:
+      - $ref: '#/components/parameters/OrganizationID'
+      - $ref: '#/components/parameters/from'
+      - $ref: '#/components/parameters/to'
+      - $ref: '#/components/parameters/interval'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationCarbon'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Organizations
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    MetricsValues:
+      type: array
+      items:
+        $ref: '#/components/schemas/MetricsValue'
+    OrganizationProjectCarbon:
+      type: object
+      properties:
+        project_id:
+          $ref: '#/components/schemas/ProjectID'
+        project_title:
+          $ref: '#/components/schemas/ProjectTitle'
+        values:
+          $ref: '#/components/schemas/MetricsValues'
+        total:
+          $ref: '#/components/schemas/CarbonTotal'
+    ProjectID:
+      type: string
+      description: The ID of the project.
+    MetricsMetadata:
+      type: object
+      properties:
+        from:
+          description: The value used to calculate the lower bound of the temporal query. Inclusive.
+        to:
+          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
+        interval:
+          description: The interval used to group the metric values.
+        units:
+          description: The units associated with the provided values.
+    MetricsValue:
+      type: object
+      properties:
+        value:
+          description: The measured value of the metric for the given time interval.
+        start_time:
+          description: The timestamp at which the time interval began.
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
+    CarbonTotal:
+      type: number
+      description: The calculated total of the metric for the given interval.
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    ArrayFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
+    OrganizationCarbon:
+      type: object
+      properties:
+        organization_id:
+          $ref: '#/components/schemas/OrganizationID'
+        meta:
+          $ref: '#/components/schemas/MetricsMetadata'
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationProjectCarbon'
+        total:
+          $ref: '#/components/schemas/CarbonTotal'
+    DateTimeFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        between:
+          type: string
+          description: Between (comma-separated list)
+        gt:
+          type: string
+          description: Greater than
+        gte:
+          type: string
+          description: Greater than or equal
+        lt:
+          type: string
+          description: Less than
+        lte:
+          type: string
+          description: Less than or equal
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
+    OrganizationID:
+      type: string
+      description: The ID of the organization.
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          description: The ID of the organization.
+        type:
+          type: string
+          description: The type of the organization.
+          enum:
+          - fixed
+          - flexible
+        owner_id:
+          type: string
+          format: uuid
+          description: The ID of the owner.
+        namespace:
+          type: string
+          description: The namespace in which the organization name is unique.
+        name:
+          type: string
+          description: A unique machine name representing the organization.
+        label:
+          type: string
+          description: The human-readable label of the organization.
+        country:
+          type: string
+          description: The organization country (2-letter country code).
+          maxLength: 2
+        capabilities:
+          type: array
+          description: The organization capabilities.
+          items:
+            type: string
+          uniqueItems: true
+        vendor:
+          type: string
+          description: The vendor.
+        billing_account_id:
+          type: string
+          description: The Billing Account ID.
+        billing_legacy:
+          type: boolean
+          description: Whether the account is billed with the legacy system.
+        security_contact:
+          type: string
+          format: email
+          description: The security contact email address for the organization.
+        status:
+          type: string
+          description: The status of the organization.
+          enum:
+          - active
+          - restricted
+          - suspended
+          - deleted
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the organization was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the organization was last updated.
+        _links:
+          type: object
+          properties:
+            self:
+              type: object
+              description: Link to the current organization.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            update:
+              type: object
+              description: Link for updating the current organization.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+                method:
+                  type: string
+                  description: The HTTP method to use.
+            delete:
+              type: object
+              description: Link for deleting the current organization.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+                method:
+                  type: string
+                  description: The HTTP method to use.
+            members:
+              type: object
+              description: Link to the current organization's members.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            create-member:
+              type: object
+              description: Link for creating a new organization member.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+                method:
+                  type: string
+                  description: The HTTP method to use.
+            address:
+              type: object
+              description: Link to the current organization's address.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            profile:
+              type: object
+              description: Link to the current organization's profile.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            payment-source:
+              type: object
+              description: Link to the current organization's payment source.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            orders:
+              type: object
+              description: Link to the current organization's orders.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            vouchers:
+              type: object
+              description: Link to the current organization's vouchers.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            apply-voucher:
+              type: object
+              description: Link for applying a voucher for the current organization.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+                method:
+                  type: string
+                  description: The HTTP method to use.
+            subscriptions:
+              type: object
+              description: Link to the current organization's subscriptions.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            create-subscription:
+              type: object
+              description: Link for creating a new organization subscription.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+                method:
+                  type: string
+                  description: The HTTP method to use.
+            estimate-subscription:
+              type: object
+              description: Link for estimating the price of a new subscription.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            mfa-enforcement:
+              type: object
+              description: Link to the current organization's MFA enforcement settings.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+    StringFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
+        between:
+          type: string
+          description: Between (comma-separated list)
+        contains:
+          type: string
+          description: Contains
+        starts:
+          type: string
+          description: Starts with
+        ends:
+          type: string
+          description: Ends with
+    ProjectTitle:
+      type: string
+      description: The title of the project.
+    OrganizationProjectCarbon_2:
+      type: object
+      properties:
+        project_id:
+          $ref: '#/components/schemas/ProjectID'
+        project_title:
+          $ref: '#/components/schemas/ProjectTitle'
+        values:
+          $ref: '#/components/schemas/MetricsValues'
+      additionalProperties: false
+    MetricsMetadata_2:
+      type: object
+      properties:
+        from:
+          description: The value used to calculate the lower bound of the temporal query. Inclusive.
+        to:
+          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
+        interval:
+          description: The interval used to group the metric values.
+        units:
+          description: The units associated with the provided values.
+      additionalProperties: false
+    MetricsValue_2:
+      type: object
+      properties:
+        value:
+          description: The measured value of the metric for the given time interval.
+        start_time:
+          description: The timestamp at which the time interval began.
+      additionalProperties: false
+    Error_2:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+    OrganizationCarbon_2:
+      type: object
+      properties:
+        organization_id:
+          $ref: '#/components/schemas/OrganizationID'
+        meta:
+          $ref: '#/components/schemas/MetricsMetadata_2'
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationProjectCarbon_2'
+        total:
+          $ref: '#/components/schemas/CarbonTotal'
+      additionalProperties: false
+    Organization_2:
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          description: The ID of the organization.
+        type:
+          type: string
+          description: The type of the organization.
+          enum:
+          - fixed
+          - flexible
+        owner_id:
+          type: string
+          format: uuid
+          description: The ID of the owner.
+        namespace:
+          type: string
+          description: The namespace in which the organization name is unique.
+        name:
+          type: string
+          description: A unique machine name representing the organization.
+        label:
+          type: string
+          description: The human-readable label of the organization.
+        country:
+          type: string
+          description: The organization country (2-letter country code).
+          maxLength: 2
+        capabilities:
+          type: array
+          description: The organization capabilities.
+          items:
+            type: string
+          uniqueItems: true
+        vendor:
+          type: string
+          description: The vendor.
+        billing_profile_id:
+          type: string
+          description: The Billing Profile ID.
+        billing_legacy:
+          type: boolean
+          description: Whether the account is billed with the legacy system.
+        security_contact:
+          type: string
+          format: email
+          description: The security contact email address for the organization.
+        ai_agent_settings:
+          type: object
+          description: AI agent consent settings for the organization.
+          properties:
+            can_enable:
+              type: boolean
+              description: Master switch for AI agent settings. Must be true to enable individual agents.
+            performance_agent_enabled:
+              type: boolean
+              description: Whether the performance agent is enabled.
+            log_analyzer_agent_enabled:
+              type: boolean
+              description: Whether the log analyzer agent is enabled.
+        status:
+          type: string
+          description: The status of the organization.
+          enum:
+          - active
+          - restricted
+          - suspended
+          - deleted
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the organization was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the organization was last updated.
+        _links:
+          type: object
+          properties:
+            self:
+              type: object
+              description: Link to the current organization.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            update:
+              type: object
+              description: Link for updating the current organization.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+                method:
+                  type: string
+                  description: The HTTP method to use.
+            delete:
+              type: object
+              description: Link for deleting the current organization.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+                method:
+                  type: string
+                  description: The HTTP method to use.
+            members:
+              type: object
+              description: Link to the current organization's members.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            create-member:
+              type: object
+              description: Link for creating a new organization member.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+                method:
+                  type: string
+                  description: The HTTP method to use.
+            address:
+              type: object
+              description: Link to the current organization's address. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            profile:
+              type: object
+              description: Link to the current organization's billing profile details. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            account:
+              type: object
+              description: Link to the current organization's account. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            payment-source:
+              type: object
+              description: Link to the current organization's payment source. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            orders:
+              type: object
+              description: Link to the current organization's orders. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            vouchers:
+              type: object
+              description: Link to the current organization's vouchers. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            discounts:
+              type: object
+              description: Link to the current organization's discounts. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            apply-voucher:
+              type: object
+              description: Link for applying a voucher for the current organization. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+                method:
+                  type: string
+                  description: The HTTP method to use.
+            subscriptions:
+              type: object
+              description: Link to the current organization's subscriptions. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            create-subscription:
+              type: object
+              description: Link for creating a new organization subscription.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+                method:
+                  type: string
+                  description: The HTTP method to use.
+            estimate-subscription:
+              type: object
+              description: Link for estimating the price of a new subscription. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            prepayment:
+              type: object
+              description: Link to the current organization's prepayment information. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            billing-profile:
+              type: object
+              description: Link to the organization's billing profile. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            mfa-enforcement:
+              type: object
+              description: Link to the current organization's MFA enforcement settings. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            sso:
+              type: object
+              description: Link to the current organization's SSO configuration. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+    OrganizationProjectCarbon_3:
+      type: object
+      properties:
+        project_id:
+          $ref: '#/components/schemas/ProjectID'
+        project_title:
+          $ref: '#/components/schemas/ProjectTitle'
+        values:
+          $ref: '#/components/schemas/MetricsValues'
+      additionalProperties: false
+    MetricsMetadata_3:
+      type: object
+      properties:
+        from:
+          description: The value used to calculate the lower bound of the temporal query. Inclusive.
+        to:
+          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
+        interval:
+          description: The interval used to group the metric values.
+        units:
+          description: The units associated with the provided values.
+      additionalProperties: false
+    MetricsValue_3:
+      type: object
+      properties:
+        value:
+          description: The measured value of the metric for the given time interval.
+        start_time:
+          description: The timestamp at which the time interval began.
+      additionalProperties: false
+    Error_3:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+    OrganizationCarbon_3:
+      type: object
+      properties:
+        organization_id:
+          $ref: '#/components/schemas/OrganizationID'
+        meta:
+          $ref: '#/components/schemas/MetricsMetadata_3'
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationProjectCarbon_3'
+        total:
+          $ref: '#/components/schemas/CarbonTotal'
+      additionalProperties: false
+    Organization_3:
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          description: The ID of the organization.
+        type:
+          type: string
+          description: The type of the organization.
+          enum:
+          - fixed
+          - flexible
+        owner_id:
+          type: string
+          format: uuid
+          description: The ID of the owner.
+        namespace:
+          type: string
+          description: The namespace in which the organization name is unique.
+        name:
+          type: string
+          description: A unique machine name representing the organization.
+        label:
+          type: string
+          description: The human-readable label of the organization.
+        country:
+          type: string
+          description: The organization country (2-letter country code).
+          maxLength: 2
+        capabilities:
+          type: array
+          description: The organization capabilities.
+          items:
+            type: string
+          uniqueItems: true
+        vendor:
+          type: string
+          description: The vendor.
+        billing_profile_id:
+          type: string
+          description: The Billing Profile ID.
+        billing_legacy:
+          type: boolean
+          description: Whether the account is billed with the legacy system.
+        security_contact:
+          type: string
+          format: email
+          description: The security contact email address for the organization.
+        ai_agent_settings:
+          type: object
+          description: AI agent consent settings for the organization.
+          properties:
+            can_enable:
+              type: boolean
+              description: Master switch for AI agent settings. Must be true to enable individual agents.
+            performance_agent_enabled:
+              type: boolean
+              description: Whether the performance agent is enabled.
+            log_analyzer_agent_enabled:
+              type: boolean
+              description: Whether the log analyzer agent is enabled.
+        status:
+          type: string
+          description: The status of the organization.
+          enum:
+          - active
+          - restricted
+          - suspended
+          - deleted
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the organization was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the organization was last updated.
+        _links:
+          type: object
+          properties:
+            self:
+              type: object
+              description: Link to the current organization.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            update:
+              type: object
+              description: Link for updating the current organization.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+                method:
+                  type: string
+                  description: The HTTP method to use.
+            delete:
+              type: object
+              description: Link for deleting the current organization.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+                method:
+                  type: string
+                  description: The HTTP method to use.
+            members:
+              type: object
+              description: Link to the current organization's members.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            create-member:
+              type: object
+              description: Link for creating a new organization member.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+                method:
+                  type: string
+                  description: The HTTP method to use.
+            address:
+              type: object
+              description: Link to the current organization's address. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            profile:
+              type: object
+              description: Link to the current organization's billing profile details. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            account:
+              type: object
+              description: Link to the current organization's account. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            payment-source:
+              type: object
+              description: Link to the current organization's payment source. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            orders:
+              type: object
+              description: Link to the current organization's orders. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            vouchers:
+              type: object
+              description: Link to the current organization's vouchers. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            discounts:
+              type: object
+              description: Link to the current organization's discounts. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            apply-voucher:
+              type: object
+              description: Link for applying a voucher for the current organization. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+                method:
+                  type: string
+                  description: The HTTP method to use.
+            subscriptions:
+              type: object
+              description: Link to the current organization's subscriptions. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            create-subscription:
+              type: object
+              description: Link for creating a new organization subscription.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+                method:
+                  type: string
+                  description: The HTTP method to use.
+            estimate-subscription:
+              type: object
+              description: Link for estimating the price of a new subscription. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            prepayment:
+              type: object
+              description: Link to the current organization's prepayment information. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            billing-profile:
+              type: object
+              description: Link to the organization's billing profile. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            mfa-enforcement:
+              type: object
+              description: Link to the current organization's MFA enforcement settings. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            sso:
+              type: object
+              description: Link to the current organization's SSO configuration. This link may not be present for all organizations.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+  parameters:
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
+    interval:
+      in: query
+      name: interval
+      description: The interval by which the query groups the results. of the time frame for the query. Exclusive.
+      schema:
+        type: string
+        enum:
+        - day
+        - month
+        - year
+    UserID:
+      name: user_id
+      in: path
+      required: true
+      description: The ID of the user.
+      schema:
+        type: string
+        example: d81c8ee2-44b3-429f-b944-a33ad7437690
+        format: uuid
+    from:
+      in: query
+      name: from
+      description: The start of the time frame for the query. Inclusive.
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    to:
+      in: query
+      name: to
+      description: The end of the time frame for the query. Exclusive.
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
+      schema:
+        type: string
+    TimeRangeFrom:
+      in: query
+      name: from
+      description: The start of the time frame for the query. Inclusive.
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    TimeRangeInterval:
+      in: query
+      name: interval
+      description: The interval by which the query groups the results. of the time frame for the query. Exclusive.
+      schema:
+        type: string
+        enum:
+        - day
+        - month
+        - year
+    TimeRangeTo:
+      in: query
+      name: to
+      description: The end of the time frame for the query. Exclusive.
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+  responses:
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error_2'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error_2'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error_2'
+    Forbidden_2:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error_3'
+    BadRequest_2:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error_3'
+    NotFound_2:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error_3'
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

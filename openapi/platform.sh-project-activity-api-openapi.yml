@@ -1,0 +1,831 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Project Activity API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Project Activity across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Project Activity
+paths:
+  /projects/{projectId}/activities:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      operationId: list-projects-activities
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityCollection'
+      tags:
+      - Project Activity
+      summary: Get project activity log
+      description: 'Retrieve a project''s activity log including logging actions in all
+
+        environments within a project. This returns a list of objects
+
+        with records of actions such as:
+
+
+        - Commits being pushed to the repository
+
+        - A new environment being branched out from the specified environment
+
+        - A snapshot being created of the specified environment
+
+
+        The object includes a timestamp of when the action occurred
+
+        (`created_at`), when the action concluded (`updated_at`),
+
+        the current `state` of the action, the action''s completion
+
+        percentage (`completion_percent`), the `environments` it
+
+        applies to and when the activity expires (`expires_at`).
+
+
+        There are other related information in the `payload`.
+
+        The contents of the `payload` varies based on the `type` of the
+
+        activity. For example:
+
+
+        - An `environment.branch` action''s `payload` can contain objects
+
+        representing the environment''s `parent` environment and the
+
+        branching action''s `outcome`.
+
+
+        - An `environment.push` action''s `payload` can contain objects
+
+        representing the `environment`, the specific `commits` included in
+
+        the push, and the `user` who pushed.
+
+
+        Expired activities are removed from the project activity log, except
+
+        the last 100 expired objects provided they are not of type `environment.cron`
+
+        or `environment.backup`.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/activities/{activityId}:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: activityId
+      operationId: get-projects-activities
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+      tags:
+      - Project Activity
+      summary: Get a project activity log entry
+      description: 'Retrieve a single activity log entry as specified by an
+
+        `id` returned by the
+
+        [Get project activity log](#tag/Project-Activity%2Fpaths%2F~1projects~1%7BprojectId%7D~1activities%2Fget)
+
+        endpoint. See the documentation on that endpoint for details about
+
+        the information this endpoint can return.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/activities/{activityId}/cancel:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: activityId
+      operationId: action-projects-activities-cancel
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Project Activity
+      summary: Cancel a project activity
+      description: 'Cancel a single activity as specified by an `id` returned by the
+
+        [Get project activity log](#tag/Project-Activity%2Fpaths%2F~1projects~1%7BprojectId%7D~1activities%2Fget)
+
+        endpoint.
+
+
+        Please note that not all activities are cancelable.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
+    Activity:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Activity Identifier
+          description: The identifier of Activity
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Type
+          description: The type of the activity
+        parameters:
+          type: object
+          title: Parameters
+          description: The parameters of the activity
+        project:
+          type: string
+          title: Project
+          description: The project the activity belongs to
+        integration:
+          type: string
+          title: Integration
+          description: The integration the activity belongs to
+        environments:
+          type: array
+          items:
+            type: string
+          title: Environments
+          description: The environments related to the activity
+        state:
+          type: string
+          enum:
+          - cancelled
+          - complete
+          - in_progress
+          - pending
+          - scheduled
+          - staged
+          title: State
+          description: The state of the activity
+        result:
+          type:
+          - string
+          - 'null'
+          enum:
+          - failure
+          - success
+          title: Result
+          description: The result of the activity
+        started_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Start date
+          description: The start date of the activity
+        completed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Completion date
+          description: The completion date of the activity
+        completion_percent:
+          type: integer
+          title: Completion percentage
+          description: The completion percentage of the activity
+        cancelled_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Cancellation date
+          description: The Cancellation date of the activity
+        timings:
+          type: object
+          additionalProperties:
+            type: number
+            format: float
+          title: Timings
+          description: Timings related to different phases of the activity
+        log:
+          type: string
+          title: Log
+          description: The log of the activity
+          deprecated: true
+          x-stability: DEPRECATED
+        payload:
+          type: object
+          title: Payload
+          description: The payload of the activity
+        description:
+          type:
+          - string
+          - 'null'
+          title: Activity HTML description
+          description: The description of the activity, formatted with HTML
+        text:
+          type:
+          - string
+          - 'null'
+          title: Activity text description
+          description: The description of the activity, formatted as plain text
+        expires_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Expiration date
+          description: The date at which the activity will expire
+        commands:
+          type: array
+          items:
+            type: object
+            properties:
+              app:
+                type: string
+                title: Application
+                description: ''
+              type:
+                type: string
+                title: Type
+                description: ''
+              exit_code:
+                type: integer
+                title: Exit status code
+                description: ''
+            required:
+            - app
+            - type
+            - exit_code
+            additionalProperties: false
+          title: Commands
+          description: The commands of the activity
+      required:
+      - id
+      - created_at
+      - updated_at
+      - type
+      - parameters
+      - project
+      - state
+      - result
+      - started_at
+      - completed_at
+      - completion_percent
+      - cancelled_at
+      - timings
+      - log
+      - payload
+      - description
+      - text
+      - expires_at
+      - commands
+      additionalProperties: false
+    ActivityCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Activity'
+    Activity_2:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Activity Identifier
+          description: The identifier of Activity
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Type
+          description: The type of the activity
+        parameters:
+          type: object
+          title: Parameters
+          description: The parameters of the activity
+        project:
+          type: string
+          title: Project
+          description: The project the activity belongs to
+        integration:
+          type: string
+          title: Integration
+          description: The integration the activity belongs to
+        environments:
+          type: array
+          items:
+            type: string
+          title: Environments
+          description: The environments related to the activity
+        state:
+          type: string
+          enum:
+          - cancelled
+          - complete
+          - in_progress
+          - pending
+          - scheduled
+          - staged
+          title: State
+          description: The state of the activity
+        result:
+          type:
+          - string
+          - 'null'
+          enum:
+          - failure
+          - success
+          title: Result
+          description: The result of the activity
+        failure_reason:
+          type:
+          - string
+          - 'null'
+          enum:
+          - error
+          - shell
+          title: Failure Reason
+          description: The reason for activity failure
+        started_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Start date
+          description: The start date of the activity
+        completed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Completion date
+          description: The completion date of the activity
+        completion_percent:
+          type: integer
+          title: Completion percentage
+          description: The completion percentage of the activity
+        cancelled_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Cancellation date
+          description: The Cancellation date of the activity
+        timings:
+          type: object
+          additionalProperties:
+            type: number
+            format: float
+          title: Timings
+          description: Timings related to different phases of the activity
+        log:
+          type: string
+          title: Log
+          description: The log of the activity
+          deprecated: true
+          x-stability: DEPRECATED
+        payload:
+          type: object
+          title: Payload
+          description: The payload of the activity
+        description:
+          type:
+          - string
+          - 'null'
+          title: Activity HTML description
+          description: The description of the activity, formatted with HTML
+        text:
+          type:
+          - string
+          - 'null'
+          title: Activity text description
+          description: The description of the activity, formatted as plain text
+        expires_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Expiration date
+          description: The date at which the activity will expire
+        commands:
+          type: array
+          items:
+            type: object
+            properties:
+              app:
+                type: string
+                title: Application
+                description: ''
+              type:
+                type: string
+                title: Type
+                description: ''
+              exit_code:
+                type: integer
+                title: Exit status code
+                description: ''
+            required:
+            - app
+            - type
+            - exit_code
+            additionalProperties: false
+          title: Commands
+          description: The commands of the activity
+      required:
+      - id
+      - created_at
+      - updated_at
+      - type
+      - parameters
+      - project
+      - state
+      - result
+      - failure_reason
+      - started_at
+      - completed_at
+      - completion_percent
+      - cancelled_at
+      - timings
+      - log
+      - payload
+      - description
+      - text
+      - expires_at
+      - commands
+      additionalProperties: false
+    Activity_3:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Activity Identifier
+          description: The identifier of Activity
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Type
+          description: The type of the activity
+        parameters:
+          type: object
+          title: Parameters
+          description: The parameters of the activity
+        project:
+          type: string
+          title: Project
+          description: The project the activity belongs to
+        integration:
+          type: string
+          title: Integration
+          description: The integration the activity belongs to
+        environments:
+          type: array
+          items:
+            type: string
+          title: Environments
+          description: The environments related to the activity
+        state:
+          type: string
+          enum:
+          - cancelled
+          - complete
+          - in_progress
+          - pending
+          - scheduled
+          - staged
+          title: State
+          description: The state of the activity
+        result:
+          type:
+          - string
+          - 'null'
+          enum:
+          - failure
+          - success
+          title: Result
+          description: The result of the activity
+        failure_reason:
+          type:
+          - string
+          - 'null'
+          enum:
+          - error
+          - shell
+          title: Failure Reason
+          description: The reason for activity failure
+        started_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Start date
+          description: The start date of the activity
+        completed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Completion date
+          description: The completion date of the activity
+        completion_percent:
+          type: integer
+          title: Completion percentage
+          description: The completion percentage of the activity
+        cancelled_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Cancellation date
+          description: The Cancellation date of the activity
+        timings:
+          type: object
+          additionalProperties:
+            type: number
+            format: float
+          title: Timings
+          description: Timings related to different phases of the activity
+        log:
+          type: string
+          title: Log
+          description: The log of the activity
+          deprecated: true
+          x-stability: DEPRECATED
+        payload:
+          type: object
+          title: Payload
+          description: The payload of the activity
+        description:
+          type:
+          - string
+          - 'null'
+          title: Activity HTML description
+          description: The description of the activity, formatted with HTML
+        text:
+          type:
+          - string
+          - 'null'
+          title: Activity text description
+          description: The description of the activity, formatted as plain text
+        expires_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Expiration date
+          description: The date at which the activity will expire
+        commands:
+          type: array
+          items:
+            type: object
+            properties:
+              app:
+                type: string
+                title: Application
+                description: ''
+              type:
+                type: string
+                title: Type
+                description: ''
+              exit_code:
+                type: integer
+                title: Exit status code
+                description: ''
+            required:
+            - app
+            - type
+            - exit_code
+            additionalProperties: false
+          title: Commands
+          description: The commands of the activity
+      required:
+      - id
+      - created_at
+      - updated_at
+      - type
+      - parameters
+      - project
+      - state
+      - result
+      - failure_reason
+      - started_at
+      - completed_at
+      - completion_percent
+      - cancelled_at
+      - timings
+      - log
+      - payload
+      - description
+      - text
+      - expires_at
+      - commands
+      additionalProperties: false
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

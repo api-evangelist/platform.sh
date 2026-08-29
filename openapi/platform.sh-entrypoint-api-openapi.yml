@@ -1,0 +1,548 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Entrypoint API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Entrypoint across 2 of this provider''s published API definitions: platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+security:
+- BearerAuth: []
+tags:
+- name: Entrypoint
+paths:
+  /projects/{projectId}/environments/{environmentId}/observability:
+    get:
+      tags:
+      - Entrypoint
+      summary: Get observability entrypoint
+      description: Returns API entrypoint with hypermedia links to all observability endpoints (resources, logs, HTTP traffic, continuous profiling, server metrics) following HATEOAS principles. Includes data retention policies per metric type (retention_period, max_range, recommended_default_range in minutes), environment metadata (project_id, environment_id, environment_type, vendor), and per-service resource links. Use _links for API navigation.
+      operationId: observability_entrypoint
+      parameters:
+      - name: projectId
+        in: path
+        description: The unique identifier of the Upsun project
+        required: true
+        schema:
+          type: string
+          pattern: '[a-z0-9]+'
+          example: abc123def456
+      - name: environmentId
+        in: path
+        description: The environment identifier
+        required: true
+        schema:
+          type: string
+          pattern: .+
+          example: main
+      responses:
+        '200':
+          description: Observability entrypoint retrieved successfully
+          content:
+            application/json:
+              schema:
+                required:
+                - message
+                - project_id
+                - branch_machine_name
+                - environment_id
+                - environment_type
+                - vendor
+                - psh_user_identifier
+                - _links
+                - retention
+                - data_retention
+                properties:
+                  message:
+                    description: Welcome message
+                    type: string
+                    example: bonjour, monde!
+                  project_id:
+                    description: Project identifier
+                    type: string
+                    example: abc123def456
+                  branch_machine_name:
+                    description: Branch machine name
+                    type: string
+                    example: main
+                  environment_id:
+                    description: Environment identifier
+                    type: string
+                    example: main
+                  environment_type:
+                    description: Environment type classification
+                    type: string
+                    example: production
+                    enum:
+                    - production
+                    - staging
+                    - development
+                  vendor:
+                    description: Platform vendor identifier
+                    type: string
+                    example: upsun
+                    enum:
+                    - upsun
+                    - platformsh
+                  psh_user_identifier:
+                    description: Authenticated user identifier
+                    type: string
+                    example: user@example.com
+                  _links:
+                    description: HATEOAS navigation links to all observability endpoints
+                    required:
+                    - _self
+                    - resources_by_service
+                    - resources_overview
+                    - resources_summary
+                    - blackfire_php_server_caches
+                    - blackfire_server_global
+                    - blackfire_server_transactions_breakdown
+                    - logs_query
+                    - logs_overview
+                    - http_metrics_timeline_urls
+                    - http_metrics_timeline_ips
+                    - http_metrics_timeline_user_agents
+                    - console_sandbox_access
+                    - conprof_applications
+                    - conprof_application_filters
+                    - conprof_timeline
+                    - conprof_flamegraph
+                    properties:
+                      _self:
+                        description: Link to this entrypoint resource
+                        required:
+                        - href
+                        properties:
+                          href:
+                            description: URL to this resource
+                            type: string
+                            format: uri
+                            example: https://api.upsun.com/projects/abc123def456/environments/main/observability
+                        type: object
+                        additionalProperties: false
+                      resources_by_service:
+                        description: Per-service resource metrics endpoints with service names as keys
+                        type: object
+                        example:
+                          app:
+                            name: app
+                            href: https://api.upsun.com/projects/abc123def456/environments/main/observability/resources/service/app
+                          database:
+                            name: database
+                            href: https://api.upsun.com/projects/abc123def456/environments/main/observability/resources/service/database
+                        additionalProperties:
+                          required:
+                          - name
+                          - href
+                          properties:
+                            name:
+                              description: Service name
+                              type: string
+                              example: app
+                            href:
+                              description: URL to service metrics endpoint
+                              type: string
+                              format: uri
+                              example: https://api.upsun.com/projects/abc123def456/environments/main/observability/resources/service/app
+                          type: object
+                          additionalProperties: false
+                      resources_overview:
+                        required:
+                        - href
+                        properties:
+                          href:
+                            type: string
+                            format: uri
+                            example: https://api.upsun.com/projects/abc123def456/environments/main/observability/resources/overview
+                        type: object
+                        additionalProperties: false
+                      resources_summary:
+                        required:
+                        - href
+                        properties:
+                          href:
+                            type: string
+                            format: uri
+                            example: https://api.upsun.com/projects/abc123def456/environments/main/observability/resources/summary
+                        type: object
+                        additionalProperties: false
+                      blackfire_php_server_caches:
+                        required:
+                        - href
+                        properties:
+                          href:
+                            type: string
+                            format: uri
+                            example: https://api.upsun.com/projects/abc123def456/environments/main/observability/server/caches
+                        type: object
+                        additionalProperties: false
+                      blackfire_server_global:
+                        required:
+                        - href
+                        properties:
+                          href:
+                            type: string
+                            format: uri
+                            example: https://api.upsun.com/projects/abc123def456/environments/main/observability/server
+                        type: object
+                        additionalProperties: false
+                      blackfire_server_transactions_breakdown:
+                        required:
+                        - href
+                        properties:
+                          href:
+                            type: string
+                            format: uri
+                            example: https://api.upsun.com/projects/abc123def456/environments/main/observability/server/transactions-break-down
+                        type: object
+                        additionalProperties: false
+                      logs_query:
+                        required:
+                        - href
+                        properties:
+                          href:
+                            type: string
+                            format: uri
+                            example: https://api.upsun.com/projects/abc123def456/environments/main/observability/logs/query
+                        type: object
+                        additionalProperties: false
+                      logs_overview:
+                        required:
+                        - href
+                        properties:
+                          href:
+                            type: string
+                            format: uri
+                            example: https://api.upsun.com/projects/abc123def456/environments/main/observability/logs/overview
+                        type: object
+                        additionalProperties: false
+                      http_metrics_timeline_urls:
+                        required:
+                        - href
+                        properties:
+                          href:
+                            type: string
+                            format: uri
+                            example: https://api.upsun.com/projects/abc123def456/environments/main/observability/http/breakdown/urls
+                        type: object
+                        additionalProperties: false
+                      http_metrics_timeline_ips:
+                        required:
+                        - href
+                        properties:
+                          href:
+                            type: string
+                            format: uri
+                            example: https://api.upsun.com/projects/abc123def456/environments/main/observability/http/breakdown/ips
+                        type: object
+                        additionalProperties: false
+                      http_metrics_timeline_user_agents:
+                        required:
+                        - href
+                        properties:
+                          href:
+                            type: string
+                            format: uri
+                            example: https://api.upsun.com/projects/abc123def456/environments/main/observability/http/breakdown/user-agents
+                        type: object
+                        additionalProperties: false
+                      console_sandbox_access:
+                        required:
+                        - href
+                        properties:
+                          href:
+                            type: string
+                            format: uri
+                            example: https://api.upsun.com/projects/abc123def456/environments/main/observability/console/sandbox-access
+                        type: object
+                        additionalProperties: false
+                      conprof_applications:
+                        required:
+                        - href
+                        properties:
+                          href:
+                            type: string
+                            format: uri
+                            example: https://api.upsun.com/projects/abc123def456/environments/main/continuous-profiling
+                        type: object
+                        additionalProperties: false
+                      conprof_application_filters:
+                        required:
+                        - href
+                        properties:
+                          href:
+                            type: string
+                            format: uri
+                            example: https://api.upsun.com/projects/abc123def456/environments/main/continuous-profiling/app/myapp/filter
+                        type: object
+                        additionalProperties: false
+                      conprof_timeline:
+                        required:
+                        - href
+                        properties:
+                          href:
+                            type: string
+                            format: uri
+                            example: https://api.upsun.com/projects/abc123def456/environments/main/continuous-profiling/app/myapp
+                        type: object
+                        additionalProperties: false
+                      conprof_flamegraph:
+                        required:
+                        - href
+                        properties:
+                          href:
+                            type: string
+                            format: uri
+                            example: https://api.upsun.com/projects/abc123def456/environments/main/continuous-profiling/app/myapp/merge
+                        type: object
+                        additionalProperties: false
+                    type: object
+                    additionalProperties: false
+                  retention:
+                    description: 'DEPRECATED: Data retention periods in minutes per resource type. Use data_retention instead.'
+                    required:
+                    - resources
+                    - logs
+                    - http_traffic
+                    - continuous_profiling
+                    properties:
+                      resources:
+                        type: integer
+                        example: 43200
+                      logs:
+                        type: integer
+                        example: 43200
+                      http_traffic:
+                        type: integer
+                        example: 43200
+                      continuous_profiling:
+                        type: integer
+                        example: 80640
+                    type: object
+                    additionalProperties: false
+                  data_retention:
+                    description: Data retention policies per metric type with periods in minutes
+                    required:
+                    - _unit
+                    - _unit_in_seconds
+                    - resources
+                    - server_monitoring
+                    - logs
+                    - http_traffic
+                    - continuous_profiling
+                    properties:
+                      _unit:
+                        description: Time unit for all retention values
+                        type: string
+                        example: minute
+                      _unit_in_seconds:
+                        description: Unit conversion to seconds
+                        type: integer
+                        example: 60
+                      resources:
+                        description: Resource metrics retention policy in minutes
+                        required:
+                        - retention_period
+                        - max_range
+                        - recommended_default_range
+                        properties:
+                          retention_period:
+                            description: Data storage duration in minutes
+                            type: integer
+                            example: 43200
+                          max_range:
+                            description: Maximum query time range in minutes
+                            type: integer
+                            example: 43200
+                          recommended_default_range:
+                            description: Recommended default query time range in minutes, for user interfaces
+                            type: integer
+                            example: 43200
+                        type: object
+                        additionalProperties: false
+                      server_monitoring:
+                        description: Server monitoring retention policy in minutes
+                        required:
+                        - retention_period
+                        - max_range
+                        - recommended_default_range
+                        properties:
+                          retention_period:
+                            description: Data storage duration in minutes
+                            type: integer
+                            example: 80640
+                          max_range:
+                            description: Maximum query time range in minutes
+                            type: integer
+                            example: 20160
+                          recommended_default_range:
+                            description: Recommended default query time range in minutes, for user interfaces
+                            type: integer
+                            example: 1440
+                        type: object
+                        additionalProperties: false
+                      logs:
+                        description: Logs retention policy in minutes
+                        required:
+                        - retention_period
+                        - max_range
+                        - recommended_default_range
+                        properties:
+                          retention_period:
+                            description: Data storage duration in minutes
+                            type: integer
+                            example: 43200
+                          max_range:
+                            description: Maximum query time range in minutes
+                            type: integer
+                            example: 43200
+                          recommended_default_range:
+                            description: Recommended default query time range in minutes, for user interfaces
+                            type: integer
+                            example: 43200
+                        type: object
+                        additionalProperties: false
+                      http_traffic:
+                        description: HTTP traffic retention policy in minutes
+                        required:
+                        - retention_period
+                        - max_range
+                        - recommended_default_range
+                        properties:
+                          retention_period:
+                            description: Data storage duration in minutes
+                            type: integer
+                            example: 43200
+                          max_range:
+                            description: Maximum query time range in minutes
+                            type: integer
+                            example: 43200
+                          recommended_default_range:
+                            description: Recommended default query time range in minutes, for user interfaces
+                            type: integer
+                            example: 43200
+                        type: object
+                        additionalProperties: false
+                      continuous_profiling:
+                        description: Continuous profiling retention policy in minutes
+                        required:
+                        - retention_period
+                        - max_range
+                        - recommended_default_range
+                        properties:
+                          retention_period:
+                            description: Data storage duration in minutes
+                            type: integer
+                            example: 43200
+                          max_range:
+                            description: Maximum query time range in minutes
+                            type: integer
+                            example: 43200
+                          recommended_default_range:
+                            description: Recommended default query time range in minutes, for user interfaces
+                            type: integer
+                            example: 43200
+                        type: object
+                        additionalProperties: false
+                    type: object
+                    additionalProperties: false
+                type: object
+                additionalProperties: false
+        '403':
+          description: Forbidden - Access denied due to insufficient permissions, or the requested project/environment does not exist (to prevent information disclosure)
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

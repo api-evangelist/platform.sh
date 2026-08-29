@@ -1,0 +1,1007 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Domain Management API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Domain Management across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Domain Management
+  description: 'These endpoints can be used to add, modify, or remove domains from
+
+    a project. For more information on how domains function on
+
+    Upsun, see the [Domains](https://docs.upsun.com/anchors/domains/custom/)
+
+    section of our documentation.
+
+    '
+paths:
+  /projects/{projectId}/domains:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      operationId: list-projects-domains
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainCollection'
+      tags:
+      - Domain Management
+      summary: Get list of project domains
+      description: 'Retrieve a list of objects representing the user-specified domains
+
+        associated with a project. Note that this does *not* return the
+
+        domains automatically assigned to a project that appear under
+
+        "Access site" on the user interface.
+
+        '
+      security:
+      - OAuth2: []
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      operationId: create-projects-domains
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DomainCreateInput'
+      tags:
+      - Domain Management
+      summary: Add a project domain
+      description: 'Add a single domain to a project.
+
+        If the `ssl` field is left blank without an object containing
+
+        a PEM-encoded SSL certificate, a certificate will
+
+        [be provisioned for you via Let''s Encrypt.](https://docs.upsun.com/anchors/routes/https/certificates/)
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/domains/{domainId}:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: domainId
+      operationId: get-projects-domains
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+      tags:
+      - Domain Management
+      summary: Get a project domain
+      description: 'Retrieve information about a single user-specified domain
+
+        associated with a project.
+
+        '
+      security:
+      - OAuth2: []
+    patch:
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DomainPatch'
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: domainId
+      operationId: update-projects-domains
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Domain Management
+      summary: Update a project domain
+      description: 'Update the information associated with a single user-specified
+
+        domain associated with a project.
+
+        '
+      security:
+      - OAuth2: []
+    delete:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: domainId
+      operationId: delete-projects-domains
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Domain Management
+      summary: Delete a project domain
+      description: 'Delete a single user-specified domain associated with a project.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/domains:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: list-projects-environments-domains
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainCollection'
+      tags:
+      - Domain Management
+      summary: Get a list of environment domains
+      description: 'Retrieve a list of objects representing the user-specified domains
+
+        associated with an environment. Note that this does *not* return the
+
+        `.platformsh.site` subdomains, which are automatically assigned to
+
+        the environment.
+
+        '
+      security:
+      - OAuth2: []
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: create-projects-environments-domains
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DomainCreateInput'
+      tags:
+      - Domain Management
+      summary: Add an environment domain
+      description: 'Add a single domain to an environment.
+
+        If the environment is not production, the `replacement_for` field
+
+        is required, which binds a new domain to an existing one from a
+
+        production environment.
+
+        If the `ssl` field is left blank without an object containing
+
+        a PEM-encoded SSL certificate, a certificate will
+
+        [be provisioned for you via Let''s Encrypt](https://docs.upsun.com/anchors/routes/https/certificates/).
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/domains/{domainId}:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: domainId
+      operationId: get-projects-environments-domains
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+      tags:
+      - Domain Management
+      summary: Get an environment domain
+      description: 'Retrieve information about a single user-specified domain
+
+        associated with an environment.
+
+        '
+      security:
+      - OAuth2: []
+    patch:
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DomainPatch'
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: domainId
+      operationId: update-projects-environments-domains
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Domain Management
+      summary: Update an environment domain
+      description: 'Update the information associated with a single user-specified
+
+        domain associated with an environment.
+
+        '
+      security:
+      - OAuth2: []
+    delete:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: domainId
+      operationId: delete-projects-environments-domains
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Domain Management
+      summary: Delete an environment domain
+      description: 'Delete a single user-specified domain associated with an environment.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    ProdDomainStorage:
+      type: object
+      properties:
+        id:
+          type: string
+          title: ProdDomainStorage Identifier
+          description: The identifier of ProdDomainStorage
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Domain type
+          description: ''
+        project:
+          type: string
+          title: Project name
+          description: ''
+        name:
+          type: string
+          title: Domain name
+          description: ''
+        registered_name:
+          type: string
+          title: Claimed domain name
+          description: ''
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        is_default:
+          type: boolean
+          title: Is Default
+          description: Is this domain default
+      required:
+      - created_at
+      - updated_at
+      - type
+      - name
+      - attributes
+      additionalProperties: false
+    ReplacementDomainStoragePatch:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+      additionalProperties: false
+    Domain:
+      oneOf:
+      - $ref: '#/components/schemas/ProdDomainStorage'
+      - $ref: '#/components/schemas/ReplacementDomainStorage'
+    ProdDomainStorageCreateInput:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Domain name
+          description: ''
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        is_default:
+          type: boolean
+          title: Is Default
+          description: Is this domain default
+      required:
+      - name
+      additionalProperties: false
+    DomainCreateInput:
+      oneOf:
+      - $ref: '#/components/schemas/ProdDomainStorageCreateInput'
+      - $ref: '#/components/schemas/ReplacementDomainStorageCreateInput'
+    ReplacementDomainStorageCreateInput:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Domain name
+          description: ''
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        replacement_for:
+          type: string
+          title: Replacement For
+          description: Prod domain which will be replaced by this domain.
+      required:
+      - name
+      additionalProperties: false
+    DomainCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Domain'
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
+    ProdDomainStoragePatch:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        is_default:
+          type: boolean
+          title: Is Default
+          description: Is this domain default
+      additionalProperties: false
+    DomainPatch:
+      oneOf:
+      - $ref: '#/components/schemas/ProdDomainStoragePatch'
+      - $ref: '#/components/schemas/ReplacementDomainStoragePatch'
+    ReplacementDomainStorage:
+      type: object
+      properties:
+        id:
+          type: string
+          title: ReplacementDomainStorage Identifier
+          description: The identifier of ReplacementDomainStorage
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Type
+          description: Domain type
+        project:
+          type: string
+          title: Project name
+          description: ''
+        name:
+          type: string
+          title: Domain name
+          description: ''
+        registered_name:
+          type: string
+          title: Claimed domain name
+          description: ''
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        replacement_for:
+          type: string
+          title: Replacement For
+          description: Prod domain which will be replaced by this domain.
+      required:
+      - created_at
+      - updated_at
+      - type
+      - name
+      - attributes
+      additionalProperties: false
+    ProdDomainStorage_2:
+      type: object
+      properties:
+        id:
+          type: string
+          title: ProdDomainStorage Identifier
+          description: The identifier of ProdDomainStorage
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Domain type
+          description: The type of domain
+        project:
+          type: string
+          title: Project name
+          description: The name of the project
+        name:
+          type: string
+          title: Domain name
+          description: The domain name
+        registered_name:
+          type: string
+          title: Claimed domain name
+          description: The claimed domain name
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        is_default:
+          type: boolean
+          title: Is Default
+          description: Is this domain default
+      required:
+      - created_at
+      - updated_at
+      - type
+      - name
+      - attributes
+      additionalProperties: false
+    ProdDomainStorageCreateInput_2:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Domain name
+          description: The domain name
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        is_default:
+          type: boolean
+          title: Is Default
+          description: Is this domain default
+      required:
+      - name
+      additionalProperties: false
+    ReplacementDomainStorageCreateInput_2:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Domain name
+          description: The domain name
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        replacement_for:
+          type: string
+          title: Replacement For
+          description: Prod domain which will be replaced by this domain
+      required:
+      - name
+      additionalProperties: false
+    ReplacementDomainStorage_2:
+      type: object
+      properties:
+        id:
+          type: string
+          title: ReplacementDomainStorage Identifier
+          description: The identifier of ReplacementDomainStorage
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Type
+          description: Domain type
+        project:
+          type: string
+          title: Project name
+          description: The name of the project
+        name:
+          type: string
+          title: Domain name
+          description: The domain name
+        registered_name:
+          type: string
+          title: Claimed domain name
+          description: The claimed domain name
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        replacement_for:
+          type: string
+          title: Replacement For
+          description: Prod domain which will be replaced by this domain
+      required:
+      - created_at
+      - updated_at
+      - type
+      - name
+      - attributes
+      additionalProperties: false
+    ProdDomainStorage_3:
+      type: object
+      properties:
+        id:
+          type: string
+          title: ProdDomainStorage Identifier
+          description: The identifier of ProdDomainStorage
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Domain type
+          description: The type of domain
+        project:
+          type: string
+          title: Project name
+          description: The name of the project
+        name:
+          type: string
+          title: Domain name
+          description: The domain name
+        registered_name:
+          type: string
+          title: Claimed domain name
+          description: The claimed domain name
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        is_default:
+          type: boolean
+          title: Is Default
+          description: Is this domain default
+      required:
+      - created_at
+      - updated_at
+      - type
+      - name
+      - attributes
+      additionalProperties: false
+    ProdDomainStorageCreateInput_3:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Domain name
+          description: The domain name
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        is_default:
+          type: boolean
+          title: Is Default
+          description: Is this domain default
+      required:
+      - name
+      additionalProperties: false
+    ReplacementDomainStorageCreateInput_3:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Domain name
+          description: The domain name
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        replacement_for:
+          type: string
+          title: Replacement For
+          description: Prod domain which will be replaced by this domain
+      required:
+      - name
+      additionalProperties: false
+    ReplacementDomainStorage_3:
+      type: object
+      properties:
+        id:
+          type: string
+          title: ReplacementDomainStorage Identifier
+          description: The identifier of ReplacementDomainStorage
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Type
+          description: Domain type
+        project:
+          type: string
+          title: Project name
+          description: The name of the project
+        name:
+          type: string
+          title: Domain name
+          description: The domain name
+        registered_name:
+          type: string
+          title: Claimed domain name
+          description: The claimed domain name
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        replacement_for:
+          type: string
+          title: Replacement For
+          description: Prod domain which will be replaced by this domain
+      required:
+      - created_at
+      - updated_at
+      - type
+      - name
+      - attributes
+      additionalProperties: false
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

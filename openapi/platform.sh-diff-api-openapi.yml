@@ -1,0 +1,184 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Diff API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Diff across 2 of this provider''s published API definitions: platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+security:
+- BearerAuth: []
+tags:
+- name: Diff
+paths:
+  /projects/{projectId}/git/diffs/{diffBaseId}/{diffTargetId}:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: diffBaseId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: diffTargetId
+      operationId: list-projects-git-diffs
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiffCollection'
+      tags:
+      - Diff
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    DiffCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Diff'
+    Diff:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Diff Identifier
+          description: The identifier of Diff
+        diff:
+          type: string
+          title: Unified diff
+          description: The unified diff between two trees
+        new_path:
+          type:
+          - string
+          - 'null'
+          title: New Path
+          description: The new path of the file in the diff
+        new_id:
+          type:
+          - string
+          - 'null'
+          title: New ID
+          description: The new object ID of the file in the diff
+        old_path:
+          type:
+          - string
+          - 'null'
+          title: Old Path
+          description: The old path of the file in the diff
+        old_id:
+          type:
+          - string
+          - 'null'
+          title: Old ID
+          description: The old object ID of the file in the diff
+      required:
+      - id
+      - diff
+      - new_path
+      - new_id
+      - old_path
+      - old_id
+      additionalProperties: false
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

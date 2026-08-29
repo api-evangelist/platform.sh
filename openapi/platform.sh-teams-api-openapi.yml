@@ -1,0 +1,843 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Teams API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Teams across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Teams
+paths:
+  /teams:
+    get:
+      summary: List teams
+      description: Retrieves a list of teams.
+      operationId: list-teams
+      tags:
+      - Teams
+      parameters:
+      - in: query
+        name: filter[organization_id]
+        description: Allows filtering by `organization_id` using one or more operators.
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/StringFilter'
+      - in: query
+        name: filter[id]
+        description: Allows filtering by `id` using one or more operators.
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/StringFilter'
+      - in: query
+        name: filter[updated_at]
+        description: Allows filtering by `updated_at` using one or more operators.
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/DateTimeFilter'
+      - in: query
+        name: page[size]
+        description: Determines the number of items to show.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: null
+      - in: query
+        name: page[before]
+        description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+        schema:
+          type: string
+      - in: query
+        name: page[after]
+        description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+        schema:
+          type: string
+      - in: query
+        name: sort
+        description: 'Allows sorting by a single field.<br>
+
+          Use a dash ("-") to sort descending.
+
+          '
+        schema:
+          type: string
+          enum:
+          - label
+          - -label
+          - created_at
+          - -created_at
+          - updated_at
+          - -updated_at
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Team'
+                  count:
+                    type: integer
+                    description: Total count of all the teams.
+                  _links:
+                    $ref: '#/components/schemas/ListLinks'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    post:
+      summary: Create team
+      description: Creates a new team.
+      operationId: create-team
+      tags:
+      - Teams
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - organization_id
+              - label
+              properties:
+                organization_id:
+                  type: string
+                  format: ulid
+                  description: The ID of the parent organization.
+                label:
+                  type: string
+                  description: The human-readable label of the team.
+                project_permissions:
+                  type: array
+                  description: Project permissions that are granted to the team.
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /teams/{team_id}:
+    parameters:
+    - $ref: '#/components/parameters/TeamID'
+    get:
+      summary: Get team
+      description: Retrieves the specified team.
+      operationId: get-team
+      tags:
+      - Teams
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    patch:
+      summary: Update team
+      description: Updates the specified team.
+      operationId: update-team
+      tags:
+      - Teams
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                label:
+                  type: string
+                  description: The human-readable label of the team.
+                project_permissions:
+                  type: array
+                  description: Project permissions that are granted to the team.
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    delete:
+      summary: Delete team
+      description: Deletes the specified team.
+      operationId: delete-team
+      tags:
+      - Teams
+      responses:
+        '204':
+          description: No Content
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /teams/{team_id}/members:
+    parameters:
+    - $ref: '#/components/parameters/TeamID'
+    get:
+      summary: List team members
+      description: Retrieves a list of users associated with a single team.
+      operationId: list-team-members
+      tags:
+      - Teams
+      parameters:
+      - in: query
+        name: page[before]
+        description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+        schema:
+          type: string
+      - in: query
+        name: page[after]
+        description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+        schema:
+          type: string
+      - in: query
+        name: sort
+        description: 'Allows sorting by a single field.<br>
+
+          Use a dash ("-") to sort descending.
+
+          '
+        schema:
+          type: string
+          enum:
+          - created_at
+          - -created_at
+          - updated_at
+          - -updated_at
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TeamMember'
+                  _links:
+                    $ref: '#/components/schemas/ListLinks'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    post:
+      summary: Create team member
+      description: Creates a new team member.
+      operationId: create-team-member
+      tags:
+      - Teams
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - user_id
+              properties:
+                user_id:
+                  type: string
+                  format: uuid
+                  description: ID of the user.
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamMember'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /teams/{team_id}/members/{user_id}:
+    parameters:
+    - $ref: '#/components/parameters/TeamID'
+    - $ref: '#/components/parameters/UserID'
+    get:
+      summary: Get team member
+      description: Retrieves the specified team member.
+      operationId: get-team-member
+      tags:
+      - Teams
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamMember'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    delete:
+      summary: Delete team member
+      description: Deletes the specified team member.
+      operationId: delete-team-member
+      tags:
+      - Teams
+      responses:
+        '204':
+          description: No Content
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /users/{user_id}/teams:
+    parameters:
+    - $ref: '#/components/parameters/UserID'
+    get:
+      summary: User teams
+      description: Retrieves teams that the specified user is a member of.
+      operationId: list-user-teams
+      tags:
+      - Teams
+      parameters:
+      - in: query
+        name: filter[organization_id]
+        description: Allows filtering by `organization_id` using one or more operators.
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/StringFilter'
+      - in: query
+        name: filter[updated_at]
+        description: Allows filtering by `updated_at` using one or more operators.
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/DateTimeFilter'
+      - in: query
+        name: page[size]
+        description: Determines the number of items to show.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: null
+      - in: query
+        name: page[before]
+        description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+        schema:
+          type: string
+      - in: query
+        name: page[after]
+        description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+        schema:
+          type: string
+      - in: query
+        name: sort
+        description: 'Allows sorting by a single field.<br>
+
+          Use a dash ("-") to sort descending.
+
+          '
+        schema:
+          type: string
+          enum:
+          - created_at
+          - -created_at
+          - updated_at
+          - -updated_at
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Team'
+                  count:
+                    type: integer
+                    description: Total count of all the teams.
+                  _links:
+                    $ref: '#/components/schemas/ListLinks'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    Team:
+      description: ''
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          description: The ID of the team.
+        organization_id:
+          type: string
+          format: ulid
+          description: The ID of the parent organization.
+        label:
+          type: string
+          description: The human-readable label of the team.
+        project_permissions:
+          type: array
+          description: Project permissions that are granted to the team.
+          items:
+            type: string
+            enum:
+            - admin
+            - viewer
+            - development:admin
+            - development:contributor
+            - development:viewer
+            - staging:admin
+            - staging:contributor
+            - staging:viewer
+            - production:admin
+            - production:contributor
+            - production:viewer
+        counts:
+          type: object
+          properties:
+            member_count:
+              type: integer
+              description: Total count of members of the team.
+            project_count:
+              type: integer
+              description: Total count of projects that the team has access to.
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the team was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the team was last updated.
+      x-examples:
+        example-1:
+          id: 01FVMKN9KHVWWVY488AVKDWHR3
+          organization_id: 01EY8BWRSQ56EY1TDC32PARAJS
+          counts:
+            member_count: 12
+            project_count: 5
+          label: Contractors
+          created_at: '2021-05-24T07:20:35.683264Z'
+          updated_at: '2021-05-24T07:20:35.683264Z'
+          project_permissions:
+          - viewer
+          - staging:contributor
+          - development:admin
+    TeamMember:
+      type: object
+      properties:
+        team_id:
+          type: string
+          format: ulid
+          description: The ID of the team.
+        user_id:
+          type: string
+          format: uuid
+          description: The ID of the user.
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the team member was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the team member was last updated.
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
+    StringFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
+        between:
+          type: string
+          description: Between (comma-separated list)
+        contains:
+          type: string
+          description: Contains
+        starts:
+          type: string
+          description: Starts with
+        ends:
+          type: string
+          description: Ends with
+    DateTimeFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        between:
+          type: string
+          description: Between (comma-separated list)
+        gt:
+          type: string
+          description: Greater than
+        gte:
+          type: string
+          description: Greater than or equal
+        lt:
+          type: string
+          description: Less than
+        lte:
+          type: string
+          description: Less than or equal
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    Error_2:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+    Error_3:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+  parameters:
+    UserID:
+      name: user_id
+      in: path
+      required: true
+      description: The ID of the user.
+      schema:
+        type: string
+        example: d81c8ee2-44b3-429f-b944-a33ad7437690
+        format: uuid
+    TeamID:
+      name: team_id
+      in: path
+      required: true
+      description: The ID of the team.
+      schema:
+        type: string
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

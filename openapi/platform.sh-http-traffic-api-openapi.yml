@@ -1,0 +1,1958 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Http Traffic API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Http Traffic across 2 of this provider''s published API definitions: platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+security:
+- BearerAuth: []
+tags:
+- name: Http Traffic
+paths:
+  /projects/{projectId}/environments/{environmentId}/observability/http/breakdown/urls:
+    get:
+      tags:
+      - Http Traffic
+      summary: Get HTTP traffic timeline by URL
+      description: 'Returns HTTP traffic analytics with URLs ranked by impact (response time × request count), aggregated metrics (average, median, p96 response times in milliseconds), status code distributions, and time-series data. Use limit parameter to control total items returned (default: 200, max: 300) and top_hits_count to control how many items are flagged as top hits and tracked in the timeline (default: 10, max: 15). Items with index < top_hits_count are flagged with top_hit: true and tracked in top_hits_timeline; the remainder (up to limit) are returned with top_hit: false.'
+      operationId: http_metrics_timeline_urls
+      parameters:
+      - name: projectId
+        in: path
+        description: The unique identifier of the Upsun project
+        required: true
+        schema:
+          type: string
+          pattern: '[a-z0-9]+'
+          example: abc123def456
+      - name: environmentId
+        in: path
+        description: The environment identifier
+        required: true
+        schema:
+          type: string
+          pattern: .+
+          example: main
+      - name: from
+        in: query
+        description: Start timestamp for the time range (Unix timestamp in seconds)
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1704067200
+      - name: to
+        in: query
+        description: End timestamp for the time range (Unix timestamp in seconds)
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1704153600
+      - name: limit
+        in: query
+        description: 'Maximum number of items to return (default: 200, max: 300)'
+        required: false
+        schema:
+          type: integer
+          default: null
+          maximum: 300
+          minimum: 1
+      - name: top_hits_count
+        in: query
+        description: 'Number of items to flag as top hits and track in the timeline (default: 10, max: 15). Items with index < top_hits_count have top_hit=true; the remainder up to limit are returned with top_hit=false.'
+        required: false
+        schema:
+          type: integer
+          default: null
+          maximum: 15
+          minimum: 1
+      - name: applications[]
+        in: query
+        description: Filter by application. Can be specified multiple times for multiple values (e.g., ?applications[]=app1&applications[]=app2). Use applications_mode to control inclusion/exclusion behavior.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: app
+      - name: applications_mode
+        in: query
+        description: 'Filter mode for applications parameter. "1" (additive) includes only specified applications. "-1" (subtractive) excludes specified applications and includes all others. When omitted: defaults to "-1" if no applications values are provided; defaults to "1" (additive) if at least one applications value is provided.'
+        required: false
+        schema:
+          type: string
+          example: '1'
+          enum:
+          - '1'
+          - '-1'
+      - name: methods[]
+        in: query
+        description: Filter by HTTP methods. Can be specified multiple times for multiple values (e.g., ?methods[]=GET&methods[]=POST). Use methods_mode to control inclusion/exclusion behavior.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: GET
+            enum:
+            - GET
+            - POST
+            - PUT
+            - PATCH
+            - DELETE
+            - HEAD
+            - OPTIONS
+      - name: methods_mode
+        in: query
+        description: 'Filter mode for methods parameter. "1" (additive) includes only specified methods. "-1" (subtractive) excludes specified methods and includes all others. When omitted: defaults to "-1" if no methods values are provided; defaults to "1" (additive) if at least one methods value is provided.'
+        required: false
+        schema:
+          type: string
+          example: '1'
+          enum:
+          - '1'
+          - '-1'
+      - name: domains[]
+        in: query
+        description: Filter by request domains/hosts. Can be specified multiple times for multiple values (e.g., ?domains[]=api.example.com&domains[]=www.example.com). Use domains_mode to control inclusion/exclusion behavior.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: api.example.com
+      - name: domains_mode
+        in: query
+        description: 'Filter mode for domains parameter. "1" (additive) includes only specified domains. "-1" (subtractive) excludes specified domains and includes all others. When omitted: defaults to "-1" if no domains values are provided; defaults to "1" (additive) if at least one domains value is provided.'
+        required: false
+        schema:
+          type: string
+          example: '1'
+          enum:
+          - '1'
+          - '-1'
+      - name: code_slots[]
+        in: query
+        description: Filter by HTTP status code groups. Can be specified multiple times for multiple values (e.g., ?code_slots[]=4XX&code_slots[]=5XX). Use code_slots_mode to control inclusion/exclusion behavior.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: 2XX
+            enum:
+            - 1XX
+            - 2XX
+            - 3XX
+            - 4XX
+            - 5XX
+      - name: code_slots_mode
+        in: query
+        description: 'Filter mode for code_slots parameter. "1" (additive) includes only specified code groups. "-1" (subtractive) excludes specified code groups and includes all others. When omitted: defaults to "-1" if no code_slots values are provided; defaults to "1" (additive) if at least one code_slots value is provided.'
+        required: false
+        schema:
+          type: string
+          example: '1'
+          enum:
+          - '1'
+          - '-1'
+      - name: codes[]
+        in: query
+        description: Filter by specific HTTP status codes. Can be specified multiple times for multiple values (e.g., ?codes[]=200&codes[]=404). Use codes_mode to control inclusion/exclusion behavior.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: '200'
+      - name: codes_mode
+        in: query
+        description: 'Filter mode for codes parameter. "1" (additive) includes only specified codes. "-1" (subtractive) excludes specified codes and includes all others. When omitted: defaults to "-1" if no codes values are provided; defaults to "1" (additive) if at least one codes value is provided.'
+        required: false
+        schema:
+          type: string
+          example: '1'
+          enum:
+          - '1'
+          - '-1'
+      - name: request_duration_slots[]
+        in: query
+        description: Filter by response time ranges (in milliseconds). Can be specified multiple times for multiple values (e.g., ?request_duration_slots[]=0-50&request_duration_slots[]=1600+). Use request_duration_slots_mode to control inclusion/exclusion behavior.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: 0-50
+            enum:
+            - 0-50
+            - 50-100
+            - 100-200
+            - 200-400
+            - 400-800
+            - 800-1600
+            - 1600+
+      - name: request_duration_slots_mode
+        in: query
+        description: 'Filter mode for request_duration_slots parameter. "1" (additive) includes only specified duration ranges. "-1" (subtractive) excludes specified duration ranges and includes all others. When omitted: defaults to "-1" if no request_duration_slots values are provided; defaults to "1" (additive) if at least one request_duration_slots value is provided.'
+        required: false
+        schema:
+          type: string
+          example: '1'
+          enum:
+          - '1'
+          - '-1'
+      responses:
+        '200':
+          description: HTTP traffic timeline by URL retrieved successfully
+          content:
+            application/json:
+              schema:
+                required:
+                - _grain
+                - _from
+                - _to
+                - _project_id
+                - _environment_id
+                - _environment_type
+                - _branch_machine_name
+                - _breakdown_limit
+                - _breakdown_top_hits
+                - breakdown
+                - top_hits_timeline
+                - filters
+                properties:
+                  _grain:
+                    description: Data granularity in seconds
+                    type: integer
+                    example: 5
+                  _from:
+                    description: Query start timestamp
+                    type: integer
+                    example: 1704067200
+                  _to:
+                    description: Query end timestamp
+                    type: integer
+                    example: 1704153600
+                  _project_id:
+                    description: Project identifier
+                    type: string
+                    example: abc123def456
+                  _environment_id:
+                    description: Environment identifier
+                    type: string
+                    example: main
+                  _environment_type:
+                    description: Environment type
+                    type: string
+                    example: production
+                    enum:
+                    - production
+                    - staging
+                    - development
+                  _branch_machine_name:
+                    description: Branch machine name
+                    type: string
+                    example: main-bvxea6i
+                  _breakdown_limit:
+                    description: Maximum number of items returned
+                    type: integer
+                    example: 200
+                  _breakdown_top_hits:
+                    description: Number of items flagged as top hits (top_hit=true) and tracked in top_hits_timeline.
+                    type: integer
+                    example: 10
+                  _applications:
+                    description: Applied application filter values
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: app
+                  _applications_mode:
+                    description: Application filter mode (1=additive, -1=subtractive)
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - '1'
+                    - '-1'
+                  _methods:
+                    description: Applied method filter values
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: GET
+                  _methods_mode:
+                    description: Method filter mode (1=additive, -1=subtractive)
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - '1'
+                    - '-1'
+                  _domains:
+                    description: Applied domain filter values
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: example.com
+                  _domains_mode:
+                    description: Domain filter mode (1=additive, -1=subtractive)
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - '1'
+                    - '-1'
+                  _code_slots:
+                    description: Applied code slot filter values
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: 2XX
+                  _code_slots_mode:
+                    description: Code slot filter mode (1=additive, -1=subtractive)
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - '1'
+                    - '-1'
+                  _codes:
+                    description: Applied HTTP status code filter values
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: '200'
+                  _codes_mode:
+                    description: Code filter mode (1=additive, -1=subtractive)
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - '1'
+                    - '-1'
+                  _request_duration_slots:
+                    description: Applied request duration slot filter values
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: 0-100
+                  _request_duration_slots_mode:
+                    description: Request duration slot filter mode (1=additive, -1=subtractive)
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - '1'
+                    - '-1'
+                  breakdown:
+                    description: URLs ranked by impact
+                    required:
+                    - kind
+                    - total
+                    - data
+                    properties:
+                      kind:
+                        description: The kind of grouping
+                        type: string
+                        example: url
+                        enum:
+                        - url
+                      total:
+                        description: Total request count across all URLs
+                        type: integer
+                        example: 396519
+                      data:
+                        description: 'List of URLs ranked by impact. Items with index < top_hits_count are tracked in top_hits_timeline (flagged with top_hit: true); the remainder are returned for reference only.'
+                        type: array
+                        items:
+                          required:
+                          - url
+                          - method
+                          - impact
+                          - average
+                          - p_50
+                          - p_96
+                          - count
+                          - top_hit
+                          properties:
+                            url:
+                              description: Request URL
+                              type: string
+                              example: https://example.com/api/products
+                            method:
+                              description: HTTP method
+                              type: string
+                              example: GET
+                              enum:
+                              - GET
+                              - POST
+                              - PUT
+                              - PATCH
+                              - DELETE
+                              - HEAD
+                              - OPTIONS
+                            impact:
+                              description: Performance impact score (ms x count)
+                              type:
+                              - number
+                              - 'null'
+                              format: float
+                              example: 15234.67
+                            average:
+                              description: Average response time in milliseconds
+                              type: number
+                              format: float
+                              example: 245.3
+                            p_50:
+                              description: Median (50th percentile) response time in milliseconds
+                              type: number
+                              format: float
+                              example: 198.5
+                            p_96:
+                              description: 96th percentile response time in milliseconds
+                              type: number
+                              format: float
+                              example: 512.8
+                            count:
+                              description: Total number of requests
+                              type: integer
+                              example: 62143
+                            top_hit:
+                              description: Whether this URL is tracked in top_hits_timeline
+                              type: boolean
+                              example: true
+                          type: object
+                          additionalProperties: false
+                        example:
+                        - url: https://example.com/api/products
+                          method: GET
+                          impact: 15234.67
+                          average: 245.3
+                          p_50: 198.5
+                          p_96: 512.8
+                          count: 62143
+                          top_hit: true
+                        - url: https://example.com/api/orders
+                          method: POST
+                          impact: 6543.21
+                          average: 312.5
+                          p_50: 267.8
+                          p_96: 678.4
+                          count: 20945
+                          top_hit: false
+                    type: object
+                    additionalProperties: false
+                  top_hits_timeline:
+                    description: Time-series data for top hit URLs
+                    required:
+                    - data
+                    properties:
+                      data:
+                        description: Time-series HTTP traffic metrics for top hit URLs. Fields are omitted for timestamps with no data.
+                        type: array
+                        items:
+                          required:
+                          - timestamp
+                          properties:
+                            timestamp:
+                              description: Data point timestamp
+                              type: integer
+                              example: 1704067200
+                            _total_consumed:
+                              description: Total wall-time consumed across all URLs at this interval
+                              type: number
+                              format: float
+                              example: 5678.9
+                            _total_count:
+                              description: Total request count at this timestamp
+                              type: integer
+                              example: 4120
+                            request_size:
+                              description: Total request payload size in bytes
+                              type: integer
+                              example: 524288
+                            response_size:
+                              description: Total response payload size in bytes
+                              type: integer
+                              example: 2097152
+                            urls:
+                              description: Per-URL metrics at this timestamp. Only includes top hit items.
+                              type: object
+                              example:
+                                GET-https://example.com/api/products:
+                                  count: 1543
+                                  impact: 378.45
+                              additionalProperties:
+                                required:
+                                - count
+                                - impact
+                                properties:
+                                  count:
+                                    description: Request count for this URL
+                                    type: integer
+                                    example: 1543
+                                  impact:
+                                    description: Performance impact score
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 378.45
+                                type: object
+                                additionalProperties: false
+                            codes:
+                              description: HTTP status code distribution
+                              required:
+                              - UNKNOWN
+                              - 1XX
+                              - 2XX
+                              - 3XX
+                              - 4XX
+                              - 5XX
+                              properties:
+                                UNKNOWN:
+                                  description: Count of unknown/unclassified status codes
+                                  type: integer
+                                  example: 0
+                                1XX:
+                                  description: Count of informational responses (100-199)
+                                  type: integer
+                                  example: 0
+                                2XX:
+                                  description: Count of successful responses (200-299)
+                                  type: integer
+                                  example: 58234
+                                3XX:
+                                  description: Count of redirect responses (300-399)
+                                  type: integer
+                                  example: 1245
+                                4XX:
+                                  description: Count of client error responses (400-499)
+                                  type: integer
+                                  example: 847
+                                5XX:
+                                  description: Count of server error responses (500-599)
+                                  type: integer
+                                  example: 23
+                              type: object
+                              additionalProperties: false
+                          type: object
+                          additionalProperties: false
+                        example:
+                        - timestamp: 1704067200
+                          _total_consumed: 5678.9
+                          _total_count: 1543
+                          request_size: 524288
+                          response_size: 2097152
+                          urls:
+                            GET-https://example.com/api/products:
+                              count: 1543
+                              impact: 378.45
+                          codes:
+                            UNKNOWN: 0
+                            1XX: 0
+                            2XX: 1543
+                            3XX: 0
+                            4XX: 0
+                            5XX: 0
+                        - timestamp: 1704070800
+                    type: object
+                    additionalProperties: false
+                  filters:
+                    required:
+                    - max_applicable_filters
+                    properties:
+                      fields:
+                        type: object
+                        example:
+                          severity:
+                            distinct_values: 3
+                            type: string
+                            values:
+                            - value: INFO
+                              count: 297
+                            - value: ERROR
+                              count: 2
+                        additionalProperties:
+                          required:
+                          - distinct_values
+                          - type
+                          - values
+                          properties:
+                            distinct_values:
+                              type: integer
+                              example: 5
+                            type:
+                              type: string
+                              example: string
+                            values:
+                              type: array
+                              items:
+                                required:
+                                - value
+                                - count
+                                properties:
+                                  value:
+                                    type: string
+                                    example: INFO
+                                  count:
+                                    type: integer
+                                    example: 297
+                                type: object
+                                additionalProperties: false
+                          type: object
+                          additionalProperties: false
+                      max_applicable_filters:
+                        type: integer
+                        example: 45
+                    type: object
+                    additionalProperties: false
+                type: object
+                additionalProperties: false
+        '400':
+          description: Bad request - Invalid parameters. Please consult the API documentation to fix the request parameters.
+          content:
+            application/json:
+              schema:
+                required:
+                - type
+                - title
+                - status
+                - violations
+                properties:
+                  type:
+                    description: RFC 2616 reference URL identifying the error type
+                    type: string
+                    format: uri
+                    example: https://tools.ietf.org/html/rfc2616#section-1
+                  title:
+                    description: Human-readable summary of the validation error
+                    type: string
+                    example: Please ensure parameters are correct.
+                  status:
+                    description: HTTP status code
+                    type: integer
+                    example: 400
+                  violations:
+                    description: Map of parameter names to their validation errors. Each parameter can have multiple error messages.
+                    type: object
+                    example:
+                      grain:
+                      - Grain can not be larger than the selection windows.
+                      from:
+                      - The from timestamp must be in the past.
+                      to:
+                      - The to timestamp must be greater than the from timestamp.
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                        example: The from timestamp must be in the past.
+                type: object
+                additionalProperties: false
+        '403':
+          description: Forbidden - Access denied due to insufficient permissions, or the requested project/environment does not exist (to prevent information disclosure)
+        '499':
+          description: Too much data fetched - The query is attempting to retrieve too much data. Please narrow down the query by reducing the time range or adding more specific filters to retrieve less data.
+          content:
+            application/json:
+              schema:
+                required:
+                - error
+                - message
+                properties:
+                  error:
+                    type: string
+                    example: Too much data fetched
+                  message:
+                    type: string
+                    example: Please reduce the time range or add more filters to narrow down the query
+                type: object
+                additionalProperties: false
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/observability/http/breakdown/ips:
+    get:
+      tags:
+      - Http Traffic
+      summary: Get HTTP traffic timeline by IP
+      description: 'Returns HTTP traffic analytics grouped by IP address with IPs ranked by impact (response time × request count). Use limit parameter to control total items returned (default: 200, max: 300) and top_hits_count to control how many items are flagged as top hits and tracked in the timeline (default: 10, max: 15). Items with index < top_hits_count are flagged with top_hit: true and tracked in top_hits_timeline; the remainder (up to limit) are returned with top_hit: false.'
+      operationId: http_metrics_timeline_ips
+      parameters:
+      - name: projectId
+        in: path
+        description: The unique identifier of the Upsun project
+        required: true
+        schema:
+          type: string
+          pattern: '[a-z0-9]+'
+          example: abc123def456
+      - name: environmentId
+        in: path
+        description: The environment identifier
+        required: true
+        schema:
+          type: string
+          pattern: .+
+          example: main
+      - name: from
+        in: query
+        description: Start timestamp for the time range (Unix timestamp in seconds)
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1704067200
+      - name: to
+        in: query
+        description: End timestamp for the time range (Unix timestamp in seconds)
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1704153600
+      - name: limit
+        in: query
+        description: 'Maximum number of items to return (default: 200, max: 300)'
+        required: false
+        schema:
+          type: integer
+          default: null
+          maximum: 300
+          minimum: 1
+      - name: top_hits_count
+        in: query
+        description: 'Number of items to flag as top hits and track in the timeline (default: 10, max: 15). Items with index < top_hits_count have top_hit=true; the remainder up to limit are returned with top_hit=false.'
+        required: false
+        schema:
+          type: integer
+          default: null
+          maximum: 15
+          minimum: 1
+      - name: applications[]
+        in: query
+        description: Filter by application. Can be specified multiple times for multiple values (e.g., ?applications[]=app1&applications[]=app2). Use applications_mode to control inclusion/exclusion behavior.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: app
+      - name: applications_mode
+        in: query
+        description: 'Filter mode for applications parameter. "1" (additive) includes only specified applications. "-1" (subtractive) excludes specified applications and includes all others. When omitted: defaults to "-1" if no applications values are provided; defaults to "1" (additive) if at least one applications value is provided.'
+        required: false
+        schema:
+          type: string
+          example: '1'
+          enum:
+          - '1'
+          - '-1'
+      - name: methods[]
+        in: query
+        description: Filter by HTTP methods. Can be specified multiple times for multiple values (e.g., ?methods[]=GET&methods[]=POST). Use methods_mode to control inclusion/exclusion behavior.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: GET
+            enum:
+            - GET
+            - POST
+            - PUT
+            - PATCH
+            - DELETE
+            - HEAD
+            - OPTIONS
+      - name: methods_mode
+        in: query
+        description: 'Filter mode for methods parameter. "1" (additive) includes only specified methods. "-1" (subtractive) excludes specified methods and includes all others. When omitted: defaults to "-1" if no methods values are provided; defaults to "1" (additive) if at least one methods value is provided.'
+        required: false
+        schema:
+          type: string
+          example: '1'
+          enum:
+          - '1'
+          - '-1'
+      - name: domains[]
+        in: query
+        description: Filter by request domains/hosts. Can be specified multiple times for multiple values (e.g., ?domains[]=api.example.com&domains[]=www.example.com). Use domains_mode to control inclusion/exclusion behavior.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: api.example.com
+      - name: domains_mode
+        in: query
+        description: 'Filter mode for domains parameter. "1" (additive) includes only specified domains. "-1" (subtractive) excludes specified domains and includes all others. When omitted: defaults to "-1" if no domains values are provided; defaults to "1" (additive) if at least one domains value is provided.'
+        required: false
+        schema:
+          type: string
+          example: '1'
+          enum:
+          - '1'
+          - '-1'
+      - name: code_slots[]
+        in: query
+        description: Filter by HTTP status code groups. Can be specified multiple times for multiple values (e.g., ?code_slots[]=4XX&code_slots[]=5XX). Use code_slots_mode to control inclusion/exclusion behavior.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: 2XX
+            enum:
+            - 1XX
+            - 2XX
+            - 3XX
+            - 4XX
+            - 5XX
+      - name: code_slots_mode
+        in: query
+        description: 'Filter mode for code_slots parameter. "1" (additive) includes only specified code groups. "-1" (subtractive) excludes specified code groups and includes all others. When omitted: defaults to "-1" if no code_slots values are provided; defaults to "1" (additive) if at least one code_slots value is provided.'
+        required: false
+        schema:
+          type: string
+          example: '1'
+          enum:
+          - '1'
+          - '-1'
+      - name: codes[]
+        in: query
+        description: Filter by specific HTTP status codes. Can be specified multiple times for multiple values (e.g., ?codes[]=200&codes[]=404). Use codes_mode to control inclusion/exclusion behavior.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: '200'
+      - name: codes_mode
+        in: query
+        description: 'Filter mode for codes parameter. "1" (additive) includes only specified codes. "-1" (subtractive) excludes specified codes and includes all others. When omitted: defaults to "-1" if no codes values are provided; defaults to "1" (additive) if at least one codes value is provided.'
+        required: false
+        schema:
+          type: string
+          example: '1'
+          enum:
+          - '1'
+          - '-1'
+      - name: request_duration_slots[]
+        in: query
+        description: Filter by response time ranges (in milliseconds). Can be specified multiple times for multiple values (e.g., ?request_duration_slots[]=0-50&request_duration_slots[]=1600+). Use request_duration_slots_mode to control inclusion/exclusion behavior.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: 0-50
+            enum:
+            - 0-50
+            - 50-100
+            - 100-200
+            - 200-400
+            - 400-800
+            - 800-1600
+            - 1600+
+      - name: request_duration_slots_mode
+        in: query
+        description: 'Filter mode for request_duration_slots parameter. "1" (additive) includes only specified duration ranges. "-1" (subtractive) excludes specified duration ranges and includes all others. When omitted: defaults to "-1" if no request_duration_slots values are provided; defaults to "1" (additive) if at least one request_duration_slots value is provided.'
+        required: false
+        schema:
+          type: string
+          example: '1'
+          enum:
+          - '1'
+          - '-1'
+      responses:
+        '200':
+          description: HTTP traffic timeline by IP retrieved successfully
+          content:
+            application/json:
+              schema:
+                required:
+                - _grain
+                - _from
+                - _to
+                - _project_id
+                - _environment_id
+                - _environment_type
+                - _branch_machine_name
+                - _breakdown_limit
+                - _breakdown_top_hits
+                - breakdown
+                - top_hits_timeline
+                properties:
+                  _grain:
+                    description: Data granularity in seconds
+                    type: integer
+                    example: 5
+                  _from:
+                    description: Query start timestamp
+                    type: integer
+                    example: 1704067200
+                  _to:
+                    description: Query end timestamp
+                    type: integer
+                    example: 1704153600
+                  _project_id:
+                    description: Project identifier
+                    type: string
+                    example: abc123def456
+                  _environment_id:
+                    description: Environment identifier
+                    type: string
+                    example: main
+                  _environment_type:
+                    description: Environment type
+                    type: string
+                    example: production
+                    enum:
+                    - production
+                    - staging
+                    - development
+                  _branch_machine_name:
+                    description: Branch machine name
+                    type: string
+                    example: main-bvxea6i
+                  _breakdown_limit:
+                    description: Maximum number of items returned
+                    type: integer
+                    example: 200
+                  _breakdown_top_hits:
+                    description: Number of items flagged as top hits (top_hit=true) and tracked in top_hits_timeline.
+                    type: integer
+                    example: 10
+                  _applications:
+                    description: Applied application filter values
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: app
+                  _applications_mode:
+                    description: Application filter mode (1=additive, -1=subtractive)
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - '1'
+                    - '-1'
+                  _methods:
+                    description: Applied method filter values
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: GET
+                  _methods_mode:
+                    description: Method filter mode (1=additive, -1=subtractive)
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - '1'
+                    - '-1'
+                  _domains:
+                    description: Applied domain filter values
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: example.com
+                  _domains_mode:
+                    description: Domain filter mode (1=additive, -1=subtractive)
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - '1'
+                    - '-1'
+                  _code_slots:
+                    description: Applied code slot filter values
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: 2XX
+                  _code_slots_mode:
+                    description: Code slot filter mode (1=additive, -1=subtractive)
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - '1'
+                    - '-1'
+                  _codes:
+                    description: Applied HTTP status code filter values
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: '200'
+                  _codes_mode:
+                    description: Code filter mode (1=additive, -1=subtractive)
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - '1'
+                    - '-1'
+                  _request_duration_slots:
+                    description: Applied request duration slot filter values
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: 0-100
+                  _request_duration_slots_mode:
+                    description: Request duration slot filter mode (1=additive, -1=subtractive)
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - '1'
+                    - '-1'
+                  breakdown:
+                    description: IP addresses ranked by impact
+                    required:
+                    - kind
+                    - total
+                    - data
+                    properties:
+                      kind:
+                        description: The kind of grouping
+                        type: string
+                        example: ip
+                        enum:
+                        - ip
+                      total:
+                        description: Total request count across all IPs
+                        type: integer
+                        example: 396519
+                      data:
+                        description: 'List of items ranked by impact. Items with index < top_hits_count are tracked in top_hits_timeline (flagged with top_hit: true); the remainder are returned for reference only.'
+                        type: array
+                        items:
+                          required:
+                          - name
+                          - impact
+                          - average
+                          - p_50
+                          - p_96
+                          - count
+                          - top_hit
+                          properties:
+                            name:
+                              description: The IP address
+                              type: string
+                              example: 192.168.1.1
+                            impact:
+                              description: Impact score as percentage of total wall time consumed
+                              type: number
+                              format: float
+                              example: 15.67
+                            average:
+                              description: Average request duration in seconds
+                              type: number
+                              format: float
+                              example: 0.234
+                            p_50:
+                              description: 50th percentile (median) request duration in seconds
+                              type: number
+                              format: float
+                              example: 0.156
+                            p_96:
+                              description: 96th percentile request duration in seconds
+                              type: number
+                              format: float
+                              example: 0.892
+                            count:
+                              description: Total number of requests from this IP
+                              type: integer
+                              example: 62143
+                            top_hit:
+                              description: Whether this item is tracked in top_hits_timeline
+                              type: boolean
+                              example: true
+                          type: object
+                          additionalProperties: false
+                        example:
+                        - name: 192.168.1.1
+                          impact: 15.67
+                          average: 0.234
+                          p_50: 0.156
+                          p_96: 0.892
+                          count: 62143
+                          top_hit: true
+                        - name: 10.0.0.5
+                          impact: 12.34
+                          average: 0.189
+                          p_50: 0.123
+                          p_96: 0.756
+                          count: 48921
+                          top_hit: true
+                        - name: 172.16.0.10
+                          impact: 8.45
+                          average: 0.312
+                          p_50: 0.201
+                          p_96: 1.234
+                          count: 33512
+                          top_hit: false
+                    type: object
+                    additionalProperties: false
+                  top_hits_timeline:
+                    description: Time-series data for top hit items
+                    required:
+                    - data
+                    properties:
+                      data:
+                        description: Time-series HTTP traffic metrics for top hit IPs. Fields are omitted for timestamps with no data.
+                        type: array
+                        items:
+                          required:
+                          - timestamp
+                          properties:
+                            timestamp:
+                              description: Data point timestamp
+                              type: integer
+                              example: 1704067200
+                            _total_consumed:
+                              description: Total wall-time consumed across all items at this interval
+                              type: number
+                              format: float
+                              example: 5678.9
+                            _total_count:
+                              description: Total request count at this timestamp across all IPs. Consider 0 if absent
+                              type: integer
+                              example: 4120
+                            data:
+                              description: Per-IP metrics at this timestamp. Only includes top hit items.
+                              type: object
+                              example:
+                                192.168.1.1:
+                                  count: 1543
+                                  impact: 37.45
+                                10.0.0.5:
+                                  count: 1247
+                                  impact: 30.26
+                              additionalProperties:
+                                required:
+                                - count
+                                - impact
+                                properties:
+                                  count:
+                                    description: Request count from this IP at this timestamp
+                                    type: integer
+                                    example: 1543
+                                  impact:
+                                    description: Impact score as percentage of wall time consumed at this timestamp
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 37.45
+                                type: object
+                                additionalProperties: false
+                          type: object
+                          additionalProperties: false
+                        example:
+                        - timestamp: 1704067200
+                          _total_consumed: 5678.9
+                          _total_count: 4120
+                          data:
+                            192.168.1.1:
+                              count: 1543
+                              impact: 37.45
+                        - timestamp: 1704070800
+                        - timestamp: 1704074400
+                          _total_consumed: 4321.2
+                          _total_count: 3891
+                          data:
+                            10.0.0.5:
+                              count: 1247
+                              impact: 30.26
+                    type: object
+                    additionalProperties: false
+                type: object
+                additionalProperties: false
+        '400':
+          description: Bad request - Invalid parameters. Please consult the API documentation to fix the request parameters.
+          content:
+            application/json:
+              schema:
+                required:
+                - type
+                - title
+                - status
+                - violations
+                properties:
+                  type:
+                    description: RFC 2616 reference URL identifying the error type
+                    type: string
+                    format: uri
+                    example: https://tools.ietf.org/html/rfc2616#section-1
+                  title:
+                    description: Human-readable summary of the validation error
+                    type: string
+                    example: Please ensure parameters are correct.
+                  status:
+                    description: HTTP status code
+                    type: integer
+                    example: 400
+                  violations:
+                    description: Map of parameter names to their validation errors. Each parameter can have multiple error messages.
+                    type: object
+                    example:
+                      grain:
+                      - Grain can not be larger than the selection windows.
+                      from:
+                      - The from timestamp must be in the past.
+                      to:
+                      - The to timestamp must be greater than the from timestamp.
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                        example: The from timestamp must be in the past.
+                type: object
+                additionalProperties: false
+        '403':
+          description: Forbidden - Access denied due to insufficient permissions, or the requested project/environment does not exist (to prevent information disclosure)
+        '499':
+          description: Too much data fetched - The query is attempting to retrieve too much data. Please narrow down the query by reducing the time range or adding more specific filters to retrieve less data.
+          content:
+            application/json:
+              schema:
+                required:
+                - error
+                - message
+                properties:
+                  error:
+                    type: string
+                    example: Too much data fetched
+                  message:
+                    type: string
+                    example: Please reduce the time range or add more filters to narrow down the query
+                type: object
+                additionalProperties: false
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/observability/http/breakdown/user-agents:
+    get:
+      tags:
+      - Http Traffic
+      summary: Get HTTP traffic timeline by user agent
+      description: 'Returns HTTP traffic analytics grouped by User Agent with User Agents ranked by impact (response time × request count). Use limit parameter to control total items returned (default: 200, max: 300) and top_hits_count to control how many items are flagged as top hits and tracked in the timeline (default: 10, max: 15). Items with index < top_hits_count are flagged with top_hit: true and tracked in top_hits_timeline; the remainder (up to limit) are returned with top_hit: false.'
+      operationId: http_metrics_timeline_user_agents
+      parameters:
+      - name: projectId
+        in: path
+        description: The unique identifier of the Upsun project
+        required: true
+        schema:
+          type: string
+          pattern: '[a-z0-9]+'
+          example: abc123def456
+      - name: environmentId
+        in: path
+        description: The environment identifier
+        required: true
+        schema:
+          type: string
+          pattern: .+
+          example: main
+      - name: from
+        in: query
+        description: Start timestamp for the time range (Unix timestamp in seconds)
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1704067200
+      - name: to
+        in: query
+        description: End timestamp for the time range (Unix timestamp in seconds)
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1704153600
+      - name: limit
+        in: query
+        description: 'Maximum number of items to return (default: 200, max: 300)'
+        required: false
+        schema:
+          type: integer
+          default: null
+          maximum: 300
+          minimum: 1
+      - name: top_hits_count
+        in: query
+        description: 'Number of items to flag as top hits and track in the timeline (default: 10, max: 15). Items with index < top_hits_count have top_hit=true; the remainder up to limit are returned with top_hit=false.'
+        required: false
+        schema:
+          type: integer
+          default: null
+          maximum: 15
+          minimum: 1
+      - name: applications[]
+        in: query
+        description: Filter by application. Can be specified multiple times for multiple values (e.g., ?applications[]=app1&applications[]=app2). Use applications_mode to control inclusion/exclusion behavior.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: app
+      - name: applications_mode
+        in: query
+        description: 'Filter mode for applications parameter. "1" (additive) includes only specified applications. "-1" (subtractive) excludes specified applications and includes all others. When omitted: defaults to "-1" if no applications values are provided; defaults to "1" (additive) if at least one applications value is provided.'
+        required: false
+        schema:
+          type: string
+          example: '1'
+          enum:
+          - '1'
+          - '-1'
+      - name: methods[]
+        in: query
+        description: Filter by HTTP methods. Can be specified multiple times for multiple values (e.g., ?methods[]=GET&methods[]=POST). Use methods_mode to control inclusion/exclusion behavior.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: GET
+            enum:
+            - GET
+            - POST
+            - PUT
+            - PATCH
+            - DELETE
+            - HEAD
+            - OPTIONS
+      - name: methods_mode
+        in: query
+        description: 'Filter mode for methods parameter. "1" (additive) includes only specified methods. "-1" (subtractive) excludes specified methods and includes all others. When omitted: defaults to "-1" if no methods values are provided; defaults to "1" (additive) if at least one methods value is provided.'
+        required: false
+        schema:
+          type: string
+          example: '1'
+          enum:
+          - '1'
+          - '-1'
+      - name: domains[]
+        in: query
+        description: Filter by request domains/hosts. Can be specified multiple times for multiple values (e.g., ?domains[]=api.example.com&domains[]=www.example.com). Use domains_mode to control inclusion/exclusion behavior.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: api.example.com
+      - name: domains_mode
+        in: query
+        description: 'Filter mode for domains parameter. "1" (additive) includes only specified domains. "-1" (subtractive) excludes specified domains and includes all others. When omitted: defaults to "-1" if no domains values are provided; defaults to "1" (additive) if at least one domains value is provided.'
+        required: false
+        schema:
+          type: string
+          example: '1'
+          enum:
+          - '1'
+          - '-1'
+      - name: code_slots[]
+        in: query
+        description: Filter by HTTP status code groups. Can be specified multiple times for multiple values (e.g., ?code_slots[]=4XX&code_slots[]=5XX). Use code_slots_mode to control inclusion/exclusion behavior.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: 2XX
+            enum:
+            - 1XX
+            - 2XX
+            - 3XX
+            - 4XX
+            - 5XX
+      - name: code_slots_mode
+        in: query
+        description: 'Filter mode for code_slots parameter. "1" (additive) includes only specified code groups. "-1" (subtractive) excludes specified code groups and includes all others. When omitted: defaults to "-1" if no code_slots values are provided; defaults to "1" (additive) if at least one code_slots value is provided.'
+        required: false
+        schema:
+          type: string
+          example: '1'
+          enum:
+          - '1'
+          - '-1'
+      - name: codes[]
+        in: query
+        description: Filter by specific HTTP status codes. Can be specified multiple times for multiple values (e.g., ?codes[]=200&codes[]=404). Use codes_mode to control inclusion/exclusion behavior.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: '200'
+      - name: codes_mode
+        in: query
+        description: 'Filter mode for codes parameter. "1" (additive) includes only specified codes. "-1" (subtractive) excludes specified codes and includes all others. When omitted: defaults to "-1" if no codes values are provided; defaults to "1" (additive) if at least one codes value is provided.'
+        required: false
+        schema:
+          type: string
+          example: '1'
+          enum:
+          - '1'
+          - '-1'
+      - name: request_duration_slots[]
+        in: query
+        description: Filter by response time ranges (in milliseconds). Can be specified multiple times for multiple values (e.g., ?request_duration_slots[]=0-50&request_duration_slots[]=1600+). Use request_duration_slots_mode to control inclusion/exclusion behavior.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: 0-50
+            enum:
+            - 0-50
+            - 50-100
+            - 100-200
+            - 200-400
+            - 400-800
+            - 800-1600
+            - 1600+
+      - name: request_duration_slots_mode
+        in: query
+        description: 'Filter mode for request_duration_slots parameter. "1" (additive) includes only specified duration ranges. "-1" (subtractive) excludes specified duration ranges and includes all others. When omitted: defaults to "-1" if no request_duration_slots values are provided; defaults to "1" (additive) if at least one request_duration_slots value is provided.'
+        required: false
+        schema:
+          type: string
+          example: '1'
+          enum:
+          - '1'
+          - '-1'
+      responses:
+        '200':
+          description: HTTP traffic timeline by User Agent retrieved successfully
+          content:
+            application/json:
+              schema:
+                required:
+                - _grain
+                - _from
+                - _to
+                - _project_id
+                - _environment_id
+                - _environment_type
+                - _branch_machine_name
+                - _breakdown_limit
+                - _breakdown_top_hits
+                - breakdown
+                - top_hits_timeline
+                properties:
+                  _grain:
+                    description: Data granularity in seconds
+                    type: integer
+                    example: 5
+                  _from:
+                    description: Query start timestamp
+                    type: integer
+                    example: 1704067200
+                  _to:
+                    description: Query end timestamp
+                    type: integer
+                    example: 1704153600
+                  _project_id:
+                    description: Project identifier
+                    type: string
+                    example: abc123def456
+                  _environment_id:
+                    description: Environment identifier
+                    type: string
+                    example: main
+                  _environment_type:
+                    description: Environment type
+                    type: string
+                    example: production
+                    enum:
+                    - production
+                    - staging
+                    - development
+                  _branch_machine_name:
+                    description: Branch machine name
+                    type: string
+                    example: main-bvxea6i
+                  _breakdown_limit:
+                    description: Maximum number of items returned
+                    type: integer
+                    example: 200
+                  _breakdown_top_hits:
+                    description: Number of items flagged as top hits (top_hit=true) and tracked in top_hits_timeline.
+                    type: integer
+                    example: 10
+                  _applications:
+                    description: Applied application filter values
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: app
+                  _applications_mode:
+                    description: Application filter mode (1=additive, -1=subtractive)
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - '1'
+                    - '-1'
+                  _methods:
+                    description: Applied method filter values
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: GET
+                  _methods_mode:
+                    description: Method filter mode (1=additive, -1=subtractive)
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - '1'
+                    - '-1'
+                  _domains:
+                    description: Applied domain filter values
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: example.com
+                  _domains_mode:
+                    description: Domain filter mode (1=additive, -1=subtractive)
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - '1'
+                    - '-1'
+                  _code_slots:
+                    description: Applied code slot filter values
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: 2XX
+                  _code_slots_mode:
+                    description: Code slot filter mode (1=additive, -1=subtractive)
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - '1'
+                    - '-1'
+                  _codes:
+                    description: Applied HTTP status code filter values
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: '200'
+                  _codes_mode:
+                    description: Code filter mode (1=additive, -1=subtractive)
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - '1'
+                    - '-1'
+                  _request_duration_slots:
+                    description: Applied request duration slot filter values
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: 0-100
+                  _request_duration_slots_mode:
+                    description: Request duration slot filter mode (1=additive, -1=subtractive)
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - '1'
+                    - '-1'
+                  breakdown:
+                    description: User Agents ranked by impact
+                    required:
+                    - kind
+                    - total
+                    - data
+                    properties:
+                      kind:
+                        description: The kind of grouping
+                        type: string
+                        example: user_agent
+                        enum:
+                        - user_agent
+                      total:
+                        description: Total request count across all User Agents
+                        type: integer
+                        example: 396519
+                      data:
+                        description: 'List of items ranked by impact. Items with index < top_hits_count are tracked in top_hits_timeline (flagged with top_hit: true); the remainder are returned for reference only.'
+                        type: array
+                        items:
+                          required:
+                          - name
+                          - impact
+                          - average
+                          - p_50
+                          - p_96
+                          - count
+                          - top_hit
+                          properties:
+                            name:
+                              description: The User Agent string
+                              type: string
+                              example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+                            impact:
+                              description: Impact score as percentage of total wall time consumed
+                              type: number
+                              format: float
+                              example: 45.67
+                            average:
+                              description: Average request duration in seconds
+                              type: number
+                              format: float
+                              example: 0.234
+                            p_50:
+                              description: 50th percentile (median) request duration in seconds
+                              type: number
+                              format: float
+                              example: 0.156
+                            p_96:
+                              description: 96th percentile request duration in seconds
+                              type: number
+                              format: float
+                              example: 0.892
+                            count:
+                              description: Total number of requests from this User Agent
+                              type: integer
+                              example: 62143
+                            top_hit:
+                              description: Whether this item is tracked in top_hits_timeline
+                              type: boolean
+                              example: true
+                          type: object
+                          additionalProperties: false
+                        example:
+                        - name: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+                          impact: 45.67
+                          average: 0.234
+                          p_50: 0.156
+                          p_96: 0.892
+                          count: 62143
+                          top_hit: true
+                        - name: curl/7.68.0
+                          impact: 8.45
+                          average: 0.312
+                          p_50: 0.201
+                          p_96: 1.234
+                          count: 11512
+                          top_hit: false
+                    type: object
+                    additionalProperties: false
+                  top_hits_timeline:
+                    description: Time-series data for top hit items
+                    required:
+                    - data
+                    properties:
+                      data:
+                        description: Time-series HTTP traffic metrics for top hit User Agents. Fields are omitted for timestamps with no data.
+                        type: array
+                        items:
+                          required:
+                          - timestamp
+                          properties:
+                            timestamp:
+                              description: Data point timestamp
+                              type: integer
+                              example: 1704067200
+                            _total_consumed:
+                              description: Total wall-time consumed across all items at this interval
+                              type: number
+                              format: float
+                              example: 5678.9
+                            _total_count:
+                              description: Total request count at this timestamp. Consider 0 if absent
+                              type: integer
+                              example: 4120
+                            data:
+                              description: Per-User Agent metrics at this timestamp. Only includes top hit items.
+                              type: object
+                              example:
+                                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36:
+                                  count: 1543
+                                  impact: 47.45
+                              additionalProperties:
+                                required:
+                                - count
+                                - impact
+                                properties:
+                                  count:
+                                    description: Request count at this timestamp
+                                    type: integer
+                                    example: 1543
+                                  impact:
+                                    description: Impact score as percentage of wall time consumed
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 47.45
+                                type: object
+                                additionalProperties: false
+                          type: object
+                          additionalProperties: false
+                        example:
+                        - timestamp: 1704067200
+                          _total_consumed: 5678.9
+                          _total_count: 4120
+                          data:
+                            Mozilla/5.0 (Windows NT 10.0; Win64; x64):
+                              count: 1543
+                              impact: 47.45
+                        - timestamp: 1704070800
+                    type: object
+                    additionalProperties: false
+                type: object
+                additionalProperties: false
+        '400':
+          description: Bad request - Invalid parameters. Please consult the API documentation to fix the request parameters.
+          content:
+            application/json:
+              schema:
+                required:
+                - type
+                - title
+                - status
+                - violations
+                properties:
+                  type:
+                    description: RFC 2616 reference URL identifying the error type
+                    type: string
+                    format: uri
+                    example: https://tools.ietf.org/html/rfc2616#section-1
+                  title:
+                    description: Human-readable summary of the validation error
+                    type: string
+                    example: Please ensure parameters are correct.
+                  status:
+                    description: HTTP status code
+                    type: integer
+                    example: 400
+                  violations:
+                    description: Map of parameter names to their validation errors. Each parameter can have multiple error messages.
+                    type: object
+                    example:
+                      grain:
+                      - Grain can not be larger than the selection windows.
+                      from:
+                      - The from timestamp must be in the past.
+                      to:
+                      - The to timestamp must be greater than the from timestamp.
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                        example: The from timestamp must be in the past.
+                type: object
+                additionalProperties: false
+        '403':
+          description: Forbidden - Access denied due to insufficient permissions, or the requested project/environment does not exist (to prevent information disclosure)
+        '499':
+          description: Too much data fetched - The query is attempting to retrieve too much data. Please narrow down the query by reducing the time range or adding more specific filters to retrieve less data.
+          content:
+            application/json:
+              schema:
+                required:
+                - error
+                - message
+                properties:
+                  error:
+                    type: string
+                    example: Too much data fetched
+                  message:
+                    type: string
+                    example: Please reduce the time range or add more filters to narrow down the query
+                type: object
+                additionalProperties: false
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

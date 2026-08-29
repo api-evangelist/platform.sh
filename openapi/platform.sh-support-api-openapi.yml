@@ -1,0 +1,550 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Support API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Support across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Support
+  description: 'These endpoints can be used to retrieve information about support ticket priority
+
+    and allow you to submit new ticket to the Upsun Support Team.
+
+    '
+paths:
+  /tickets:
+    post:
+      tags:
+      - Support
+      summary: Create a new support ticket
+      operationId: create-ticket
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - subject
+              - description
+              properties:
+                subject:
+                  description: A title of the ticket.
+                  type: string
+                description:
+                  description: The description body of the support ticket.
+                  type: string
+                requester_id:
+                  description: UUID of the ticket requester. Converted from the ZID value.
+                  type: string
+                  format: uuid
+                priority:
+                  description: A priority of the ticket.
+                  type: string
+                  enum:
+                  - low
+                  - normal
+                  - high
+                  - urgent
+                subscription_id:
+                  description: see create()
+                  type: string
+                organization_id:
+                  description: see create()
+                  type: string
+                affected_url:
+                  description: see create().
+                  type: string
+                  format: url
+                followup_tid:
+                  description: The unique ID of the ticket which this ticket is a follow-up to.
+                  type: string
+                category:
+                  description: The category of the support ticket.
+                  type: string
+                  enum:
+                  - access
+                  - billing_question
+                  - complaint
+                  - compliance_question
+                  - configuration_change
+                  - general_question
+                  - incident_outage
+                  - bug_report
+                  - report_a_gui_bug
+                  - onboarding
+                  - close_my_account
+                attachments:
+                  description: A list of attachments for the ticket.
+                  type: array
+                  items:
+                    properties:
+                      filename:
+                        description: The filename to be used in storage.
+                        type: string
+                      data:
+                        description: the base64 encoded file.
+                        type: string
+                    type: object
+                collaborator_ids:
+                  description: A list of collaborators uuids for the ticket.
+                  type: array
+                  items:
+                    type: string
+              type: object
+      responses:
+        '200':
+          description: A Support Ticket object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /tickets/{ticket_id}:
+    patch:
+      tags:
+      - Support
+      summary: Update a ticket
+      operationId: update-ticket
+      parameters:
+      - name: ticket_id
+        in: path
+        description: The ID of the ticket
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                status:
+                  description: The status of the support ticket.
+                  type: string
+                  enum:
+                  - open
+                  - solved
+                collaborator_ids:
+                  description: A list of collaborators uuids for the ticket.
+                  type: array
+                  items:
+                    type: string
+                collaborators_replace:
+                  description: Whether or not should replace ticket collaborators with the provided values. If false, the collaborators will be appended.
+                  type: boolean
+                  default: null
+              type: object
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        '204':
+          description: The ticket was not updated.
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /tickets/priority:
+    get:
+      tags:
+      - Support
+      summary: List support ticket priorities
+      operationId: list-ticket-priorities
+      parameters:
+      - name: subscription_id
+        in: query
+        description: The ID of the subscription the ticket should be related to
+        required: false
+        schema:
+          type: string
+      - name: category
+        in: query
+        description: The category of the support ticket.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: An array of available priorities for that license.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      description: Machine name of the priority.
+                      type: string
+                    label:
+                      description: The human-readable label of the priority.
+                      type: string
+                    short_description:
+                      description: The short description of the priority.
+                      type: string
+                    description:
+                      description: The long description of the priority.
+                      type: string
+                  type: object
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /tickets/category:
+    get:
+      tags:
+      - Support
+      summary: List support ticket categories
+      operationId: list-ticket-categories
+      parameters:
+      - name: subscription_id
+        in: query
+        description: The ID of the subscription the ticket should be related to
+        required: false
+        schema:
+          type: string
+      - name: organization_id
+        in: query
+        description: The ID of the organization the ticket should be related to
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: An array of available categories for a ticket.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      description: Machine name of the category as is listed in zendesk.
+                      type: string
+                    label:
+                      description: The human-readable label of the category.
+                      type: string
+                  type: object
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    Ticket:
+      description: The support ticket object.
+      properties:
+        ticket_id:
+          description: The ID of the ticket.
+          type: integer
+        created:
+          description: The time when the support ticket was created.
+          type: string
+          format: date-time
+        updated:
+          description: The time when the support ticket was updated.
+          type: string
+          format: date-time
+        type:
+          description: A type of the ticket.
+          type: string
+          enum:
+          - problem
+          - task
+          - incident
+          - question
+        subject:
+          description: A title of the ticket.
+          type: string
+        description:
+          description: The description body of the support ticket.
+          type: string
+        priority:
+          description: A priority of the ticket.
+          type: string
+          enum:
+          - low
+          - normal
+          - high
+          - urgent
+        followup_tid:
+          description: Followup ticket ID. The unique ID of the ticket which this ticket is a follow-up to.
+          type: string
+        status:
+          description: The status of the support ticket.
+          type: string
+          enum:
+          - closed
+          - deleted
+          - hold
+          - new
+          - open
+          - pending
+          - solved
+        recipient:
+          description: Email address of the ticket recipient, defaults to support@upsun.com.
+          type: string
+        requester_id:
+          description: UUID of the ticket requester.
+          type: string
+          format: uuid
+        submitter_id:
+          description: UUID of the ticket submitter.
+          type: string
+          format: uuid
+        assignee_id:
+          description: UUID of the ticket assignee.
+          type: string
+          format: uuid
+        organization_id:
+          description: A reference id that is usable to find the commerce license.
+          type: string
+        collaborator_ids:
+          description: A list of the collaborators uuids for this ticket.
+          type: array
+          items:
+            type: string
+        has_incidents:
+          description: Whether or not this ticket has incidents.
+          type: boolean
+        due:
+          description: A time that the ticket is due at.
+          type: string
+          format: date-time
+        tags:
+          description: A list of tags assigned to the ticket.
+          type: array
+          items:
+            type: string
+        subscription_id:
+          description: The internal ID of the subscription.
+          type: string
+        ticket_group:
+          description: Maps to zendesk field 'Request group'.
+          type: string
+        support_plan:
+          description: Maps to zendesk field 'The support plan associated with this ticket.
+          type: string
+        affected_url:
+          description: The affected URL associated with the support ticket.
+          type: string
+          format: url
+        queue:
+          description: The queue the support ticket is in.
+          type: string
+        issue_type:
+          description: The issue type of the support ticket.
+          type: string
+        resolution_time:
+          description: Maps to zendesk field 'Resolution Time'.
+          type: string
+          format: date-time
+        response_time:
+          description: Maps to zendesk field 'Response Time (time from request to reply).
+          type: string
+          format: date-time
+        project_url:
+          description: Maps to zendesk field 'Project URL'.
+          type: string
+          format: url
+        region:
+          description: Maps to zendesk field 'Region'.
+          type: string
+        category:
+          description: Maps to zendesk field 'Category'.
+          type: string
+          enum:
+          - access
+          - billing_question
+          - complaint
+          - compliance_question
+          - configuration_change
+          - general_question
+          - incident_outage
+          - bug_report
+          - onboarding
+          - report_a_gui_bug
+          - close_my_account
+        environment:
+          description: Maps to zendesk field 'Environment'.
+          type: string
+          enum:
+          - env_development
+          - env_staging
+          - env_production
+        ticket_sharing_status:
+          description: Maps to zendesk field 'Ticket Sharing Status'.
+          type: string
+          enum:
+          - ts_sent_to_platform
+          - ts_accepted_by_platform
+          - ts_returned_from_platform
+          - ts_solved_by_platform
+          - ts_rejected_by_platform
+        application_ticket_url:
+          description: Maps to zendesk field 'Application Ticket URL'.
+          type: string
+          format: url
+        infrastructure_ticket_url:
+          description: Maps to zendesk field 'Infrastructure Ticket URL'.
+          type: string
+          format: url
+        jira:
+          description: A list of JIRA issues related to the support ticket.
+          type: array
+          items:
+            properties:
+              id:
+                description: The id of the query.
+                type: integer
+              ticket_id:
+                description: The id of the ticket.
+                type: integer
+              issue_id:
+                description: The issue id number.
+                type: integer
+              issue_key:
+                description: The issue key.
+                type: string
+              created_at:
+                description: The created at timestamp.
+                type: number
+                format: float
+              updated_at:
+                description: The updated at timestamp.
+                type: number
+                format: float
+            type: object
+        zd_ticket_url:
+          description: URL to the customer-facing ticket in Zendesk.
+          type: string
+          format: url
+      type: object
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

@@ -1,0 +1,343 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh API Tokens API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged API Tokens across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: API Tokens
+paths:
+  /users/{user_id}/api-tokens:
+    parameters:
+    - $ref: '#/components/parameters/UserID'
+    get:
+      summary: List a user's API tokens
+      description: Retrieves a list of API tokens associated with a single user.
+      operationId: list-api-tokens
+      tags:
+      - API Tokens
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/APIToken'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    post:
+      summary: Create an API token
+      description: Creates an API token
+      operationId: create-api-token
+      tags:
+      - API Tokens
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIToken'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The token name.
+              required:
+              - name
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /users/{user_id}/api-tokens/{token_id}:
+    parameters:
+    - $ref: '#/components/parameters/UserID'
+    - schema:
+        type: string
+        format: uuid
+      name: token_id
+      in: path
+      required: true
+      description: The ID of the token.
+    get:
+      summary: Get an API token
+      description: Retrieves the specified API token.
+      operationId: get-api-token
+      tags:
+      - API Tokens
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIToken'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+      security:
+      - OAuth2: []
+    delete:
+      summary: Delete an API token
+      description: Deletes an API token
+      operationId: delete-api-token
+      tags:
+      - API Tokens
+      responses:
+        '204':
+          description: No Content
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    APIToken:
+      description: ''
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of the token.
+        name:
+          type: string
+          description: The token name.
+        mfa_on_creation:
+          type: boolean
+          description: Whether the user had multi-factor authentication (MFA) enabled when they created the token.
+        token:
+          type: string
+          description: The token in plain text (available only when created).
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the token was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the token was last updated.
+        last_used_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: 'The date and time when the token was last exchanged for an access token. This will be <code>null</code> for a token which has never been used, or not used since this API property was added. <strong>Note:</strong> After an API token is used, the derived access token may continue to be used until its expiry. This also applies to SSH certificate(s) derived from the access token.
+
+            '
+      x-examples:
+        example-1:
+          created_at: '2019-01-29T08:17:47Z'
+          id: 660aa36d-23cf-402b-8889-63af71967f2b
+          name: Token for CI
+          updated_at: '2019-01-29T08:17:47Z'
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    Error_2:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+    Error_3:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+  parameters:
+    UserID:
+      name: user_id
+      in: path
+      required: true
+      description: The ID of the user.
+      schema:
+        type: string
+        example: d81c8ee2-44b3-429f-b944-a33ad7437690
+        format: uuid
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

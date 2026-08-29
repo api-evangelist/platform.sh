@@ -1,0 +1,1428 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Blackfire Profiling API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Blackfire Profiling across 2 of this provider''s published API definitions: platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+security:
+- BearerAuth: []
+tags:
+- name: Blackfire Profiling
+paths:
+  /projects/{projectId}/environments/{environmentId}/observability/profiles/{uuid}/timeline:
+    get:
+      tags:
+      - Blackfire Profiling
+      summary: Get profile timeline data
+      description: Returns timeline visualization data for a Blackfire profile, showing the execution flow over time.
+      operationId: blackfire_profile_timeline
+      parameters:
+      - name: projectId
+        in: path
+        description: The unique identifier of the Upsun project
+        required: true
+        schema:
+          type: string
+          pattern: '[a-z0-9]+'
+          example: abc123def456
+      - name: environmentId
+        in: path
+        description: The environment identifier
+        required: true
+        schema:
+          type: string
+          pattern: .+
+          example: main
+      - name: uuid
+        in: path
+        description: The profile UUID
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+          example: 4b5266a2-fd71-468b-bf05-87b342079cbf
+      responses:
+        '200':
+          description: Timeline data retrieved successfully
+          content:
+            application/json:
+              schema:
+                required:
+                - _project_id
+                - _environment_id
+                - _branch_machine_name
+                - _agent
+                - _uuid
+                - timeline
+                - dimension
+                - time
+                - language
+                properties:
+                  _project_id:
+                    description: Project identifier
+                    type: string
+                    example: abc123def456
+                  _environment_id:
+                    description: Environment identifier
+                    type: string
+                    example: main
+                  _branch_machine_name:
+                    description: Branch machine name
+                    type: string
+                    example: main-bvxea6i
+                  _agent:
+                    description: Blackfire Agent UUID
+                    type: string
+                    format: uuid
+                    example: a38f69ca-3b56-4ea6-beac-272b2568164a
+                  _uuid:
+                    description: Profile UUID
+                    type: string
+                    format: uuid
+                    example: 4b5266a2-fd71-468b-bf05-87b342079cbf
+                  timeline:
+                    description: Timeline event data including stack frames, memory graph, labels, markers, spans, and hierarchy
+                    type: object
+                  dimension:
+                    description: Active timeline dimension
+                    type: string
+                    example: wt
+                  time:
+                    description: Total time for the active dimension in microseconds
+                    type: integer
+                    example: 4329972
+                  language:
+                    description: Profiled application language
+                    type: string
+                    example: php
+                    enum:
+                    - php
+                    - python
+                type: object
+                additionalProperties: false
+        '403':
+          description: Forbidden - Access denied due to insufficient permissions, or the requested project/environment does not exist (to prevent information disclosure)
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/observability/profiles/{uuid}/subprofiles:
+    get:
+      tags:
+      - Blackfire Profiling
+      summary: Get profile subprofiles
+      description: Returns subprofiles (child profiles) associated with a Blackfire profile.
+      operationId: blackfire_profile_subprofiles
+      parameters:
+      - name: projectId
+        in: path
+        description: The unique identifier of the Upsun project
+        required: true
+        schema:
+          type: string
+          pattern: '[a-z0-9]+'
+          example: abc123def456
+      - name: environmentId
+        in: path
+        description: The environment identifier
+        required: true
+        schema:
+          type: string
+          pattern: .+
+          example: main
+      - name: uuid
+        in: path
+        description: The profile UUID
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+          example: 4b5266a2-fd71-468b-bf05-87b342079cbf
+      responses:
+        '200':
+          description: Subprofiles retrieved successfully
+          content:
+            application/json:
+              schema:
+                required:
+                - _project_id
+                - _environment_id
+                - _branch_machine_name
+                - _agent
+                - _uuid
+                - subprofiles
+                properties:
+                  _project_id:
+                    description: Project identifier
+                    type: string
+                    example: abc123def456
+                  _environment_id:
+                    description: Environment identifier
+                    type: string
+                    example: main
+                  _branch_machine_name:
+                    description: Branch machine name
+                    type: string
+                    example: main-bvxea6i
+                  _agent:
+                    description: Blackfire Agent UUID
+                    type: string
+                    format: uuid
+                    example: a38f69ca-3b56-4ea6-beac-272b2568164a
+                  _uuid:
+                    description: Profile UUID
+                    type: string
+                    format: uuid
+                    example: 4b5266a2-fd71-468b-bf05-87b342079cbf
+                  subprofiles:
+                    description: Profile tree with context, metrics, recommendations, and child profiles
+                    type: object
+                type: object
+                additionalProperties: false
+        '403':
+          description: Forbidden - Access denied due to insufficient permissions, or the requested project/environment does not exist (to prevent information disclosure)
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/observability/profiles/{uuid}/profile:
+    get:
+      tags:
+      - Blackfire Profiling
+      summary: Get profile details
+      description: Returns full profile data including metrics, metadata, and recommendations.
+      operationId: blackfire_profile_profile
+      parameters:
+      - name: projectId
+        in: path
+        description: The unique identifier of the Upsun project
+        required: true
+        schema:
+          type: string
+          pattern: '[a-z0-9]+'
+          example: abc123def456
+      - name: environmentId
+        in: path
+        description: The environment identifier
+        required: true
+        schema:
+          type: string
+          pattern: .+
+          example: main
+      - name: uuid
+        in: path
+        description: The profile UUID
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+          example: 4b5266a2-fd71-468b-bf05-87b342079cbf
+      responses:
+        '200':
+          description: Profile details retrieved successfully
+          content:
+            application/json:
+              schema:
+                required:
+                - _project_id
+                - _environment_id
+                - _branch_machine_name
+                - _agent
+                - _uuid
+                - profile
+                properties:
+                  _project_id:
+                    description: Project identifier
+                    type: string
+                    example: abc123def456
+                  _environment_id:
+                    description: Environment identifier
+                    type: string
+                    example: main
+                  _branch_machine_name:
+                    description: Branch machine name
+                    type: string
+                    example: main-bvxea6i
+                  _agent:
+                    description: Blackfire Agent UUID
+                    type: string
+                    format: uuid
+                    example: a38f69ca-3b56-4ea6-beac-272b2568164a
+                  _uuid:
+                    description: Profile UUID
+                    type: string
+                    format: uuid
+                    example: 4b5266a2-fd71-468b-bf05-87b342079cbf
+                  profile:
+                    description: Profile data including links, metadata, metrics, recommendations, and status information
+                    type: object
+                type: object
+                additionalProperties: false
+        '403':
+          description: Forbidden - Access denied due to insufficient permissions, or the requested project/environment does not exist (to prevent information disclosure)
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/observability/profiles/{uuid}/graph:
+    get:
+      tags:
+      - Blackfire Profiling
+      summary: Get profile call graph
+      description: Returns the call graph data for a Blackfire profile, showing function calls and their performance metrics.
+      operationId: blackfire_profile_graph
+      parameters:
+      - name: projectId
+        in: path
+        description: The unique identifier of the Upsun project
+        required: true
+        schema:
+          type: string
+          pattern: '[a-z0-9]+'
+          example: abc123def456
+      - name: environmentId
+        in: path
+        description: The environment identifier
+        required: true
+        schema:
+          type: string
+          pattern: .+
+          example: main
+      - name: uuid
+        in: path
+        description: The profile UUID
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+          example: 4b5266a2-fd71-468b-bf05-87b342079cbf
+      responses:
+        '200':
+          description: Call graph retrieved successfully
+          content:
+            application/json:
+              schema:
+                required:
+                - _project_id
+                - _environment_id
+                - _branch_machine_name
+                - _agent
+                - _uuid
+                - dimensions
+                - root
+                - nodes
+                - edges
+                - comparison
+                - language
+                properties:
+                  _project_id:
+                    description: Project identifier
+                    type: string
+                    example: abc123def456
+                  _environment_id:
+                    description: Environment identifier
+                    type: string
+                    example: main
+                  _branch_machine_name:
+                    description: Branch machine name
+                    type: string
+                    example: main-bvxea6i
+                  _agent:
+                    description: Blackfire Agent UUID
+                    type: string
+                    format: uuid
+                    example: a38f69ca-3b56-4ea6-beac-272b2568164a
+                  _uuid:
+                    description: Profile UUID
+                    type: string
+                    format: uuid
+                    example: 4b5266a2-fd71-468b-bf05-87b342079cbf
+                  dimensions:
+                    description: Available metric dimensions (wt, cpu, mu, pmu, io, nw, ct)
+                    type: object
+                  root:
+                    description: Root node identifier
+                    type: string
+                    example: main()
+                  nodes:
+                    description: Call graph nodes with inclusive/exclusive costs and percentages
+                    type: object
+                  edges:
+                    description: Call graph edges linking caller to callee nodes
+                    type: object
+                  comparison:
+                    description: Whether this is a comparison graph
+                    type: boolean
+                    example: false
+                  peaks:
+                    description: Peak inclusive and exclusive costs
+                    type: object
+                  arguments:
+                    description: Function arguments and metric data
+                    type:
+                    - object
+                    - 'null'
+                  layers:
+                    description: Layer information
+                    type:
+                    - object
+                    - 'null'
+                  labels:
+                    description: Timespan labels
+                    type: object
+                  spans:
+                    description: Span metadata
+                    type: object
+                  spans-ot:
+                    description: OpenTelemetry span data
+                    type: object
+                  hierarchy:
+                    description: Profile hierarchy data
+                    type: object
+                  language:
+                    description: Profiled application language
+                    type: string
+                    example: php
+                    enum:
+                    - php
+                    - python
+                type: object
+                additionalProperties: false
+        '403':
+          description: Forbidden - Access denied due to insufficient permissions, or the requested project/environment does not exist (to prevent information disclosure)
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/observability/profiles/recommendations:
+    get:
+      tags:
+      - Blackfire Profiling
+      summary: Get recommendation statistics
+      description: Returns recommendation statistics for the environment, optionally filtered by transaction. Proxied from the Blackfire API. Each recommendation includes the constraint details, occurrence count, and links to the latest profile and documentation.
+      operationId: blackfire_profiles_recommendations
+      parameters:
+      - name: projectId
+        in: path
+        description: The unique identifier of the Upsun project
+        required: true
+        schema:
+          type: string
+          pattern: '[a-z0-9]+'
+          example: abc123def456
+      - name: environmentId
+        in: path
+        description: The environment identifier
+        required: true
+        schema:
+          type: string
+          pattern: .+
+          example: main
+      - name: from
+        in: query
+        description: Start of time range (Unix timestamp). Defaults to 2 weeks ago.
+        required: false
+        schema:
+          type: integer
+          example: 1704067200
+      - name: to
+        in: query
+        description: End of time range (Unix timestamp). Defaults to now.
+        required: false
+        schema:
+          type: integer
+          example: 1704326400
+      - name: transaction
+        in: query
+        description: Filter recommendations to a specific transaction name.
+        required: false
+        schema:
+          type: string
+          example: App\Controller\ProductController::list
+      - name: limit
+        in: query
+        description: Maximum number of recommendation results to return. Clamped to range 10–200. Defaults to 10 (or 200 when filtering by transaction).
+        required: false
+        schema:
+          type: integer
+          example: 50
+          maximum: 200
+          minimum: 10
+      responses:
+        '200':
+          description: Recommendation statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                required:
+                - _project_id
+                - _environment_id
+                - _branch_machine_name
+                - _agent
+                - _from
+                - _to
+                - recommendations
+                - total
+                properties:
+                  _project_id:
+                    description: Project identifier
+                    type: string
+                    example: abc123def456
+                  _environment_id:
+                    description: Environment identifier
+                    type: string
+                    example: main
+                  _branch_machine_name:
+                    description: Branch machine name
+                    type: string
+                    example: main-bvxea6i
+                  _agent:
+                    description: Blackfire Agent UUID
+                    type: string
+                    format: uuid
+                    example: a38f69ca-3b56-4ea6-beac-272b2568164a
+                  _from:
+                    description: Start of time range (Unix timestamp)
+                    type: integer
+                    example: 1704067200
+                  _to:
+                    description: End of time range (Unix timestamp)
+                    type: integer
+                    example: 1704326400
+                  _transaction:
+                    description: Filtered transaction name (only present when transaction filter is applied)
+                    type: string
+                    example: App\Controller\ProductController::list
+                  recommendations:
+                    description: List of failing recommendations
+                    type: array
+                    items:
+                      required:
+                      - name
+                      - total
+                      properties:
+                        name:
+                          description: Recommendation constraint name
+                          type: string
+                          example: tests.symfony.kernel.secret_is_set
+                        constraint:
+                          description: Constraint details
+                          type:
+                          - object
+                          - 'null'
+                        total:
+                          description: Number of profiles failing this recommendation
+                          type: integer
+                          example: 15
+                        _links:
+                          description: API links to the latest profile that triggered this recommendation. Only present when a latest profile is available.
+                          required:
+                          - api_subprofiles
+                          - api_profile
+                          - api_graph
+                          properties:
+                            api_timeline:
+                              description: API endpoint for timeline data (JSON)
+                              required:
+                              - href
+                              - type
+                              properties:
+                                href:
+                                  type: string
+                                  format: uri
+                                  example: https://api.upsun.com/projects/abc123/environments/main/observability/profiles/4b5266a2-fd71-468b-bf05-87b342079cbf/timeline
+                                type:
+                                  type: string
+                                  example: application/json
+                                  enum:
+                                  - application/json
+                              type: object
+                              additionalProperties: false
+                            api_subprofiles:
+                              description: API endpoint for subprofiles data (JSON)
+                              required:
+                              - href
+                              - type
+                              properties:
+                                href:
+                                  type: string
+                                  format: uri
+                                  example: https://api.upsun.com/projects/abc123/environments/main/observability/profiles/4b5266a2-fd71-468b-bf05-87b342079cbf/subprofiles
+                                type:
+                                  type: string
+                                  example: application/json
+                                  enum:
+                                  - application/json
+                              type: object
+                              additionalProperties: false
+                            api_profile:
+                              description: API endpoint for profile details (JSON)
+                              required:
+                              - href
+                              - type
+                              properties:
+                                href:
+                                  type: string
+                                  format: uri
+                                  example: https://api.upsun.com/projects/abc123/environments/main/observability/profiles/4b5266a2-fd71-468b-bf05-87b342079cbf/profile
+                                type:
+                                  type: string
+                                  example: application/json
+                                  enum:
+                                  - application/json
+                              type: object
+                              additionalProperties: false
+                            api_graph:
+                              description: API endpoint for call graph data (JSON)
+                              required:
+                              - href
+                              - type
+                              properties:
+                                href:
+                                  type: string
+                                  format: uri
+                                  example: https://api.upsun.com/projects/abc123/environments/main/observability/profiles/4b5266a2-fd71-468b-bf05-87b342079cbf/graph
+                                type:
+                                  type: string
+                                  example: application/json
+                                  enum:
+                                  - application/json
+                              type: object
+                              additionalProperties: false
+                          type: object
+                          additionalProperties: false
+                      type: object
+                      additionalProperties: false
+                  tested_transactions:
+                    description: List of transaction names that have been tested by recommendations
+                    type: array
+                    items:
+                      type: string
+                  untested_top_transactions:
+                    description: List of top transaction names that have not been tested by recommendations
+                    type: array
+                    items:
+                      type: string
+                  total:
+                    description: Total number of profiles with failing recommendations
+                    type: integer
+                    example: 42
+                type: object
+                additionalProperties: false
+              example:
+                _project_id: abc123def456
+                _environment_id: main
+                _branch_machine_name: main-bvxea6i
+                _agent: a38f69ca-3b56-4ea6-beac-272b2568164a
+                _from: 1704067200
+                _to: 1704326400
+                recommendations:
+                - name: tests.symfony.kernel.secret_is_set
+                  constraint:
+                    id: tests.symfony.kernel.secret_is_set
+                    name: tests.symfony.kernel.secret_is_set
+                  total: 15
+                  _links:
+                    api_timeline:
+                      href: https://api.upsun.com/projects/abc123def456/environments/main/observability/profiles/4b5266a2-fd71-468b-bf05-87b342079cbf/timeline
+                      type: application/json
+                    api_subprofiles:
+                      href: https://api.upsun.com/projects/abc123def456/environments/main/observability/profiles/4b5266a2-fd71-468b-bf05-87b342079cbf/subprofiles
+                      type: application/json
+                    api_profile:
+                      href: https://api.upsun.com/projects/abc123def456/environments/main/observability/profiles/4b5266a2-fd71-468b-bf05-87b342079cbf/profile
+                      type: application/json
+                    api_graph:
+                      href: https://api.upsun.com/projects/abc123def456/environments/main/observability/profiles/4b5266a2-fd71-468b-bf05-87b342079cbf/graph
+                      type: application/json
+                total: 42
+        '400':
+          description: Bad request - Invalid parameters. Please consult the API documentation to fix the request parameters.
+          content:
+            application/json:
+              schema:
+                required:
+                - type
+                - title
+                - status
+                - violations
+                properties:
+                  type:
+                    description: RFC 2616 reference URL identifying the error type
+                    type: string
+                    format: uri
+                    example: https://tools.ietf.org/html/rfc2616#section-1
+                  title:
+                    description: Human-readable summary of the validation error
+                    type: string
+                    example: Please ensure parameters are correct.
+                  status:
+                    description: HTTP status code
+                    type: integer
+                    example: 400
+                  violations:
+                    description: Map of parameter names to their validation errors. Each parameter can have multiple error messages.
+                    type: object
+                    example:
+                      grain:
+                      - Grain can not be larger than the selection windows.
+                      from:
+                      - The from timestamp must be in the past.
+                      to:
+                      - The to timestamp must be greater than the from timestamp.
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                        example: The from timestamp must be in the past.
+                type: object
+                additionalProperties: false
+        '403':
+          description: Forbidden - Access denied due to insufficient permissions, or the requested project/environment does not exist (to prevent information disclosure)
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/observability/profiles:
+    get:
+      tags:
+      - Blackfire Profiling
+      summary: List profiling results
+      description: Returns a paginated list of profiles for the environment, optionally filtered by transaction name. Proxied from the Blackfire API.
+      operationId: blackfire_profiles_list
+      parameters:
+      - name: projectId
+        in: path
+        description: The unique identifier of the Upsun project
+        required: true
+        schema:
+          type: string
+          pattern: '[a-z0-9]+'
+          example: abc123def456
+      - name: environmentId
+        in: path
+        description: The environment identifier
+        required: true
+        schema:
+          type: string
+          pattern: .+
+          example: main
+      - name: transaction
+        in: query
+        description: Filter by transaction name (exact match).
+        required: false
+        schema:
+          type: string
+          example: App\Controller\ProductController::list
+      - name: page
+        in: query
+        description: Page number for pagination.
+        required: false
+        schema:
+          type: integer
+          default: null
+          minimum: 1
+      - name: limit
+        in: query
+        description: Number of profiles per page.
+        required: false
+        schema:
+          type: integer
+          default: null
+          maximum: 100
+          minimum: 1
+      - name: url
+        in: query
+        description: Wildcard search across URI, name, and transaction name.
+        required: false
+        schema:
+          type: string
+          example: /api/products
+      - name: is_auto
+        in: query
+        description: When false, excludes auto-triggered (APM) profiles from results.
+        required: false
+        schema:
+          type: boolean
+          example: false
+      - name: is_public
+        in: query
+        description: Filter to public profiles only when set to "true".
+        required: false
+        schema:
+          type: string
+          example: 'true'
+          enum:
+          - 'true'
+          - 'false'
+      - name: sort_by
+        in: query
+        description: Field to sort results by.
+        required: false
+        schema:
+          type: string
+          example: date
+          default: null
+          enum:
+          - date
+          - wt
+          - io
+          - cpu
+          - pmu
+          - nw
+          - sql
+          - http
+      - name: sort_order
+        in: query
+        description: Sort direction.
+        required: false
+        schema:
+          type: string
+          example: desc
+          default: null
+          enum:
+          - asc
+          - desc
+      - name: start_date
+        in: query
+        description: Filter profiles created after this date (ISO 8601).
+        required: false
+        schema:
+          type: string
+          format: date-time
+          example: '2026-01-01T00:00:00+00:00'
+      - name: end_date
+        in: query
+        description: Filter profiles created before this date (ISO 8601).
+        required: false
+        schema:
+          type: string
+          format: date-time
+          example: '2026-12-31T23:59:59+00:00'
+      - name: status_code
+        in: query
+        description: 'Filter by profile status code: -1=empty, 0=todo, 16=payment_required, 32=too_many_subprofiles, 64=done, 128=failed, 192=rejected.'
+        required: false
+        schema:
+          type: integer
+          example: 64
+          enum:
+          - -1
+          - 0
+          - 16
+          - 32
+          - 64
+          - 128
+          - 192
+      - name: owner
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/FilterSelect'
+      - name: languages
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/FilterSelect'
+      - name: frameworks
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/FilterSelect'
+      - name: items_per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: null
+          maximum: 100
+          minimum: 1
+      responses:
+        '200':
+          description: Profiles retrieved successfully
+          content:
+            application/json:
+              schema:
+                required:
+                - _project_id
+                - _environment_id
+                - _branch_machine_name
+                - _agent
+                - profiles
+                - page
+                - pages
+                - total
+                properties:
+                  _project_id:
+                    description: Project identifier
+                    type: string
+                    example: abc123def456
+                  _environment_id:
+                    description: Environment identifier
+                    type: string
+                    example: main
+                  _branch_machine_name:
+                    description: Branch machine name
+                    type: string
+                    example: main-bvxea6i
+                  _agent:
+                    description: Blackfire Agent UUID
+                    type: string
+                    format: uuid
+                    example: a38f69ca-3b56-4ea6-beac-272b2568164a
+                  profiles:
+                    description: List of profiles
+                    type: array
+                    items:
+                      required:
+                      - uuid
+                      - name
+                      - _links
+                      properties:
+                        uuid:
+                          description: Profile UUID
+                          type: string
+                          format: uuid
+                          example: 4b5266a2-fd71-468b-bf05-87b342079cbf
+                        name:
+                          description: Profile name
+                          type: string
+                          example: POST /api/cart
+                        created_at:
+                          description: Profile creation date (ISO 8601)
+                          type: string
+                          format: date-time
+                          example: 2026-03-26T14:31:49+0000
+                        updated_at:
+                          description: Profile last update date (ISO 8601)
+                          type: string
+                          format: date-time
+                          example: 2026-03-26T14:31:52+0000
+                        metadata:
+                          description: Profile metadata (language, framework, transaction name, etc.)
+                          type: object
+                        data:
+                          description: Profile performance data
+                          properties:
+                            envelope:
+                              description: Aggregate performance metrics
+                              properties:
+                                wt:
+                                  description: Wall time (microseconds)
+                                  type: number
+                                  example: 143341
+                                cpu:
+                                  description: CPU time (microseconds)
+                                  type: number
+                                  example: 113242
+                                io:
+                                  description: I/O time (microseconds)
+                                  type: number
+                                  example: 30099
+                                pmu:
+                                  description: Peak memory usage (bytes)
+                                  type: number
+                                  example: 5990880
+                                mu:
+                                  description: Memory usage (bytes)
+                                  type: number
+                                  example: 6301320
+                                nw:
+                                  description: Network I/O (bytes)
+                                  type: number
+                                  example: 739
+                                ct:
+                                  description: Call count
+                                  type: number
+                                  example: 1
+                              type: object
+                            important_metrics:
+                              description: Pre-aggregated SQL and HTTP metrics
+                              properties:
+                                sql_queries:
+                                  properties:
+                                    ct:
+                                      description: Number of SQL queries
+                                      type: number
+                                      example: 5
+                                    wt:
+                                      description: Total SQL wall time (microseconds)
+                                      type: number
+                                      example: 7004
+                                  type: object
+                                http_requests:
+                                  properties:
+                                    ct:
+                                      description: Number of HTTP requests
+                                      type: number
+                                      example: 1
+                                    wt:
+                                      description: Total HTTP wall time (microseconds)
+                                      type: number
+                                      example: 11
+                                  type: object
+                              type: object
+                          type: object
+                        recommendations:
+                          description: Number of recommendation constraints evaluated
+                          type:
+                          - integer
+                          - 'null'
+                          example: 4
+                        context:
+                          description: Request context (HTTP or CLI)
+                          properties:
+                            uri:
+                              description: Full request URI (HTTP profiles)
+                              type: string
+                              example: https://example.com/api/v2/builds
+                            method:
+                              description: HTTP method
+                              type: string
+                              example: POST
+                            status_code:
+                              description: HTTP response status code
+                              type: integer
+                              example: 200
+                            path:
+                              description: Request path
+                              type: string
+                              example: /api/v2/builds
+                            type:
+                              description: Context type
+                              type: string
+                              example: http-request
+                              enum:
+                              - http-request
+                              - cli
+                              - no-op
+                            args:
+                              description: Command arguments (CLI profiles)
+                              type: array
+                              items:
+                                type: string
+                          type: object
+                        status_code:
+                          description: 'Profile processing status: 64=done, 128=failed, 0=todo, -1=empty, 16=payment_required, 32=too_many_subprofiles, 192=rejected'
+                          type: integer
+                          example: 64
+                        status_name:
+                          description: Human-readable profile status
+                          type: string
+                          example: finished
+                        owner:
+                          description: Profile owner
+                          properties:
+                            uuid:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                              example: John Doe
+                            avatar:
+                              type: string
+                              format: uri
+                          type: object
+                        agent:
+                          description: Blackfire agent/environment info
+                          properties:
+                            uuid:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            env_uuid:
+                              type: string
+                              format: uuid
+                            is_env:
+                              type: boolean
+                          type: object
+                        has_timeline:
+                          description: Whether the profile has timeline data
+                          type: boolean
+                          example: true
+                        is_public:
+                          description: Whether the profile is publicly shared
+                          type: boolean
+                          example: false
+                        is_readonly:
+                          description: Whether the profile is read-only
+                          type: boolean
+                          example: false
+                        is_comparison:
+                          description: Whether this is a comparison profile
+                          type: boolean
+                          example: false
+                        caches:
+                          description: Cache statistics (OPcache, APCu, realpath, PCRE)
+                          type: object
+                        report:
+                          description: Test report with constraints and assertions
+                          type:
+                          - object
+                          - 'null'
+                        key_page:
+                          description: Key page / transaction configuration
+                          type: object
+                        _links:
+                          description: Profile navigation links. Links with type "text/html" are web pages for humans. Links with type "application/json" are API endpoints returning JSON.
+                          required:
+                          - api_subprofiles
+                          - api_profile
+                          - api_graph
+                          properties:
+                            graph_url:
+                              required:
+                              - href
+                              - type
+                              properties:
+                                href:
+                                  type: string
+                                  format: uri
+                                  example: https://blackfire.io/profiles/4b5266a2-fd71-468b-bf05-87b342079cbf/graph
+                                type:
+                                  type: string
+                                  example: text/html
+                                  enum:
+                                  - text/html
+                              type: object
+                              additionalProperties: false
+                            api_timeline:
+                              description: API endpoint for timeline data (JSON)
+                              required:
+                              - href
+                              - type
+                              properties:
+                                href:
+                                  type: string
+                                  format: uri
+                                  example: https://api.upsun.com/projects/abc123/environments/main/observability/profiles/4b5266a2-fd71-468b-bf05-87b342079cbf/timeline
+                                type:
+                                  type: string
+                                  example: application/json
+                                  enum:
+                                  - application/json
+                              type: object
+                              additionalProperties: false
+                            api_subprofiles:
+                              description: API endpoint for subprofiles data (JSON)
+                              required:
+                              - href
+                              - type
+                              properties:
+                                href:
+                                  type: string
+                                  format: uri
+                                  example: https://api.upsun.com/projects/abc123/environments/main/observability/profiles/4b5266a2-fd71-468b-bf05-87b342079cbf/subprofiles
+                                type:
+                                  type: string
+                                  example: application/json
+                                  enum:
+                                  - application/json
+                              type: object
+                              additionalProperties: false
+                            api_profile:
+                              description: API endpoint for profile details (JSON)
+                              required:
+                              - href
+                              - type
+                              properties:
+                                href:
+                                  type: string
+                                  format: uri
+                                  example: https://api.upsun.com/projects/abc123/environments/main/observability/profiles/4b5266a2-fd71-468b-bf05-87b342079cbf/profile
+                                type:
+                                  type: string
+                                  example: application/json
+                                  enum:
+                                  - application/json
+                              type: object
+                              additionalProperties: false
+                            api_graph:
+                              description: API endpoint for call graph data (JSON)
+                              required:
+                              - href
+                              - type
+                              properties:
+                                href:
+                                  type: string
+                                  format: uri
+                                  example: https://api.upsun.com/projects/abc123/environments/main/observability/profiles/4b5266a2-fd71-468b-bf05-87b342079cbf/graph
+                                type:
+                                  type: string
+                                  example: application/json
+                                  enum:
+                                  - application/json
+                              type: object
+                              additionalProperties: false
+                          type: object
+                      type: object
+                  page:
+                    description: Current page number
+                    type: integer
+                    example: 1
+                  pages:
+                    description: Total number of pages
+                    type: integer
+                    example: 3
+                  total:
+                    description: Total number of profiles
+                    type: integer
+                    example: 25
+                type: object
+                additionalProperties: false
+              example:
+                _project_id: abc123def456
+                _environment_id: main
+                _branch_machine_name: main-bvxea6i
+                _agent: a38f69ca-3b56-4ea6-beac-272b2568164a
+                profiles:
+                - uuid: 4b5266a2-fd71-468b-bf05-87b342079cbf
+                  name: POST /api/cart
+                  created_at: 2026-03-26T14:31:49+0000
+                  updated_at: 2026-03-26T14:31:52+0000
+                  metadata:
+                    Triggered by: apm
+                    Transaction Name: App\Controller\CartController::add
+                    Language: php
+                    Frameworks:
+                    - symfony_framework
+                  data:
+                    envelope:
+                      wt: 143341
+                      cpu: 113242
+                      io: 30099
+                      pmu: 5990880
+                      mu: 6301320
+                      nw: 739
+                      ct: 1
+                    important_metrics:
+                      sql_queries:
+                        ct: 5
+                        wt: 7004
+                      http_requests:
+                        ct: 1
+                        wt: 11
+                  recommendations: 4
+                  context:
+                    uri: https://example.com/api/cart
+                    method: POST
+                    status_code: 200
+                    path: /api/cart
+                    type: http-request
+                  status_code: 64
+                  status_name: finished
+                  owner:
+                    uuid: 4aed4f5d-e0cb-4320-902f-885fddaa7d15
+                    name: John Doe
+                  agent:
+                    uuid: a38f69ca-3b56-4ea6-beac-272b2568164a
+                    name: Production
+                    env_uuid: a38f69ca-3b56-4ea6-beac-272b2568164a
+                    is_env: true
+                  has_timeline: true
+                  is_public: false
+                  is_readonly: false
+                  is_comparison: false
+                  caches:
+                    opcache:
+                      enabled: true
+                      hitrate: 0.99
+                      items: 5128
+                  _links:
+                    graph_url:
+                      href: https://blackfire.io/profiles/4b5266a2-fd71-468b-bf05-87b342079cbf/graph
+                      type: text/html
+                    api_timeline:
+                      href: https://api.upsun.com/projects/abc123def456/environments/main/observability/profiles/4b5266a2-fd71-468b-bf05-87b342079cbf/timeline
+                      type: application/json
+                    api_subprofiles:
+                      href: https://api.upsun.com/projects/abc123def456/environments/main/observability/profiles/4b5266a2-fd71-468b-bf05-87b342079cbf/subprofiles
+                      type: application/json
+                    api_profile:
+                      href: https://api.upsun.com/projects/abc123def456/environments/main/observability/profiles/4b5266a2-fd71-468b-bf05-87b342079cbf/profile
+                      type: application/json
+                    api_graph:
+                      href: https://api.upsun.com/projects/abc123def456/environments/main/observability/profiles/4b5266a2-fd71-468b-bf05-87b342079cbf/graph
+                      type: application/json
+                page: 1
+                pages: 3
+                total: 25
+        '400':
+          description: Bad request - Invalid parameters. Please consult the API documentation to fix the request parameters.
+          content:
+            application/json:
+              schema:
+                required:
+                - type
+                - title
+                - status
+                - violations
+                properties:
+                  type:
+                    description: RFC 2616 reference URL identifying the error type
+                    type: string
+                    format: uri
+                    example: https://tools.ietf.org/html/rfc2616#section-1
+                  title:
+                    description: Human-readable summary of the validation error
+                    type: string
+                    example: Please ensure parameters are correct.
+                  status:
+                    description: HTTP status code
+                    type: integer
+                    example: 400
+                  violations:
+                    description: Map of parameter names to their validation errors. Each parameter can have multiple error messages.
+                    type: object
+                    example:
+                      grain:
+                      - Grain can not be larger than the selection windows.
+                      from:
+                      - The from timestamp must be in the past.
+                      to:
+                      - The to timestamp must be greater than the from timestamp.
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                        example: The from timestamp must be in the past.
+                type: object
+                additionalProperties: false
+        '403':
+          description: Forbidden - Access denied due to insufficient permissions, or the requested project/environment does not exist (to prevent information disclosure)
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    FilterSelect:
+      properties:
+        mode:
+          $ref: '#/components/schemas/Mode'
+        values:
+          oneOf:
+          - type: array
+            items:
+              type:
+              - string
+              - 'null'
+          - type: object
+            additionalProperties:
+              type:
+              - string
+              - 'null'
+          default: null
+      type: object
+    Mode:
+      type: string
+      enum:
+      - '1'
+      - '-1'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

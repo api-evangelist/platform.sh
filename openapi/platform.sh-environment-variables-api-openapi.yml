@@ -1,0 +1,548 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Environment Variables API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Environment Variables across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Environment Variables
+  description: 'These endpoints manipulate user-defined variables which are bound to a
+
+    specific environment, as well as (optionally) the children of an
+
+    environment. These variables can be made available at both build time
+
+    and runtime. For more information on environment variables,
+
+    see the [Variables](https://docs.upsun.com/anchors/variables/set/environment/create/)
+
+    section of the documentation.
+
+    '
+paths:
+  /projects/{projectId}/environments/{environmentId}/variables:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: list-projects-environments-variables
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentVariableCollection'
+      tags:
+      - Environment Variables
+      summary: Get list of environment variables
+      description: 'Retrieve a list of objects representing the user-defined variables
+
+        within an environment.
+
+        '
+      security:
+      - OAuth2: []
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: create-projects-environments-variables
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentVariableCreateInput'
+      tags:
+      - Environment Variables
+      summary: Add an environment variable
+      description: 'Add a variable to an environment. The `value` can be either a string or a JSON
+
+        object (default: string), as specified by the `is_json` boolean flag.
+
+        Additionally, the inheritability of an environment variable can be
+
+        determined through the `is_inheritable` flag (default: true).
+
+        See the [Environment Variables](https://docs.upsun.com/anchors/variables/set/environment/create/)
+
+        section in our documentation for more information.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/variables/{variableId}:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: variableId
+      operationId: get-projects-environments-variables
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentVariable'
+      tags:
+      - Environment Variables
+      summary: Get an environment variable
+      description: Retrieve a single user-defined environment variable.
+      security:
+      - OAuth2: []
+    patch:
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentVariablePatch'
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: variableId
+      operationId: update-projects-environments-variables
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment Variables
+      summary: Update an environment variable
+      description: 'Update a single user-defined environment variable.
+
+        The `value` can be either a string or a JSON
+
+        object (default: string), as specified by the `is_json` boolean flag.
+
+        Additionally, the inheritability of an environment variable can be
+
+        determined through the `is_inheritable` flag (default: true).
+
+        See the [Variables](https://docs.upsun.com/anchors/variables/)
+
+        section in our documentation for more information.
+
+        '
+      security:
+      - OAuth2: []
+    delete:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: variableId
+      operationId: delete-projects-environments-variables
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment Variables
+      summary: Delete an environment variable
+      description: Delete a single user-defined environment variable.
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    EnvironmentVariableCreateInput:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Name of the variable
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        value:
+          type: string
+          title: Value
+          description: Value of the variable
+        is_json:
+          type: boolean
+          title: Is JSON
+          description: The variable is a JSON string
+        is_sensitive:
+          type: boolean
+          title: Is Sensitive
+          description: The variable is sensitive
+        visible_build:
+          type: boolean
+          title: Is visible during build
+          description: The variable is visible during build
+        visible_runtime:
+          type: boolean
+          title: Visible at runtime
+          description: The variable is visible at runtime
+        application_scope:
+          type: array
+          items:
+            type: string
+          title: Application Scope
+          description: Applications that have access to this variable
+        is_enabled:
+          type: boolean
+          title: Is enabled
+          description: The variable is enabled on this environment
+        is_inheritable:
+          type: boolean
+          title: Is inheritable
+          description: The variable is inheritable to child environments
+      required:
+      - name
+      - value
+      additionalProperties: false
+    EnvironmentVariable:
+      type: object
+      properties:
+        id:
+          type: string
+          title: EnvironmentVariable Identifier
+          description: The identifier of EnvironmentVariable
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        name:
+          type: string
+          title: Name
+          description: Name of the variable
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        value:
+          type: string
+          title: Value
+          description: Value of the variable
+        is_json:
+          type: boolean
+          title: Is JSON
+          description: The variable is a JSON string
+        is_sensitive:
+          type: boolean
+          title: Is Sensitive
+          description: The variable is sensitive
+        visible_build:
+          type: boolean
+          title: Is visible during build
+          description: The variable is visible during build
+        visible_runtime:
+          type: boolean
+          title: Visible at runtime
+          description: The variable is visible at runtime
+        application_scope:
+          type: array
+          items:
+            type: string
+          title: Application Scope
+          description: Applications that have access to this variable
+        project:
+          type: string
+          title: Project name
+          description: The name of the project
+        environment:
+          type: string
+          title: Environment name
+          description: The name of the environment
+        inherited:
+          type: boolean
+          title: Is inherited
+          description: The variable is inherited from a parent environment
+        is_enabled:
+          type: boolean
+          title: Is enabled
+          description: The variable is enabled on this environment
+        is_inheritable:
+          type: boolean
+          title: Is inheritable
+          description: The variable is inheritable to child environments
+      required:
+      - id
+      - created_at
+      - updated_at
+      - name
+      - attributes
+      - is_json
+      - is_sensitive
+      - visible_build
+      - visible_runtime
+      - application_scope
+      - project
+      - environment
+      - inherited
+      - is_enabled
+      - is_inheritable
+      additionalProperties: false
+    EnvironmentVariableCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/EnvironmentVariable'
+    EnvironmentVariablePatch:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Name of the variable
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        value:
+          type: string
+          title: Value
+          description: Value of the variable
+        is_json:
+          type: boolean
+          title: Is JSON
+          description: The variable is a JSON string
+        is_sensitive:
+          type: boolean
+          title: Is Sensitive
+          description: The variable is sensitive
+        visible_build:
+          type: boolean
+          title: Is visible during build
+          description: The variable is visible during build
+        visible_runtime:
+          type: boolean
+          title: Visible at runtime
+          description: The variable is visible at runtime
+        application_scope:
+          type: array
+          items:
+            type: string
+          title: Application Scope
+          description: Applications that have access to this variable
+        is_enabled:
+          type: boolean
+          title: Is enabled
+          description: The variable is enabled on this environment
+        is_inheritable:
+          type: boolean
+          title: Is inheritable
+          description: The variable is inheritable to child environments
+      additionalProperties: false
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

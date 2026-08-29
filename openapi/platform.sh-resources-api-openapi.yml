@@ -1,0 +1,3429 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Resources API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Resources across 2 of this provider''s published API definitions: platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+security:
+- BearerAuth: []
+tags:
+- name: Resources
+paths:
+  /projects/{projectId}/environments/{environmentId}/observability/resources/overview:
+    get:
+      tags:
+      - Resources
+      summary: Get resource metrics overview
+      description: 'Returns time-series resource utilization data for all services. Each timestamp includes per-service metrics: CPU (cores), memory (bytes), swap (bytes), pressure indicators (0.0-1.0), and per-mountpoint disk/inode usage. All metrics include statistical aggregations: min, max, avg, stddev, and percentiles (p50, p95-p99). Service names and mountpoint paths are dynamic. Aggregation values are nullable when insufficient data exists.'
+      operationId: resources_overview
+      parameters:
+      - name: projectId
+        in: path
+        description: The unique identifier of the Upsun project
+        required: true
+        schema:
+          type: string
+          pattern: '[a-z0-9]+'
+          example: abc123def456
+      - name: environmentId
+        in: path
+        description: The environment identifier
+        required: true
+        schema:
+          type: string
+          pattern: .+
+          example: main
+      - name: from
+        in: query
+        description: Start timestamp for the time range (Unix timestamp in seconds)
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1704067200
+      - name: to
+        in: query
+        description: End timestamp for the time range (Unix timestamp in seconds)
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1704153600
+      - name: service
+        in: query
+        description: Filter by specific service name (optional)
+        required: false
+        schema:
+          type: string
+          example: app
+      - name: services[]
+        in: query
+        description: Filter results to specific services. Can be specified multiple times for multiple services. When omitted, all services are included by default. Use services_mode to control inclusion/exclusion behavior. Specify parameter multiple times for multiple values (e.g., ?services[]=app&services[]=database).
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: app
+      - name: services_mode
+        in: query
+        description: Filter mode for services parameter. "1" (additive) includes only specified services. "-1" (subtractive, default) excludes specified services and includes all others.
+        required: false
+        schema:
+          type: string
+          example: '1'
+          default: null
+          enum:
+          - '1'
+          - '-1'
+      responses:
+        '200':
+          description: Resource metrics retrieved successfully
+          content:
+            application/json:
+              schema:
+                required:
+                - _grain
+                - _from
+                - _to
+                - _project_id
+                - _environment_id
+                - _branch_machine_name
+                - data
+                properties:
+                  _grain:
+                    description: Data granularity in seconds
+                    type: integer
+                    example: 5
+                  _from:
+                    description: Query start timestamp
+                    type: integer
+                    example: 1704067200
+                  _to:
+                    description: Query end timestamp
+                    type: integer
+                    example: 1704153600
+                  _project_id:
+                    description: Project identifier
+                    type: string
+                    example: abc123def456
+                  _environment_id:
+                    description: Environment identifier
+                    type: string
+                    example: main
+                  _branch_machine_name:
+                    description: Branch machine name
+                    type: string
+                    example: main-bvxea6i
+                  data:
+                    description: Array of timestamped data points, each containing resource metrics grouped by service name. Each data point contains `timestamp` and optional data fields. Fields are omitted for timestamps with no data - this indicates no data was received.
+                    type: array
+                    items:
+                      required:
+                      - timestamp
+                      properties:
+                        timestamp:
+                          description: Data point timestamp (Unix timestamp in seconds)
+                          type: integer
+                          example: 1704067200
+                        services:
+                          description: 'Object with service names as keys (dynamic, e.g., "app", "database"). Each service contains: cpu_used, cpu_limit, memory_used, memory_limit, swap_used, swap_limit, memory_pressure, cpu_pressure, io_pressure, irq_pressure, and mountpoints. All metrics except limits include min, max, avg, stddev, p50, p95-p99 aggregations (nullable).'
+                          type: object
+                          example:
+                            app:
+                              cpu_used:
+                                min: 0.12
+                                max: 1.85
+                                avg: 0.45
+                                stddev: 0.32
+                                p50: 0.42
+                                p95: 1.23
+                                p96: 1.34
+                                p97: 1.45
+                                p98: 1.62
+                                p99: 1.78
+                              cpu_limit:
+                                max: 2
+                              memory_used:
+                                min: 536870912
+                                max: 715827883
+                                avg: 612892672
+                                stddev: 45000000
+                                p50: 605000000
+                                p95: 690000000
+                                p96: 695000000
+                                p97: 700000000
+                                p98: 708000000
+                                p99: 712000000
+                              memory_limit:
+                                max: 1073741824
+                              swap_used:
+                                min: 0
+                                max: 4194304
+                                avg: 1048576
+                                stddev: 850000
+                                p50: 950000
+                                p95: 3200000
+                                p96: 3400000
+                                p97: 3600000
+                                p98: 3900000
+                                p99: 4100000
+                              swap_limit:
+                                max: 536870912
+                              memory_pressure:
+                                min: 0
+                                max: 0.15
+                                avg: 0.03
+                                stddev: 0.02
+                                p50: 0.02
+                                p95: 0.12
+                                p96: 0.13
+                                p97: 0.14
+                                p98: 0.145
+                                p99: 0.148
+                              cpu_pressure:
+                                min: 0
+                                max: 0.08
+                                avg: 0.01
+                                stddev: 0.01
+                                p50: 0.01
+                                p95: 0.05
+                                p96: 0.06
+                                p97: 0.065
+                                p98: 0.07
+                                p99: 0.075
+                              io_pressure:
+                                min: 0
+                                max: 0.22
+                                avg: 0.05
+                                stddev: 0.04
+                                p50: 0.04
+                                p95: 0.18
+                                p96: 0.19
+                                p97: 0.2
+                                p98: 0.21
+                                p99: 0.215
+                              irq_pressure:
+                                min: 0
+                                max: 0.01
+                                avg: 0.001
+                                stddev: 0.002
+                                p50: 0
+                                p95: 0.008
+                                p96: 0.009
+                                p97: 0.0095
+                                p98: 0.0097
+                                p99: 0.0099
+                              mountpoints:
+                                ? ''
+                                : disk_used:
+                                    min: 3087007744
+                                    max: 3221225472
+                                    avg: 3154116608
+                                    stddev: 35000000
+                                    p50: 3150000000
+                                    p95: 3210000000
+                                    p96: 3215000000
+                                    p97: 3217000000
+                                    p98: 3219000000
+                                    p99: 3220000000
+                                  disk_limit:
+                                    max: 10737418240
+                                  inodes_used:
+                                    min: 45000
+                                    max: 52000
+                                    avg: 48500
+                                    stddev: 1500
+                                    p50: 48400
+                                    p95: 51200
+                                    p96: 51400
+                                    p97: 51600
+                                    p98: 51800
+                                    p99: 51900
+                                  inodes_limit:
+                                    max: 655360
+                                /tmp:
+                                  disk_used:
+                                    min: 524288
+                                    max: 2097152
+                                    avg: 1310720
+                                    stddev: 400000
+                                    p50: 1300000
+                                    p95: 1900000
+                                    p96: 1950000
+                                    p97: 2000000
+                                    p98: 2050000
+                                    p99: 2080000
+                                  disk_limit:
+                                    max: 1073741824
+                                  inodes_used:
+                                    min: 120
+                                    max: 245
+                                    avg: 182
+                                    stddev: 25
+                                    p50: 180
+                                    p95: 230
+                                    p96: 235
+                                    p97: 238
+                                    p98: 242
+                                    p99: 244
+                                  inodes_limit:
+                                    max: 65536
+                            database:
+                              cpu_used:
+                                min: 0.08
+                                max: 2.45
+                                avg: 0.62
+                                stddev: 0.48
+                                p50: 0.55
+                                p95: 1.85
+                                p96: 2.02
+                                p97: 2.15
+                                p98: 2.28
+                                p99: 2.38
+                              cpu_limit:
+                                max: 4
+                              memory_used:
+                                min: 1073741824
+                                max: 1610612736
+                                avg: 1342177280
+                                stddev: 120000000
+                                p50: 1320000000
+                                p95: 1550000000
+                                p96: 1570000000
+                                p97: 1585000000
+                                p98: 1598000000
+                                p99: 1606000000
+                              memory_limit:
+                                max: 2147483648
+                              swap_used:
+                                min: 0
+                                max: 8388608
+                                avg: 2097152
+                                stddev: 1800000
+                                p50: 1900000
+                                p95: 6500000
+                                p96: 7100000
+                                p97: 7500000
+                                p98: 7900000
+                                p99: 8200000
+                              swap_limit:
+                                max: 1073741824
+                              memory_pressure:
+                                min: 0
+                                max: 0.25
+                                avg: 0.06
+                                stddev: 0.05
+                                p50: 0.05
+                                p95: 0.2
+                                p96: 0.21
+                                p97: 0.22
+                                p98: 0.23
+                                p99: 0.24
+                              cpu_pressure:
+                                min: 0
+                                max: 0.12
+                                avg: 0.02
+                                stddev: 0.02
+                                p50: 0.02
+                                p95: 0.09
+                                p96: 0.1
+                                p97: 0.105
+                                p98: 0.11
+                                p99: 0.115
+                              io_pressure:
+                                min: 0
+                                max: 0.45
+                                avg: 0.12
+                                stddev: 0.09
+                                p50: 0.1
+                                p95: 0.35
+                                p96: 0.38
+                                p97: 0.4
+                                p98: 0.42
+                                p99: 0.44
+                              irq_pressure:
+                                min: 0
+                                max: 0.02
+                                avg: 0.003
+                                stddev: 0.004
+                                p50: 0.002
+                                p95: 0.015
+                                p96: 0.017
+                                p97: 0.018
+                                p98: 0.019
+                                p99: 0.0195
+                              mountpoints:
+                                ? ''
+                                : disk_used:
+                                    min: 8589934592
+                                    max: 9663676416
+                                    avg: 9126805504
+                                    stddev: 250000000
+                                    p50: 9100000000
+                                    p95: 9550000000
+                                    p96: 9580000000
+                                    p97: 9610000000
+                                    p98: 9640000000
+                                    p99: 9660000000
+                                  disk_limit:
+                                    max: 21474836480
+                                  inodes_used:
+                                    min: 125000
+                                    max: 145000
+                                    avg: 135000
+                                    stddev: 4500
+                                    p50: 134500
+                                    p95: 142800
+                                    p96: 143400
+                                    p97: 144000
+                                    p98: 144500
+                                    p99: 144800
+                                  inodes_limit:
+                                    max: 1310720
+                          additionalProperties:
+                            properties:
+                              cpu_used:
+                                description: 'CPU usage in cores. Includes statistical aggregations (all nullable): min, max, avg, stddev, p50, p95, p96, p97, p98, p99'
+                                properties:
+                                  min:
+                                    description: Minimum CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.12
+                                  max:
+                                    description: Maximum CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 1.85
+                                  avg:
+                                    description: Average CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.45
+                                  stddev:
+                                    description: Standard deviation of CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.32
+                                  p50:
+                                    description: Median (50th percentile) CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.42
+                                  p95:
+                                    description: 95th percentile CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 1.23
+                                  p96:
+                                    description: 96th percentile CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 1.34
+                                  p97:
+                                    description: 97th percentile CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 1.45
+                                  p98:
+                                    description: 98th percentile CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 1.62
+                                  p99:
+                                    description: 99th percentile CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 1.78
+                                type: object
+                                additionalProperties: false
+                              cpu_limit:
+                                description: CPU limit in cores. Contains only max (nullable)
+                                properties:
+                                  max:
+                                    description: Maximum CPU limit in cores
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 2
+                                type: object
+                                additionalProperties: false
+                              memory_used:
+                                description: 'Memory usage in bytes. Includes statistical aggregations (all nullable): min, max, avg, stddev, p50, p95, p96, p97, p98, p99'
+                                properties:
+                                  min:
+                                    description: Minimum memory bytes used
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    format: int64
+                                    example: 536870912
+                                  max:
+                                    description: Maximum memory bytes used
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    format: int64
+                                    example: 715827883
+                                  avg:
+                                    description: Average memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 612892672
+                                  stddev:
+                                    description: Standard deviation of memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 45000000
+                                  p50:
+                                    description: Median (50th percentile) memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 605000000
+                                  p95:
+                                    description: 95th percentile memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 690000000
+                                  p96:
+                                    description: 96th percentile memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 695000000
+                                  p97:
+                                    description: 97th percentile memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 700000000
+                                  p98:
+                                    description: 98th percentile memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 708000000
+                                  p99:
+                                    description: 99th percentile memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 712000000
+                                type: object
+                                additionalProperties: false
+                              memory_limit:
+                                description: Memory limit in bytes. Contains only max (nullable)
+                                properties:
+                                  max:
+                                    description: Maximum memory limit in bytes
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    format: int64
+                                    example: 1073741824
+                                type: object
+                                additionalProperties: false
+                              swap_used:
+                                description: 'Swap usage in bytes. Includes statistical aggregations (all nullable): min, max, avg, stddev, p50, p95, p96, p97, p98, p99'
+                                properties:
+                                  min:
+                                    description: Minimum swap bytes used
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    format: int64
+                                    example: 0
+                                  max:
+                                    description: Maximum swap bytes used
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    format: int64
+                                    example: 4194304
+                                  avg:
+                                    description: Average swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 1048576
+                                  stddev:
+                                    description: Standard deviation of swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 850000
+                                  p50:
+                                    description: Median (50th percentile) swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 950000
+                                  p95:
+                                    description: 95th percentile swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 3200000
+                                  p96:
+                                    description: 96th percentile swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 3400000
+                                  p97:
+                                    description: 97th percentile swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 3600000
+                                  p98:
+                                    description: 98th percentile swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 3900000
+                                  p99:
+                                    description: 99th percentile swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 4100000
+                                type: object
+                                additionalProperties: false
+                              swap_limit:
+                                description: Swap limit in bytes. Contains only max (nullable)
+                                properties:
+                                  max:
+                                    description: Maximum swap limit in bytes
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    format: int64
+                                    example: 536870912
+                                type: object
+                                additionalProperties: false
+                              memory_pressure:
+                                description: 'Memory pressure stall indicator (0.0-1.0). Includes statistical aggregations (all nullable): min, max, avg, stddev, p50, p95, p96, p97, p98, p99'
+                                properties:
+                                  min:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  max:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.15
+                                  avg:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.03
+                                  stddev:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.02
+                                  p50:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.02
+                                  p95:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.12
+                                  p96:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.13
+                                  p97:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.14
+                                  p98:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.145
+                                  p99:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.148
+                                type: object
+                                additionalProperties: false
+                              cpu_pressure:
+                                description: 'CPU pressure stall indicator (0.0-1.0). Includes statistical aggregations (all nullable): min, max, avg, stddev, p50, p95, p96, p97, p98, p99'
+                                properties:
+                                  min:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  max:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.08
+                                  avg:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.01
+                                  stddev:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.01
+                                  p50:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.01
+                                  p95:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.05
+                                  p96:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.06
+                                  p97:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.065
+                                  p98:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.07
+                                  p99:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.075
+                                type: object
+                                additionalProperties: false
+                              io_pressure:
+                                description: 'I/O pressure stall indicator (0.0-1.0). Includes statistical aggregations (all nullable): min, max, avg, stddev, p50, p95, p96, p97, p98, p99'
+                                properties:
+                                  min:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  max:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.22
+                                  avg:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.05
+                                  stddev:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.04
+                                  p50:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.04
+                                  p95:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.18
+                                  p96:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.19
+                                  p97:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.2
+                                  p98:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.21
+                                  p99:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.215
+                                type: object
+                                additionalProperties: false
+                              irq_pressure:
+                                description: 'IRQ pressure stall indicator (0.0-1.0). Includes statistical aggregations (all nullable): min, max, avg, stddev, p50, p95, p96, p97, p98, p99'
+                                properties:
+                                  min:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  max:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.01
+                                  avg:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.001
+                                  stddev:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.002
+                                  p50:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p95:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.008
+                                  p96:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.009
+                                  p97:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.0095
+                                  p98:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.0097
+                                  p99:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.0099
+                                type: object
+                                additionalProperties: false
+                              mountpoints:
+                                description: 'Object with mountpoint paths as keys (dynamic, e.g., "", "/tmp", "/mnt"). Each mountpoint contains: disk_used, disk_limit, inodes_used, inodes_limit. All metrics except limits include min, max, avg, stddev, p50, p95-p99 aggregations (nullable).'
+                                type: object
+                                additionalProperties:
+                                  properties:
+                                    disk_used:
+                                      description: 'Disk usage in bytes. Includes statistical aggregations (all nullable): min, max, avg, stddev, p50, p95, p96, p97, p98, p99'
+                                      properties:
+                                        min:
+                                          description: Minimum disk bytes used
+                                          type:
+                                          - integer
+                                          - 'null'
+                                          format: int64
+                                          example: 3087007744
+                                        max:
+                                          description: Maximum disk bytes used
+                                          type:
+                                          - integer
+                                          - 'null'
+                                          format: int64
+                                          example: 3221225472
+                                        avg:
+                                          description: Average disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 3154116608
+                                        stddev:
+                                          description: Standard deviation of disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 35000000
+                                        p50:
+                                          description: Median (50th percentile) disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 3150000000
+                                        p95:
+                                          description: 95th percentile disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 3210000000
+                                        p96:
+                                          description: 96th percentile disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 3215000000
+                                        p97:
+                                          description: 97th percentile disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 3217000000
+                                        p98:
+                                          description: 98th percentile disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 3219000000
+                                        p99:
+                                          description: 99th percentile disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 3220000000
+                                      type: object
+                                      additionalProperties: false
+                                    disk_limit:
+                                      description: Disk limit in bytes. Contains only max (nullable)
+                                      properties:
+                                        max:
+                                          description: Maximum disk limit in bytes
+                                          type:
+                                          - integer
+                                          - 'null'
+                                          format: int64
+                                          example: 10737418240
+                                      type: object
+                                      additionalProperties: false
+                                    inodes_used:
+                                      description: 'Inode usage count. Includes statistical aggregations (all nullable): min, max, avg, stddev, p50, p95, p96, p97, p98, p99'
+                                      properties:
+                                        min:
+                                          description: Minimum inodes used
+                                          type:
+                                          - integer
+                                          - 'null'
+                                          example: 45000
+                                        max:
+                                          description: Maximum inodes used
+                                          type:
+                                          - integer
+                                          - 'null'
+                                          example: 52000
+                                        avg:
+                                          description: Average inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 48500
+                                        stddev:
+                                          description: Standard deviation of inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 1500
+                                        p50:
+                                          description: Median (50th percentile) inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 48400
+                                        p95:
+                                          description: 95th percentile inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 51200
+                                        p96:
+                                          description: 96th percentile inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 51400
+                                        p97:
+                                          description: 97th percentile inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 51600
+                                        p98:
+                                          description: 98th percentile inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 51800
+                                        p99:
+                                          description: 99th percentile inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 51900
+                                      type: object
+                                      additionalProperties: false
+                                    inodes_limit:
+                                      description: Inode limit count. Contains only max (nullable)
+                                      properties:
+                                        max:
+                                          description: Maximum inodes limit
+                                          type:
+                                          - integer
+                                          - 'null'
+                                          example: 655360
+                                      type: object
+                                      additionalProperties: false
+                                  type: object
+                                  additionalProperties: false
+                            type: object
+                            additionalProperties: false
+                      type: object
+                      additionalProperties: false
+                    example:
+                    - timestamp: 1704067200
+                      services:
+                        app:
+                          cpu_used:
+                            avg: 0.45
+                          memory_used:
+                            avg: 612892672
+                    - timestamp: 1704070800
+                    - timestamp: 1704074400
+                      services:
+                        app:
+                          cpu_used:
+                            avg: 0.52
+                          memory_used:
+                            avg: 625000000
+                type: object
+                additionalProperties: false
+        '400':
+          description: Bad request - Invalid parameters. Please consult the API documentation to fix the request parameters.
+          content:
+            application/json:
+              schema:
+                required:
+                - type
+                - title
+                - status
+                - violations
+                properties:
+                  type:
+                    description: RFC 2616 reference URL identifying the error type
+                    type: string
+                    format: uri
+                    example: https://tools.ietf.org/html/rfc2616#section-1
+                  title:
+                    description: Human-readable summary of the validation error
+                    type: string
+                    example: Please ensure parameters are correct.
+                  status:
+                    description: HTTP status code
+                    type: integer
+                    example: 400
+                  violations:
+                    description: Map of parameter names to their validation errors. Each parameter can have multiple error messages.
+                    type: object
+                    example:
+                      grain:
+                      - Grain can not be larger than the selection windows.
+                      from:
+                      - The from timestamp must be in the past.
+                      to:
+                      - The to timestamp must be greater than the from timestamp.
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                        example: The from timestamp must be in the past.
+                type: object
+                additionalProperties: false
+        '403':
+          description: Forbidden - Access denied due to insufficient permissions, or the requested project/environment does not exist (to prevent information disclosure)
+        '499':
+          description: Too much data fetched - The query is attempting to retrieve too much data. Please narrow down the query by reducing the time range or adding more specific filters to retrieve less data.
+          content:
+            application/json:
+              schema:
+                required:
+                - error
+                - message
+                properties:
+                  error:
+                    type: string
+                    example: Too much data fetched
+                  message:
+                    type: string
+                    example: Please reduce the time range or add more filters to narrow down the query
+                type: object
+                additionalProperties: false
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/observability/resources/summary:
+    get:
+      tags:
+      - Resources
+      summary: Get resource metrics summary
+      description: Returns per-instance resource statistics aggregated over the time range. Filter results using aggs[] (min, max, avg, stddev, p50, p95-p99) and types[] (cpu, memory, swap, disk, inodes, pressure metrics). Response grouped by service name then instance ID (e.g., "app.0", "database.1"). All aggregations nullable when insufficient data exists.
+      operationId: resources_summary
+      parameters:
+      - name: projectId
+        in: path
+        description: The unique identifier of the Upsun project
+        required: true
+        schema:
+          type: string
+          pattern: '[a-z0-9]+'
+          example: abc123def456
+      - name: environmentId
+        in: path
+        description: The environment identifier
+        required: true
+        schema:
+          type: string
+          pattern: .+
+          example: main
+      - name: from
+        in: query
+        description: Start timestamp for the time range (Unix timestamp in seconds)
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1704067200
+      - name: to
+        in: query
+        description: End timestamp for the time range (Unix timestamp in seconds)
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1704153600
+      - name: aggs[]
+        in: query
+        description: 'Statistical aggregations to include in the response. Can be specified multiple times. Available values: avg, stddev, max, min, p50, p95, p96, p97, p98, p99. Specify parameter multiple times for multiple values (e.g., ?aggs[]=avg&aggs[]=p50).'
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - avg
+            - stddev
+            - max
+            - min
+            - p50
+            - p95
+            - p96
+            - p97
+            - p98
+            - p99
+      - name: types[]
+        in: query
+        description: 'Metric types to include in the response. Can be specified multiple times. Available values: cpu, memory, disk, inodes, swap, memory_pressure, cpu_pressure, io_pressure, irq_pressure. Specify parameter multiple times for multiple values (e.g., ?types[]=cpu&types[]=memory).'
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - cpu
+            - memory
+            - disk
+            - inodes
+            - swap
+            - memory_pressure
+            - cpu_pressure
+            - io_pressure
+            - irq_pressure
+      - name: services[]
+        in: query
+        description: Filter results to specific services. Can be specified multiple times for multiple services. When omitted, all services are included by default. Use services_mode to control inclusion/exclusion behavior. Specify parameter multiple times for multiple values (e.g., ?services[]=app&services[]=database).
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            example: app
+      - name: services_mode
+        in: query
+        description: Filter mode for services parameter. "1" (additive) includes only specified services. "-1" (subtractive, default) excludes specified services and includes all others.
+        required: false
+        schema:
+          type: string
+          example: '1'
+          default: null
+          enum:
+          - '1'
+          - '-1'
+      responses:
+        '200':
+          description: Successfully retrieved resource summary with per-service-instance aggregations
+          content:
+            application/json:
+              schema:
+                required:
+                - _from
+                - _to
+                - _project_id
+                - _environment_id
+                - _branch_machine_name
+                - data
+                properties:
+                  _from:
+                    description: Query start timestamp
+                    type: integer
+                    example: 1704067200
+                  _to:
+                    description: Query end timestamp
+                    type: integer
+                    example: 1704153600
+                  _project_id:
+                    description: Project identifier
+                    type: string
+                    example: abc123def456
+                  _environment_id:
+                    description: Environment identifier
+                    type: string
+                    example: main
+                  _branch_machine_name:
+                    description: Branch machine name
+                    type: string
+                    example: main-bvxea6i
+                  data:
+                    description: Resource summary data organized by service and instance
+                    required:
+                    - services
+                    properties:
+                      services:
+                        description: Resource metrics grouped by service name. Service names are dynamic and vary based on customer configuration (e.g., "admin-pipeline", "clickhouse", "app", "database"). Each service contains one or more instances with full statistical aggregations for all requested metric types.
+                        type: object
+                        example:
+                          app:
+                            app.0:
+                              cpu_used:
+                                min: 0.12
+                                max: 1.85
+                                avg: 0.45
+                                stddev: 0.32
+                                p50: 0.42
+                                p95: 1.23
+                                p96: 1.34
+                                p97: 1.45
+                                p98: 1.62
+                                p99: 1.78
+                              cpu_limit:
+                                max: 2
+                              memory_used:
+                                min: 536870912
+                                max: 715827883
+                                avg: 612892672
+                                stddev: 45000000
+                                p50: 605000000
+                                p95: 690000000
+                                p96: 695000000
+                                p97: 700000000
+                                p98: 708000000
+                                p99: 712000000
+                              memory_limit:
+                                max: 1073741824
+                              swap_used:
+                                min: 0
+                                max: 4194304
+                                avg: 1048576
+                                stddev: 850000
+                                p50: 950000
+                                p95: 3200000
+                                p96: 3400000
+                                p97: 3600000
+                                p98: 3900000
+                                p99: 4100000
+                              swap_limit:
+                                max: 536870912
+                              memory_pressure:
+                                min: 0
+                                max: 0.15
+                                avg: 0.03
+                                stddev: 0.02
+                                p50: 0.02
+                                p95: 0.12
+                                p96: 0.13
+                                p97: 0.14
+                                p98: 0.145
+                                p99: 0.148
+                              cpu_pressure:
+                                min: 0
+                                max: 0.08
+                                avg: 0.01
+                                stddev: 0.01
+                                p50: 0.01
+                                p95: 0.05
+                                p96: 0.06
+                                p97: 0.065
+                                p98: 0.07
+                                p99: 0.075
+                              io_pressure:
+                                min: 0
+                                max: 0.22
+                                avg: 0.05
+                                stddev: 0.04
+                                p50: 0.04
+                                p95: 0.18
+                                p96: 0.19
+                                p97: 0.2
+                                p98: 0.21
+                                p99: 0.215
+                              irq_pressure:
+                                min: 0
+                                max: 0.01
+                                avg: 0.001
+                                stddev: 0.002
+                                p50: 0
+                                p95: 0.008
+                                p96: 0.009
+                                p97: 0.0095
+                                p98: 0.0097
+                                p99: 0.0099
+                              mountpoints:
+                                ? ''
+                                : disk_used:
+                                    min: null
+                                    max: null
+                                    avg: null
+                                    stddev: null
+                                    p50: null
+                                    p95: null
+                                    p96: null
+                                    p97: null
+                                    p98: null
+                                    p99: null
+                                  disk_limit:
+                                    max: null
+                                  inodes_used:
+                                    min: null
+                                    max: null
+                                    avg: null
+                                    stddev: null
+                                    p50: null
+                                    p95: null
+                                    p96: null
+                                    p97: null
+                                    p98: null
+                                    p99: null
+                                  inodes_limit:
+                                    max: null
+                                /tmp:
+                                  disk_used:
+                                    min: 147197952
+                                    max: 147197952
+                                    avg: 147197952
+                                    stddev: null
+                                    p50: 147197952
+                                    p95: 147197952
+                                    p96: 147197952
+                                    p97: 147197952
+                                    p98: 147197952
+                                    p99: 147197952
+                                  disk_limit:
+                                    max: 17169383424
+                                  inodes_used:
+                                    min: 2244
+                                    max: 2244
+                                    avg: 2244
+                                    stddev: null
+                                    p50: 2244
+                                    p95: 2244
+                                    p96: 2244
+                                    p97: 2244
+                                    p98: 2244
+                                    p99: 2244
+                                  inodes_limit:
+                                    max: 8388608
+                          clickhouse:
+                            clickhouse.0:
+                              cpu_used:
+                                min: 0.88
+                                max: 0.88
+                                avg: 0.88
+                                stddev: null
+                                p50: 0.88
+                                p95: 0.88
+                                p96: 0.88
+                                p97: 0.88
+                                p98: 0.88
+                                p99: 0.88
+                              cpu_limit:
+                                max: 16
+                              memory_used:
+                                min: 1415147520
+                                max: 1415147520
+                                avg: 1415147520
+                                stddev: null
+                                p50: 1415147520
+                                p95: 1415147520
+                                p96: 1415147520
+                                p97: 1415147520
+                                p98: 1415147520
+                                p99: 1415147520
+                              memory_limit:
+                                max: 34359738368
+                              swap_used:
+                                min: 223432704
+                                max: 223432704
+                                avg: 223432704
+                                stddev: null
+                                p50: 223432704
+                                p95: 223432704
+                                p96: 223432704
+                                p97: 223432704
+                                p98: 223432704
+                                p99: 223432704
+                              swap_limit:
+                                max: 536870912
+                              memory_pressure:
+                                min: 0
+                                max: 0
+                                avg: 0
+                                stddev: null
+                                p50: 0
+                                p95: 0
+                                p96: 0
+                                p97: 0
+                                p98: 0
+                                p99: 0
+                              cpu_pressure:
+                                min: 0.08
+                                max: 0.08
+                                avg: 0.08
+                                stddev: null
+                                p50: 0.08
+                                p95: 0.08
+                                p96: 0.08
+                                p97: 0.08
+                                p98: 0.08
+                                p99: 0.08
+                              io_pressure:
+                                min: 0.12
+                                max: 0.12
+                                avg: 0.12
+                                stddev: null
+                                p50: 0.12
+                                p95: 0.12
+                                p96: 0.12
+                                p97: 0.12
+                                p98: 0.12
+                                p99: 0.12
+                              irq_pressure:
+                                min: 0
+                                max: 0
+                                avg: 0
+                                stddev: null
+                                p50: 0
+                                p95: 0
+                                p96: 0
+                                p97: 0
+                                p98: 0
+                                p99: 0
+                              mountpoints:
+                                ? ''
+                                : disk_used:
+                                    min: null
+                                    max: null
+                                    avg: null
+                                    stddev: null
+                                    p50: null
+                                    p95: null
+                                    p96: null
+                                    p97: null
+                                    p98: null
+                                    p99: null
+                                  disk_limit:
+                                    max: null
+                                  inodes_used:
+                                    min: null
+                                    max: null
+                                    avg: null
+                                    stddev: null
+                                    p50: null
+                                    p95: null
+                                    p96: null
+                                    p97: null
+                                    p98: null
+                                    p99: null
+                                  inodes_limit:
+                                    max: null
+                                /mnt:
+                                  disk_used:
+                                    min: 608173674496
+                                    max: 608173674496
+                                    avg: 608173674496
+                                    stddev: null
+                                    p50: 608173674496
+                                    p95: 608173674496
+                                    p96: 608173674496
+                                    p97: 608173674496
+                                    p98: 608173674496
+                                    p99: 608173674496
+                                  disk_limit:
+                                    max: 1056876748800
+                                  inodes_used:
+                                    min: 495287
+                                    max: 495287
+                                    avg: 495287
+                                    stddev: null
+                                    p50: 495287
+                                    p95: 495287
+                                    p96: 495287
+                                    p97: 495287
+                                    p98: 495287
+                                    p99: 495287
+                                  inodes_limit:
+                                    max: 65536000
+                                /tmp:
+                                  disk_used:
+                                    min: 76398592
+                                    max: 76398592
+                                    avg: 76398592
+                                    stddev: null
+                                    p50: 76398592
+                                    p95: 76398592
+                                    p96: 76398592
+                                    p97: 76398592
+                                    p98: 76398592
+                                    p99: 76398592
+                                  disk_limit:
+                                    max: 17169383424
+                                  inodes_used:
+                                    min: 11
+                                    max: 11
+                                    avg: 11
+                                    stddev: null
+                                    p50: 11
+                                    p95: 11
+                                    p96: 11
+                                    p97: 11
+                                    p98: 11
+                                    p99: 11
+                                  inodes_limit:
+                                    max: 8388608
+                        additionalProperties:
+                          description: Service-level container with one or more instance names as keys (e.g., "app.0", "clickhouse.0", "database.1")
+                          type: object
+                          additionalProperties:
+                            description: Instance-level metrics with statistical aggregations. Instance identifiers are dynamic and vary based on service scaling.
+                            properties:
+                              cpu_used:
+                                description: CPU cores used with statistical aggregations. Values may be null when insufficient data is available.
+                                properties:
+                                  min:
+                                    description: Minimum CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.12
+                                  max:
+                                    description: Maximum CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 1.85
+                                  avg:
+                                    description: Average CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.45
+                                  stddev:
+                                    description: Standard deviation of CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.32
+                                  p50:
+                                    description: Median (50th percentile) CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.42
+                                  p95:
+                                    description: 95th percentile CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 1.23
+                                  p96:
+                                    description: 96th percentile CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 1.34
+                                  p97:
+                                    description: 97th percentile CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 1.45
+                                  p98:
+                                    description: 98th percentile CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 1.62
+                                  p99:
+                                    description: 99th percentile CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 1.78
+                                type: object
+                                additionalProperties: false
+                              cpu_limit:
+                                description: CPU limit in cores. Contains only max (nullable)
+                                properties:
+                                  max:
+                                    description: Maximum CPU limit in cores
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 2
+                                type: object
+                                additionalProperties: false
+                              memory_used:
+                                description: Memory bytes used with statistical aggregations. Values may be null when insufficient data is available.
+                                properties:
+                                  min:
+                                    description: Minimum memory bytes used
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    format: int64
+                                    example: 536870912
+                                  max:
+                                    description: Maximum memory bytes used
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    format: int64
+                                    example: 715827883
+                                  avg:
+                                    description: Average memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 612892672
+                                  stddev:
+                                    description: Standard deviation of memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 45000000
+                                  p50:
+                                    description: Median (50th percentile) memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 605000000
+                                  p95:
+                                    description: 95th percentile memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 690000000
+                                  p96:
+                                    description: 96th percentile memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 695000000
+                                  p97:
+                                    description: 97th percentile memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 700000000
+                                  p98:
+                                    description: 98th percentile memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 708000000
+                                  p99:
+                                    description: 99th percentile memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 712000000
+                                type: object
+                                additionalProperties: false
+                              memory_limit:
+                                description: Memory limit in bytes. Contains only max (nullable)
+                                properties:
+                                  max:
+                                    description: Maximum memory limit in bytes
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    format: int64
+                                    example: 1073741824
+                                type: object
+                                additionalProperties: false
+                              swap_used:
+                                description: Swap bytes used with statistical aggregations. Values may be null when insufficient data is available.
+                                properties:
+                                  min:
+                                    description: Minimum swap bytes used
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    format: int64
+                                    example: 0
+                                  max:
+                                    description: Maximum swap bytes used
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    format: int64
+                                    example: 4194304
+                                  avg:
+                                    description: Average swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 1048576
+                                  stddev:
+                                    description: Standard deviation of swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 850000
+                                  p50:
+                                    description: Median (50th percentile) swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 950000
+                                  p95:
+                                    description: 95th percentile swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 3200000
+                                  p96:
+                                    description: 96th percentile swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 3400000
+                                  p97:
+                                    description: 97th percentile swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 3600000
+                                  p98:
+                                    description: 98th percentile swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 3900000
+                                  p99:
+                                    description: 99th percentile swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 4100000
+                                type: object
+                                additionalProperties: false
+                              swap_limit:
+                                description: Swap limit in bytes. Contains only max (nullable)
+                                properties:
+                                  max:
+                                    description: Maximum swap limit in bytes
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    format: int64
+                                    example: 536870912
+                                type: object
+                                additionalProperties: false
+                              memory_pressure:
+                                description: Memory pressure stall indicator (0.0-1.0) with statistical aggregations. Values may be null when insufficient data is available.
+                                properties:
+                                  min:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  max:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.15
+                                  avg:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.03
+                                  stddev:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.02
+                                  p50:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.02
+                                  p95:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.12
+                                  p96:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.13
+                                  p97:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.14
+                                  p98:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.145
+                                  p99:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.148
+                                type: object
+                                additionalProperties: false
+                              cpu_pressure:
+                                description: CPU pressure stall indicator (0.0-1.0) with statistical aggregations. Values may be null when insufficient data is available.
+                                properties:
+                                  min:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  max:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.08
+                                  avg:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.01
+                                  stddev:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.01
+                                  p50:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.01
+                                  p95:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.05
+                                  p96:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.06
+                                  p97:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.065
+                                  p98:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.07
+                                  p99:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.075
+                                type: object
+                                additionalProperties: false
+                              io_pressure:
+                                description: I/O pressure stall indicator (0.0-1.0) with statistical aggregations. Values may be null when insufficient data is available.
+                                properties:
+                                  min:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  max:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.22
+                                  avg:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.05
+                                  stddev:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.04
+                                  p50:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.04
+                                  p95:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.18
+                                  p96:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.19
+                                  p97:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.2
+                                  p98:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.21
+                                  p99:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.215
+                                type: object
+                                additionalProperties: false
+                              irq_pressure:
+                                description: IRQ pressure stall indicator (0.0-1.0) with statistical aggregations. Values may be null when insufficient data is available.
+                                properties:
+                                  min:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  max:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.01
+                                  avg:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.001
+                                  stddev:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.002
+                                  p50:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p95:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.008
+                                  p96:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.009
+                                  p97:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.0095
+                                  p98:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.0097
+                                  p99:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.0099
+                                type: object
+                                additionalProperties: false
+                              mountpoints:
+                                description: Disk usage statistics for filesystem mountpoints. Mountpoint paths are dynamic and vary based on service configuration (e.g., "" for root, "/tmp", "/mnt"). Each mountpoint provides disk and inode usage with statistical aggregations.
+                                type: object
+                                additionalProperties:
+                                  properties:
+                                    disk_used:
+                                      description: Disk bytes used with statistical aggregations. Values may be null when insufficient data is available.
+                                      properties:
+                                        min:
+                                          description: Minimum disk bytes used
+                                          type:
+                                          - integer
+                                          - 'null'
+                                          format: int64
+                                          example: 3087007744
+                                        max:
+                                          description: Maximum disk bytes used
+                                          type:
+                                          - integer
+                                          - 'null'
+                                          format: int64
+                                          example: 3221225472
+                                        avg:
+                                          description: Average disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 3154116608
+                                        stddev:
+                                          description: Standard deviation of disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 35000000
+                                        p50:
+                                          description: Median (50th percentile) disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 3150000000
+                                        p95:
+                                          description: 95th percentile disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 3210000000
+                                        p96:
+                                          description: 96th percentile disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 3215000000
+                                        p97:
+                                          description: 97th percentile disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 3217000000
+                                        p98:
+                                          description: 98th percentile disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 3219000000
+                                        p99:
+                                          description: 99th percentile disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 3220000000
+                                      type: object
+                                      additionalProperties: false
+                                    disk_limit:
+                                      description: Disk limit in bytes. Contains only max (nullable)
+                                      properties:
+                                        max:
+                                          description: Maximum disk limit in bytes
+                                          type:
+                                          - integer
+                                          - 'null'
+                                          format: int64
+                                          example: 10737418240
+                                      type: object
+                                      additionalProperties: false
+                                    inodes_used:
+                                      description: Inodes used with statistical aggregations. Values may be null when insufficient data is available.
+                                      properties:
+                                        min:
+                                          description: Minimum inodes used
+                                          type:
+                                          - integer
+                                          - 'null'
+                                          example: 45000
+                                        max:
+                                          description: Maximum inodes used
+                                          type:
+                                          - integer
+                                          - 'null'
+                                          example: 52000
+                                        avg:
+                                          description: Average inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 48500
+                                        stddev:
+                                          description: Standard deviation of inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 1500
+                                        p50:
+                                          description: Median (50th percentile) inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 48400
+                                        p95:
+                                          description: 95th percentile inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 51200
+                                        p96:
+                                          description: 96th percentile inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 51400
+                                        p97:
+                                          description: 97th percentile inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 51600
+                                        p98:
+                                          description: 98th percentile inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 51800
+                                        p99:
+                                          description: 99th percentile inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 51900
+                                      type: object
+                                      additionalProperties: false
+                                    inodes_limit:
+                                      description: Inode limit count. Contains only max (nullable)
+                                      properties:
+                                        max:
+                                          description: Maximum inodes limit
+                                          type:
+                                          - integer
+                                          - 'null'
+                                          example: 655360
+                                      type: object
+                                      additionalProperties: false
+                                  type: object
+                                  additionalProperties: false
+                            type: object
+                            additionalProperties: false
+                    type: object
+                    additionalProperties: false
+                type: object
+                additionalProperties: false
+        '400':
+          description: Bad request - Invalid parameters. Please consult the API documentation to fix the request parameters.
+          content:
+            application/json:
+              schema:
+                required:
+                - type
+                - title
+                - status
+                - violations
+                properties:
+                  type:
+                    description: RFC 2616 reference URL identifying the error type
+                    type: string
+                    format: uri
+                    example: https://tools.ietf.org/html/rfc2616#section-1
+                  title:
+                    description: Human-readable summary of the validation error
+                    type: string
+                    example: Please ensure parameters are correct.
+                  status:
+                    description: HTTP status code
+                    type: integer
+                    example: 400
+                  violations:
+                    description: Map of parameter names to their validation errors. Each parameter can have multiple error messages.
+                    type: object
+                    example:
+                      from:
+                      - The from timestamp must be in the past.
+                      to:
+                      - The to timestamp must be greater than the from timestamp.
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                        example: The from timestamp must be in the past.
+                type: object
+                additionalProperties: false
+        '403':
+          description: Forbidden - Access denied due to insufficient permissions, or the requested project/environment does not exist (to prevent information disclosure)
+        '499':
+          description: Too much data fetched - The query is attempting to retrieve too much data. Please narrow down the query by reducing the time range or adding more specific filters to retrieve less data.
+          content:
+            application/json:
+              schema:
+                required:
+                - error
+                - message
+                properties:
+                  error:
+                    type: string
+                    example: Too much data fetched
+                  message:
+                    type: string
+                    example: Please reduce the time range or add more filters to narrow down the query
+                type: object
+                additionalProperties: false
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/observability/resources/service/{service}:
+    get:
+      tags:
+      - Resources
+      summary: Get resource metrics by service
+      description: Returns time-series resource data for one service. Each timestamp contains per-instance metrics. Filter results using aggs[] (min, max, avg, stddev, p50, p95-p99) and types[] (cpu, memory, swap, disk, inodes, pressure metrics). Response grouped by timestamp then instance ID (e.g., "app.0"). All aggregations nullable when insufficient data exists.
+      operationId: resources_by_service
+      parameters:
+      - name: projectId
+        in: path
+        description: The unique identifier of the Upsun project
+        required: true
+        schema:
+          type: string
+          pattern: '[a-z0-9]+'
+          example: abc123def456
+      - name: environmentId
+        in: path
+        description: The environment identifier
+        required: true
+        schema:
+          type: string
+          pattern: .+
+          example: main
+      - name: service
+        in: path
+        description: The service name to retrieve metrics for (e.g., "app", "database", "admin-pipeline--kafka-profile-payloads")
+        required: true
+        schema:
+          type: string
+          example: app
+      - name: from
+        in: query
+        description: Start timestamp for the time range (Unix timestamp in seconds)
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1704067200
+      - name: to
+        in: query
+        description: End timestamp for the time range (Unix timestamp in seconds)
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1704153600
+      - name: aggs[]
+        in: query
+        description: 'Statistical aggregations to include in the response. Can be specified multiple times. Available values: avg, stddev, max, min, p50, p95, p96, p97, p98, p99. Specify parameter multiple times for multiple values (e.g., ?aggs[]=avg&aggs[]=p50).'
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - avg
+            - stddev
+            - max
+            - min
+            - p50
+            - p95
+            - p96
+            - p97
+            - p98
+            - p99
+      - name: types[]
+        in: query
+        description: 'Metric types to include in the response. Can be specified multiple times. Available values: cpu, memory, disk, inodes, swap, memory_pressure, cpu_pressure, io_pressure, irq_pressure. Specify parameter multiple times for multiple values (e.g., ?types[]=cpu&types[]=memory).'
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - cpu
+            - memory
+            - disk
+            - inodes
+            - swap
+            - memory_pressure
+            - cpu_pressure
+            - io_pressure
+            - irq_pressure
+      responses:
+        '200':
+          description: Successfully retrieved service-specific resource metrics with time-series data
+          content:
+            application/json:
+              schema:
+                required:
+                - _grain
+                - _from
+                - _to
+                - _project_id
+                - _environment_id
+                - _branch_machine_name
+                - _service
+                - data
+                properties:
+                  _grain:
+                    description: Data granularity in seconds
+                    type: integer
+                    example: 5
+                  _from:
+                    description: Query start timestamp
+                    type: integer
+                    example: 1704067200
+                  _to:
+                    description: Query end timestamp
+                    type: integer
+                    example: 1704153600
+                  _project_id:
+                    description: Project identifier
+                    type: string
+                    example: abc123def456
+                  _environment_id:
+                    description: Environment identifier
+                    type: string
+                    example: main
+                  _branch_machine_name:
+                    description: Branch machine name
+                    type: string
+                    example: main-bvxea6i
+                  _service:
+                    description: Service name
+                    type: string
+                    example: admin-pipeline--kafka-profile-payloads
+                  _dg2_host_types_mapping:
+                    description: DG2 host type mapping per instance. Only present for DG2 environments. Maps instance names to their host type ("web", "unified", or empty string).
+                    type:
+                    - object
+                    - 'null'
+                    example:
+                      app.0: web
+                      app.1: unified
+                      worker.0: ''
+                    additionalProperties:
+                      type: string
+                      example: web
+                      enum:
+                      - web
+                      - unified
+                      - ''
+                  data:
+                    description: Time-series resource utilization data organized by timestamp with instance-level metrics
+                    type: array
+                    items:
+                      required:
+                      - timestamp
+                      properties:
+                        timestamp:
+                          description: Data point timestamp (Unix timestamp in seconds)
+                          type: integer
+                          example: 1764083040
+                        instances:
+                          description: Resource metrics grouped by instance name. Instance names are dynamic and vary based on service scaling (e.g., "admin-pipeline--kafka-profile-payloads.0", "app.0", "database.1"). This property may be absent if no data is available for the timestamp.
+                          type: object
+                          additionalProperties:
+                            description: Instance-level metrics with statistical aggregations. Instance identifiers are dynamic and vary based on service scaling.
+                            properties:
+                              cpu_used:
+                                description: CPU cores used with statistical aggregations. Values may be null when insufficient data is available.
+                                properties:
+                                  min:
+                                    description: Minimum CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.016
+                                  max:
+                                    description: Maximum CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.016
+                                  avg:
+                                    description: Average CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.016
+                                  stddev:
+                                    description: Standard deviation of CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: null
+                                  p50:
+                                    description: Median (50th percentile) CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.016
+                                  p95:
+                                    description: 95th percentile CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.016
+                                  p96:
+                                    description: 96th percentile CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.016
+                                  p97:
+                                    description: 97th percentile CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.016
+                                  p98:
+                                    description: 98th percentile CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.016
+                                  p99:
+                                    description: 99th percentile CPU cores used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.016
+                                type: object
+                                additionalProperties: false
+                              cpu_limit:
+                                description: CPU limit in cores. Contains only max (nullable)
+                                properties:
+                                  max:
+                                    description: Maximum CPU limit in cores
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.25
+                                type: object
+                                additionalProperties: false
+                              memory_used:
+                                description: Memory bytes used with statistical aggregations. Values may be null when insufficient data is available.
+                                properties:
+                                  min:
+                                    description: Minimum memory bytes used
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    format: int64
+                                    example: 128819200
+                                  max:
+                                    description: Maximum memory bytes used
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    format: int64
+                                    example: 128819200
+                                  avg:
+                                    description: Average memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 128819200
+                                  stddev:
+                                    description: Standard deviation of memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: null
+                                  p50:
+                                    description: Median (50th percentile) memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 128819200
+                                  p95:
+                                    description: 95th percentile memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 128819200
+                                  p96:
+                                    description: 96th percentile memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 128819200
+                                  p97:
+                                    description: 97th percentile memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 128819200
+                                  p98:
+                                    description: 98th percentile memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 128819200
+                                  p99:
+                                    description: 99th percentile memory bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 128819200
+                                type: object
+                                additionalProperties: false
+                              memory_limit:
+                                description: Memory limit in bytes. Contains only max (nullable)
+                                properties:
+                                  max:
+                                    description: Maximum memory limit in bytes
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    format: int64
+                                    example: 671088640
+                                type: object
+                                additionalProperties: false
+                              swap_used:
+                                description: Swap bytes used with statistical aggregations. Values may be null when insufficient data is available.
+                                properties:
+                                  min:
+                                    description: Minimum swap bytes used
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    format: int64
+                                    example: 0
+                                  max:
+                                    description: Maximum swap bytes used
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    format: int64
+                                    example: 0
+                                  avg:
+                                    description: Average swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  stddev:
+                                    description: Standard deviation of swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: null
+                                  p50:
+                                    description: Median (50th percentile) swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p95:
+                                    description: 95th percentile swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p96:
+                                    description: 96th percentile swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p97:
+                                    description: 97th percentile swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p98:
+                                    description: 98th percentile swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p99:
+                                    description: 99th percentile swap bytes used
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                type: object
+                                additionalProperties: false
+                              swap_limit:
+                                description: Swap limit in bytes. Contains only max (nullable)
+                                properties:
+                                  max:
+                                    description: Maximum swap limit in bytes
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    format: int64
+                                    example: 536870912
+                                type: object
+                                additionalProperties: false
+                              memory_pressure:
+                                description: Memory pressure stall indicator (0.0-1.0) with statistical aggregations. Values may be null when insufficient data is available.
+                                properties:
+                                  min:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  max:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  avg:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  stddev:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: null
+                                  p50:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p95:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p96:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p97:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p98:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p99:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                type: object
+                                additionalProperties: false
+                              cpu_pressure:
+                                description: CPU pressure stall indicator (0.0-1.0) with statistical aggregations. Values may be null when insufficient data is available.
+                                properties:
+                                  min:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.229667
+                                  max:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.229667
+                                  avg:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.229667
+                                  stddev:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: null
+                                  p50:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.229667
+                                  p95:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.229667
+                                  p96:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.229667
+                                  p97:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.229667
+                                  p98:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.229667
+                                  p99:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0.229667
+                                type: object
+                                additionalProperties: false
+                              io_pressure:
+                                description: I/O pressure stall indicator (0.0-1.0) with statistical aggregations. Values may be null when insufficient data is available.
+                                properties:
+                                  min:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  max:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  avg:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  stddev:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: null
+                                  p50:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p95:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p96:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p97:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p98:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p99:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                type: object
+                                additionalProperties: false
+                              irq_pressure:
+                                description: IRQ pressure stall indicator (0.0-1.0) with statistical aggregations. Values may be null when insufficient data is available.
+                                properties:
+                                  min:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  max:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  avg:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  stddev:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: null
+                                  p50:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p95:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p96:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p97:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p98:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                  p99:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    format: float
+                                    example: 0
+                                type: object
+                                additionalProperties: false
+                              mountpoints:
+                                description: Disk usage statistics for filesystem mountpoints. Mountpoint paths are dynamic and vary based on service configuration (e.g., "" for root, "/tmp", "/mnt"). Each mountpoint provides disk and inode usage with statistical aggregations.
+                                type: object
+                                additionalProperties:
+                                  properties:
+                                    disk_used:
+                                      description: Disk bytes used with statistical aggregations. Values may be null when insufficient data is available.
+                                      properties:
+                                        min:
+                                          description: Minimum disk bytes used
+                                          type:
+                                          - integer
+                                          - 'null'
+                                          format: int64
+                                          example: 197959680
+                                        max:
+                                          description: Maximum disk bytes used
+                                          type:
+                                          - integer
+                                          - 'null'
+                                          format: int64
+                                          example: 197959680
+                                        avg:
+                                          description: Average disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 197959680
+                                        stddev:
+                                          description: Standard deviation of disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: null
+                                        p50:
+                                          description: Median (50th percentile) disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 197959680
+                                        p95:
+                                          description: 95th percentile disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 197959680
+                                        p96:
+                                          description: 96th percentile disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 197959680
+                                        p97:
+                                          description: 97th percentile disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 197959680
+                                        p98:
+                                          description: 98th percentile disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 197959680
+                                        p99:
+                                          description: 99th percentile disk bytes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 197959680
+                                      type: object
+                                      additionalProperties: false
+                                    disk_limit:
+                                      description: Disk limit in bytes. Contains only max (nullable)
+                                      properties:
+                                        max:
+                                          description: Maximum disk limit in bytes
+                                          type:
+                                          - integer
+                                          - 'null'
+                                          format: int64
+                                          example: 17169383424
+                                      type: object
+                                      additionalProperties: false
+                                    inodes_used:
+                                      description: Inodes used with statistical aggregations. Values may be null when insufficient data is available.
+                                      properties:
+                                        min:
+                                          description: Minimum inodes used
+                                          type:
+                                          - integer
+                                          - 'null'
+                                          example: 2245
+                                        max:
+                                          description: Maximum inodes used
+                                          type:
+                                          - integer
+                                          - 'null'
+                                          example: 2245
+                                        avg:
+                                          description: Average inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 2245
+                                        stddev:
+                                          description: Standard deviation of inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: null
+                                        p50:
+                                          description: Median (50th percentile) inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 2245
+                                        p95:
+                                          description: 95th percentile inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 2245
+                                        p96:
+                                          description: 96th percentile inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 2245
+                                        p97:
+                                          description: 97th percentile inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 2245
+                                        p98:
+                                          description: 98th percentile inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 2245
+                                        p99:
+                                          description: 99th percentile inodes used
+                                          type:
+                                          - number
+                                          - 'null'
+                                          format: float
+                                          example: 2245
+                                      type: object
+                                      additionalProperties: false
+                                    inodes_limit:
+                                      description: Inode limit count. Contains only max (nullable)
+                                      properties:
+                                        max:
+                                          description: Maximum inodes limit
+                                          type:
+                                          - integer
+                                          - 'null'
+                                          example: 8388608
+                                      type: object
+                                      additionalProperties: false
+                                  type: object
+                                  additionalProperties: false
+                            type: object
+                            additionalProperties: false
+                      type: object
+                      additionalProperties: false
+                type: object
+                additionalProperties: false
+        '400':
+          description: Bad request - Invalid parameters. Please consult the API documentation to fix the request parameters.
+          content:
+            application/json:
+              schema:
+                required:
+                - type
+                - title
+                - status
+                - violations
+                properties:
+                  type:
+                    description: RFC 2616 reference URL identifying the error type
+                    type: string
+                    format: uri
+                    example: https://tools.ietf.org/html/rfc2616#section-1
+                  title:
+                    description: Human-readable summary of the validation error
+                    type: string
+                    example: Please ensure parameters are correct.
+                  status:
+                    description: HTTP status code
+                    type: integer
+                    example: 400
+                  violations:
+                    description: Map of parameter names to their validation errors. Each parameter can have multiple error messages.
+                    type: object
+                    example:
+                      grain:
+                      - Grain can not be larger than the selection windows.
+                      from:
+                      - The from timestamp must be in the past.
+                      to:
+                      - The to timestamp must be greater than the from timestamp.
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                        example: The from timestamp must be in the past.
+                type: object
+                additionalProperties: false
+        '403':
+          description: Forbidden - Access denied due to insufficient permissions, or the requested project/environment does not exist (to prevent information disclosure)
+        '499':
+          description: Too much data fetched - The query is attempting to retrieve too much data. Please narrow down the query by reducing the time range or adding more specific filters to retrieve less data.
+          content:
+            application/json:
+              schema:
+                required:
+                - error
+                - message
+                properties:
+                  error:
+                    type: string
+                    example: Too much data fetched
+                  message:
+                    type: string
+                    example: Please reduce the time range or add more filters to narrow down the query
+                type: object
+                additionalProperties: false
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

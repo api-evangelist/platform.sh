@@ -1,0 +1,312 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Source Operations API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Source Operations across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Source Operations
+  description: 'These endpoints interact with source code operations as defined in the `source.operations`
+
+    key in a project''s `.upsun/config.yaml` configuration. More information
+
+    on source code operations is
+
+    [available in our user documentation](https://docs.upsun.com/anchors/app/source-operations/).
+
+    '
+paths:
+  /projects/{projectId}/environments/{environmentId}/source-operation:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: run-source-operation
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentSourceOperationInput'
+      tags:
+      - Source Operations
+      summary: Trigger a source operation
+      description: 'This endpoint triggers a source code operation as defined in the `source.operations`
+
+        key in a project''s `.upsun/config.yaml` configuration. More information
+
+        on source code operations is
+
+        [available in our user documentation](https://docs.upsun.com/anchors/app/reference/source/operations/).
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/source-operations:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: list-projects-environments-source-operations
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentSourceOperationCollection'
+      tags:
+      - Source Operations
+      summary: List source operations
+      description: 'Lists all the source operations, defined in `.upsun/config.yaml`, that are available in an environment.
+
+        More information on source code operations is
+
+        [available in our user documentation](https://docs.upsun.com/anchors/app/reference/source/operations/).
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
+    EnvironmentSourceOperation:
+      type: object
+      properties:
+        id:
+          type: string
+          title: EnvironmentSourceOperation Identifier
+          description: The identifier of EnvironmentSourceOperation
+        app:
+          type: string
+          title: Application name
+          description: The name of the application
+        operation:
+          type: string
+          title: Source operation name
+          description: The name of the source operation
+        command:
+          type: string
+          title: Command
+          description: The command that will be triggered
+      required:
+      - id
+      - app
+      - operation
+      - command
+      additionalProperties: false
+    EnvironmentSourceOperationInput:
+      type: object
+      properties:
+        operation:
+          type: string
+          title: Operation name
+          description: The name of the operation to execute
+        variables:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties: {}
+          title: Variables
+          description: The variables of the application.
+      required:
+      - operation
+      - variables
+      additionalProperties: false
+    EnvironmentSourceOperationCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/EnvironmentSourceOperation'
+    EnvironmentSourceOperationInput_2:
+      type: object
+      properties:
+        operation:
+          type: string
+          title: Operation name
+          description: The name of the operation to execute
+        variables:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties: {}
+          title: Variables
+          description: The variables of the application.
+      required:
+      - operation
+      additionalProperties: false
+    EnvironmentSourceOperationInput_3:
+      type: object
+      properties:
+        operation:
+          type: string
+          title: Operation name
+          description: The name of the operation to execute
+        variables:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties: {}
+          title: Variables
+          description: The variables of the application.
+      required:
+      - operation
+      additionalProperties: false
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

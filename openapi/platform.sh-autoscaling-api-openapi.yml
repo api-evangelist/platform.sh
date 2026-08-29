@@ -1,0 +1,718 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Autoscaling API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Autoscaling across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Autoscaling
+  description: "Upsun provides native support for autoscaling, allowing your applications to automatically adjust based on resource usage.\nThis ensures that your apps remain responsive under load while helping you optimize costs.\nYou can configure thresholds for metrics such as CPU, RAM, and request latency.  \nResources will automatically scale to meet demand.\nEach container profile assigned to an application or service provides a specific combination of CPU and RAM, which you can select via the Upsun UI or CLI.\n\nThese endpoints manage autoscaling configurations that are tied to a\nspecific environment, and optionally to its child environments.\nYou can define scaling rules based on metrics like CPU, memory, or\nrequest latency, and these rules will be applied at both build time\nand runtime. For more information on configuring autoscaling for your\nenvironments, see the [Autoscaling](https://docs.upsun.com/manage-resources/autoscaling.html) section\nof the documentation.\n"
+paths:
+  /projects/{projectId}/environments/{environmentId}/autoscaling/settings:
+    get:
+      tags:
+      - Autoscaling
+      description: Retrieves Autoscaler settings
+      operationId: get-autoscaler-settings
+      parameters:
+      - name: projectId
+        in: path
+        description: A string that uniquely identifies the project
+        required: true
+        schema:
+          type: string
+      - name: environmentId
+        in: path
+        description: A string that uniquely identifies the project environment
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: Autoscaler settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutoscalerSettings'
+      summary: Retrieves Autoscaler settings
+      security:
+      - OAuth2: []
+    post:
+      tags:
+      - Autoscaling
+      description: Updates Autoscaler settings
+      operationId: post-autoscaler-settings
+      parameters:
+      - name: projectId
+        in: path
+        description: A string that uniquely identifies the project
+        required: true
+        schema:
+          type: string
+      - name: environmentId
+        in: path
+        description: A string that uniquely identifies the project environment
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Settings to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutoscalerSettings'
+      responses:
+        '200':
+          description: Updated Autoscaler settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutoscalerSettings'
+      summary: Updates Autoscaler settings
+      security:
+      - OAuth2: []
+    patch:
+      tags:
+      - Autoscaling
+      description: Modifies Autoscaler settings
+      operationId: patch-autoscaler-settings
+      parameters:
+      - name: projectId
+        in: path
+        description: A string that uniquely identifies the project
+        required: true
+        schema:
+          type: string
+      - name: environmentId
+        in: path
+        description: A string that uniquely identifies the project environment
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Settings to modify
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutoscalerSettings'
+      responses:
+        '200':
+          description: Updated Autoscaler settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutoscalerSettings'
+      summary: Modifies Autoscaler settings
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    AutoscalerMemoryPressureTrigger:
+      description: 'Memory pressure trigger settings.
+
+
+        When memory pressure goes below lower bound, service will be scaled down.
+
+        When memory pressure goes above upper bound, service will be scaled up.'
+      properties:
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          title: Enabled
+          description: Whether the trigger is enabled
+        down:
+          allOf:
+          - description: Lower bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+        up:
+          allOf:
+          - description: Upper bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+      title: AutoscalerMemoryPressureTrigger
+      type: object
+    AutoscalerCPUPressureTrigger:
+      description: 'CPU pressure trigger settings.
+
+
+        When CPU pressure goes below lower bound, service will be scaled down.
+
+        When CPU pressure goes above upper bound, service will be scaled up.'
+      properties:
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          title: Enabled
+          description: Whether the trigger is enabled
+        down:
+          allOf:
+          - description: Lower bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+        up:
+          allOf:
+          - description: Upper bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+      title: AutoscalerCPUPressureTrigger
+      type: object
+    AutoscalerScalingCooldown:
+      description: Scaling cooldown settings
+      properties:
+        up:
+          description: Number of seconds to wait until scaling up can be done again (since last attempt)
+          minimum: 0
+          title: Up
+          type: integer
+        down:
+          description: Number of seconds to wait until scaling down can be done again (since last attempt)
+          minimum: 0
+          title: Down
+          type: integer
+      title: AutoscalerScalingCooldown
+      type: object
+    AutoscalerMemoryTrigger:
+      description: 'Memory resource trigger settings.
+
+
+        When memory usage goes below lower bound, service will be scaled down.
+
+        When memory usage goes above upper bound, service will be scaled up.'
+      properties:
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          title: Enabled
+          description: Whether the trigger is enabled
+        down:
+          allOf:
+          - description: Lower bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+        up:
+          allOf:
+          - description: Upper bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+      title: AutoscalerMemoryTrigger
+      type: object
+    AutoscalerResources:
+      description: Vertical scaling settings
+      properties:
+        cpu:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/AutoscalerCPUResources'
+          description: Lower/Upper bounds on CPU allocation when scaling
+        memory:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/AutoscalerMemoryResources'
+          description: Lower/Upper bounds on Memory allocation when scaling
+      title: AutoscalerResources
+      type: object
+    AutoscalerInstances:
+      description: Horizontal scaling settings
+      properties:
+        min:
+          description: Minimum number of instances when scaling down horizontally
+          title: Min
+          type: integer
+        max:
+          description: Maximum number of instances when scaling up horizontally
+          title: Max
+          type: integer
+      title: AutoscalerInstances
+      type: object
+    AutoscalerCPUResources:
+      description: CPU scaling settings
+      properties:
+        min:
+          description: Minimum CPUs when scaling down vertically
+          minimum: 0
+          title: Min
+          type: number
+        max:
+          description: Maximum CPUs when scaling up vertically
+          minimum: 0
+          title: Max
+          type: number
+      title: AutoscalerCPUResources
+      type: object
+    AutoscalerSettings:
+      description: 'Update model for autoscaling settings.
+
+
+        This model is mainly used for partial updates (PATCH), therefore all its
+
+        attributes are optional.'
+      properties:
+        services:
+          additionalProperties:
+            type:
+            - object
+            - 'null'
+            additionalProperties:
+              $ref: '#/components/schemas/AutoscalerServiceSettings'
+          type:
+          - object
+          - 'null'
+          title: Services
+          description: Each service for which autoscaling is configured is listed in the key
+      title: AutoscalerSettings
+      type: object
+    AutoscalerScalingFactor:
+      description: Scaling factor settings
+      properties:
+        up:
+          description: Number of instances to add when scaling up horizontally
+          minimum: 0
+          title: Up
+          type: integer
+        down:
+          description: Number of instances to remove when scaling down horizontally
+          minimum: 0
+          title: Down
+          type: integer
+      title: AutoscalerScalingFactor
+      type: object
+    AutoscalerMemoryResources:
+      description: Memory scaling settings
+      properties:
+        min:
+          description: Minimum memory (bytes) when scaling down vertically
+          minimum: 0
+          title: Min
+          type: integer
+        max:
+          description: Maximum memory (bytes) when scaling up vertically
+          minimum: 0
+          title: Max
+          type: integer
+      title: AutoscalerMemoryResources
+      type: object
+    AutoscalerCPUTrigger:
+      description: 'CPU resource trigger settings.
+
+
+        When CPU usage goes below lower bound, service will be scaled down.
+
+        When CPU usage goes above upper bound, service will be scaled up.'
+      properties:
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          title: Enabled
+          description: Whether the trigger is enabled
+        down:
+          allOf:
+          - description: Lower bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+        up:
+          allOf:
+          - description: Upper bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+      title: AutoscalerCPUTrigger
+      type: object
+    AutoscalerServiceSettings:
+      description: Autoscaling settings for a specific service
+      properties:
+        triggers:
+          allOf:
+          - description: Metrics should be evaluated as triggers for autoscaling
+          - $ref: '#/components/schemas/AutoscalerTriggers'
+        instances:
+          allOf:
+          - description: Lower/Upper bounds on number of instances for horizontal scaling
+          - $ref: '#/components/schemas/AutoscalerInstances'
+        resources:
+          allOf:
+          - description: Lower/Upper bounds on cpu/memory for vertical scaling
+          - $ref: '#/components/schemas/AutoscalerResources'
+        scale_factor:
+          allOf:
+          - description: How many instances to add/remove on each scaling attempt
+          - $ref: '#/components/schemas/AutoscalerScalingFactor'
+        scale_cooldown:
+          allOf:
+          - description: How long to wait before the next scaling attempt can be performed
+          - $ref: '#/components/schemas/AutoscalerScalingCooldown'
+      title: AutoscalerServiceSettings
+      type: object
+    AutoscalerCondition:
+      description: Trigger condition settings
+      properties:
+        threshold:
+          description: Value at which the condition is satisfied
+          maximum: 100
+          minimum: 0
+          title: Threshold
+          type: number
+        duration:
+          allOf:
+          - description: Number of seconds during which the condition must be satisfied
+          - $ref: '#/components/schemas/AutoscalerDuration'
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          title: Enabled
+          description: Whether the condition should be used for generating alerts
+      required:
+      - threshold
+      title: AutoscalerCondition
+      type: object
+    AutoscalerDuration:
+      enum:
+      - 60
+      - 120
+      - 300
+      - 600
+      - 1800
+      - 3600
+      title: AutoscalerDuration
+      type: integer
+    AutoscalerTriggers:
+      additionalProperties: false
+      description: Scaling triggers settings
+      properties:
+        cpu:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/AutoscalerCPUTrigger'
+          description: Settings for scaling based on CPU usage
+        memory:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/AutoscalerMemoryTrigger'
+          description: Settings for scaling based on Memory usage
+        cpu_pressure:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/AutoscalerCPUPressureTrigger'
+          description: Settings for scaling based on CPU pressure
+        memory_pressure:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/AutoscalerMemoryPressureTrigger'
+          description: Settings for scaling based on Memory pressure
+      title: AutoscalerTriggers
+      type: object
+    AutoscalerMemoryPressureTrigger_2:
+      description: 'Memory pressure trigger settings.
+
+
+        When memory pressure goes below lower bound, service will be scaled down.
+
+        When memory pressure goes above upper bound, service will be scaled up.'
+      properties:
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          title: Enabled
+          description: Whether the trigger is enabled
+        down:
+          allOf:
+          - description: Lower bound on resource usage. Uses a longer duration than scale-up to prevent premature downscaling.
+          - $ref: '#/components/schemas/AutoscalerCondition'
+        up:
+          allOf:
+          - description: Upper bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+      title: AutoscalerMemoryPressureTrigger
+      type: object
+    AutoscalerCPUPressureTrigger_2:
+      description: 'CPU pressure trigger settings.
+
+
+        When CPU pressure goes below lower bound, service will be scaled down.
+
+        When CPU pressure goes above upper bound, service will be scaled up.'
+      properties:
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          title: Enabled
+          description: Whether the trigger is enabled
+        down:
+          allOf:
+          - description: Lower bound on resource usage. Uses a longer duration than scale-up to prevent premature downscaling.
+          - $ref: '#/components/schemas/AutoscalerCondition'
+        up:
+          allOf:
+          - description: Upper bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+      title: AutoscalerCPUPressureTrigger
+      type: object
+    AutoscalerMemoryTrigger_2:
+      description: 'Memory resource trigger settings.
+
+
+        When memory usage goes below lower bound, service will be scaled down.
+
+        When memory usage goes above upper bound, service will be scaled up.'
+      properties:
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          title: Enabled
+          description: Whether the trigger is enabled
+        down:
+          allOf:
+          - description: Lower bound on resource usage. Uses a longer duration than scale-up to prevent premature downscaling.
+          - $ref: '#/components/schemas/AutoscalerCondition'
+        up:
+          allOf:
+          - description: Upper bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+      title: AutoscalerMemoryTrigger
+      type: object
+    AutoscalerCPUTrigger_2:
+      description: 'CPU resource trigger settings.
+
+
+        When CPU usage goes below lower bound, service will be scaled down.
+
+        When CPU usage goes above upper bound, service will be scaled up.'
+      properties:
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          title: Enabled
+          description: Whether the trigger is enabled
+        down:
+          allOf:
+          - description: Lower bound on resource usage. Uses a longer duration than scale-up to prevent premature downscaling.
+          - $ref: '#/components/schemas/AutoscalerCondition'
+        up:
+          allOf:
+          - description: Upper bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+      title: AutoscalerCPUTrigger
+      type: object
+    AutoscalerMemoryPressureTrigger_3:
+      description: 'Memory pressure trigger settings.
+
+
+        When memory pressure goes below lower bound, service will be scaled down.
+
+        When memory pressure goes above upper bound, service will be scaled up.'
+      properties:
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          title: Enabled
+          description: Whether the trigger is enabled
+        down:
+          allOf:
+          - description: Lower bound on resource usage. Uses a longer duration than scale-up to prevent premature downscaling.
+          - $ref: '#/components/schemas/AutoscalerCondition'
+        up:
+          allOf:
+          - description: Upper bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+      title: AutoscalerMemoryPressureTrigger
+      type: object
+    AutoscalerCPUPressureTrigger_3:
+      description: 'CPU pressure trigger settings.
+
+
+        When CPU pressure goes below lower bound, service will be scaled down.
+
+        When CPU pressure goes above upper bound, service will be scaled up.'
+      properties:
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          title: Enabled
+          description: Whether the trigger is enabled
+        down:
+          allOf:
+          - description: Lower bound on resource usage. Uses a longer duration than scale-up to prevent premature downscaling.
+          - $ref: '#/components/schemas/AutoscalerCondition'
+        up:
+          allOf:
+          - description: Upper bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+      title: AutoscalerCPUPressureTrigger
+      type: object
+    AutoscalerMemoryTrigger_3:
+      description: 'Memory resource trigger settings.
+
+
+        When memory usage goes below lower bound, service will be scaled down.
+
+        When memory usage goes above upper bound, service will be scaled up.'
+      properties:
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          title: Enabled
+          description: Whether the trigger is enabled
+        down:
+          allOf:
+          - description: Lower bound on resource usage. Uses a longer duration than scale-up to prevent premature downscaling.
+          - $ref: '#/components/schemas/AutoscalerCondition'
+        up:
+          allOf:
+          - description: Upper bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+      title: AutoscalerMemoryTrigger
+      type: object
+    AutoscalerCPUTrigger_3:
+      description: 'CPU resource trigger settings.
+
+
+        When CPU usage goes below lower bound, service will be scaled down.
+
+        When CPU usage goes above upper bound, service will be scaled up.'
+      properties:
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          title: Enabled
+          description: Whether the trigger is enabled
+        down:
+          allOf:
+          - description: Lower bound on resource usage. Uses a longer duration than scale-up to prevent premature downscaling.
+          - $ref: '#/components/schemas/AutoscalerCondition'
+        up:
+          allOf:
+          - description: Upper bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+      title: AutoscalerCPUTrigger
+      type: object
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

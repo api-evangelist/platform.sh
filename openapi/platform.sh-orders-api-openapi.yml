@@ -1,0 +1,608 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Orders API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Orders across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Orders
+  description: 'These endpoints can be used to retrieve order information from our billing
+
+    system. Here you can view information about your bill for our services,
+
+    include the billed amount and a link to a PDF of the bill.
+
+    '
+paths:
+  /orders/download:
+    get:
+      tags:
+      - Orders
+      summary: Download an invoice.
+      operationId: download-invoice
+      parameters:
+      - name: token
+        in: query
+        description: JWT for invoice.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: An invoice PDF.
+          content:
+            application/pdf: {}
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}/orders:
+    get:
+      summary: List orders
+      description: Retrieves orders for the specified organization.
+      operationId: list-org-orders
+      tags:
+      - Orders
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIDName'
+      - $ref: '#/components/parameters/filter_order_status'
+      - $ref: '#/components/parameters/filter_order_total'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/mode'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order'
+                  _links:
+                    $ref: '#/components/schemas/ListLinks'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}/orders/{order_id}:
+    get:
+      summary: Get order
+      description: Retrieves an order for the specified organization.
+      operationId: get-org-order
+      tags:
+      - Orders
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIDName'
+      - $ref: '#/components/parameters/OrderID'
+      - $ref: '#/components/parameters/mode'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}/orders/{order_id}/authorize:
+    post:
+      summary: Create confirmation credentials for for 3D-Secure
+      description: Creates confirmation credentials for payments that require online authorization
+      operationId: create-authorization-credentials
+      tags:
+      - Orders
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIDName'
+      - $ref: '#/components/parameters/OrderID'
+      responses:
+        '200':
+          description: Payment authorization credentials, if the payment is pending
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  redirect_to_url:
+                    type: object
+                    description: URL information to complete the payment.
+                    properties:
+                      return_url:
+                        type: string
+                        description: Return URL after payment completion.
+                      url:
+                        type: string
+                        description: URL for payment finalization.
+                  type:
+                    type: string
+                    description: Required payment action type.
+        '400':
+          description: Bad Request when no authorization is required.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  parameters:
+    OrderID:
+      in: path
+      name: order_id
+      description: The ID of the order.
+      required: true
+      schema:
+        type: string
+    filter_order_status:
+      name: filter[status]
+      in: query
+      description: The status of the order.
+      schema:
+        type: string
+        enum:
+        - completed
+        - past_due
+        - pending
+        - canceled
+        - payment_failed_soft_decline
+        - payment_failed_hard_decline
+    page:
+      name: page
+      in: query
+      description: Page to be displayed. Defaults to 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+    filter_order_total:
+      name: filter[total]
+      in: query
+      description: The total of the order.
+      schema:
+        type: integer
+    mode:
+      name: mode
+      in: query
+      description: The output mode.
+      schema:
+        type: string
+        enum:
+        - details
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
+      schema:
+        type: string
+  schemas:
+    LineItem:
+      description: A line item in an order.
+      properties:
+        type:
+          description: The type of line item.
+          type: string
+          enum:
+          - project_plan
+          - project_feature
+          - project_subtotal
+          - organization_plan
+          - organization_feature
+          - organization_subtotal
+        license_id:
+          description: The associated subscription identifier.
+          type:
+          - number
+          - 'null'
+        project_id:
+          description: The associated project identifier.
+          type:
+          - string
+          - 'null'
+        product:
+          description: Display name of the line item product.
+          type: string
+        sku:
+          description: The line item product SKU.
+          type: string
+        total:
+          description: Total price as a decimal.
+          type: number
+        total_formatted:
+          description: Total price, formatted with currency.
+          type: string
+        components:
+          description: The price components for the line item, keyed by type.
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/LineItemComponent'
+        exclude_from_invoice:
+          description: Line item should not be considered billable.
+          type: boolean
+      type: object
+    Address:
+      description: The address of the user.
+      properties:
+        country:
+          description: Two-letter country codes are used to represent countries and states
+          type: string
+          format: ISO ALPHA-2
+        name_line:
+          description: The full name of the user
+          type: string
+        premise:
+          description: Premise (i.e. Apt, Suite, Bldg.)
+          type: string
+        sub_premise:
+          description: Sub Premise (i.e. Suite, Apartment, Floor, Unknown.
+          type: string
+        thoroughfare:
+          description: The address of the user
+          type: string
+        administrative_area:
+          description: The administrative area of the user address
+          type: string
+          format: ISO ALPHA-2
+        sub_administrative_area:
+          description: The sub-administrative area of the user address
+          type: string
+        locality:
+          description: The locality of the user address
+          type: string
+        dependent_locality:
+          description: The dependant_locality area of the user address
+          type: string
+        postal_code:
+          description: The postal code area of the user address
+          type: string
+      type: object
+    Order:
+      description: The order object.
+      properties:
+        id:
+          description: The ID of the order.
+          type: string
+        status:
+          description: The status of the subscription.
+          type: string
+          enum:
+          - completed
+          - past_due
+          - pending
+          - canceled
+          - payment_failed_soft_decline
+          - payment_failed_hard_decline
+        owner:
+          description: The UUID of the owner.
+          type: string
+          format: uuid
+        address:
+          $ref: '#/components/schemas/Address'
+        company:
+          description: The company name.
+          type: string
+        vat_number:
+          description: An identifier used in many countries for value added tax purposes.
+          type: string
+        billing_period_start:
+          description: The time when the billing period of the order started.
+          type: string
+          format: date-time
+        billing_period_end:
+          description: The time when the billing period of the order ended.
+          type: string
+          format: date-time
+        billing_period_label:
+          description: Descriptive information about the billing cycle.
+          properties:
+            formatted:
+              description: The renderable label for the billing cycle.
+              type: string
+            month:
+              description: The month of the billing cycle.
+              type: string
+            year:
+              description: The year of the billing cycle.
+              type: string
+            next_month:
+              description: The name of the next month following this billing cycle.
+              type: string
+          type: object
+        billing_period_duration:
+          description: The duration of the billing period of the order in seconds.
+          type: integer
+        paid_on:
+          description: The time when the order was successfully charged.
+          type:
+          - string
+          - 'null'
+          format: date-time
+        total:
+          description: The total of the order.
+          type: integer
+        total_formatted:
+          description: The total of the order, formatted with currency.
+          type: integer
+        components:
+          $ref: '#/components/schemas/Components'
+        currency:
+          description: The order currency code.
+          type: string
+        invoice_url:
+          description: A link to the PDF invoice.
+          type: string
+        last_refreshed:
+          description: The time when the order was last refreshed.
+          type: string
+          format: date-time
+        invoiced:
+          description: The customer is invoiced.
+          type: boolean
+        line_items:
+          description: The line items that comprise the order.
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItem'
+        _links:
+          description: Links to related API endpoints.
+          properties:
+            invoices:
+              description: Link to related Invoices API. Use this to retrieve invoices related to this order.
+              properties:
+                href:
+                  description: URL of the link
+                  type: string
+              type: object
+          type: object
+      type: object
+    Components:
+      description: The components of the project
+      properties:
+        voucher/vat/baseprice:
+          description: stub
+          type: object
+      type: object
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
+    LineItemComponent:
+      description: A price component for a line item.
+      properties:
+        amount:
+          description: The price as a decimal.
+          type: number
+        amount_formatted:
+          description: The price formatted with currency.
+          type: string
+        display_title:
+          description: The display title for the component.
+          type: string
+        currency:
+          description: The currency code for the component.
+          type: string
+      type: object
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    Error_2:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+    Error_3:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

@@ -1,0 +1,742 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Profiles API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Profiles across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Profiles
+paths:
+  /organizations/{organization_id}/address:
+    get:
+      summary: Get address
+      description: Retrieves the address for the specified organization.
+      operationId: get-org-address
+      tags:
+      - Profiles
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIDName'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    patch:
+      summary: Update address
+      description: Updates the address for the specified organization.
+      operationId: update-org-address
+      tags:
+      - Profiles
+      parameters:
+      - $ref: '#/components/parameters/OrganizationID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Address'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}/profile:
+    get:
+      summary: Get profile
+      description: Retrieves the profile for the specified organization.
+      operationId: get-org-profile
+      tags:
+      - Profiles
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIDName'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    patch:
+      summary: Update profile
+      description: Updates the profile for the specified organization.
+      operationId: update-org-profile
+      tags:
+      - Profiles
+      parameters:
+      - $ref: '#/components/parameters/OrganizationID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                default_catalog:
+                  type: string
+                  description: The URL of a catalog file which overrides the default.
+                project_options_url:
+                  type: string
+                  format: uri
+                  description: The URL of an organization-wide project options file.
+                company_name:
+                  type: string
+                  description: The company name.
+                vat_number:
+                  type: string
+                  description: The VAT number of the company.
+                billing_contact:
+                  type: string
+                  format: email
+                  description: The e-mail address of a contact to whom billing notices will be sent.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    Profile:
+      description: The user profile.
+      properties:
+        id:
+          description: The user's unique ID.
+          type: string
+          format: uuid
+        display_name:
+          description: The user's display name.
+          type: string
+        email:
+          description: The user's email address.
+          type: string
+          format: email
+        username:
+          description: The user's username.
+          type: string
+        type:
+          description: The user's type (user/organization).
+          type: string
+          enum:
+          - user
+          - organization
+        picture:
+          description: The URL of the user's picture.
+          type: string
+          format: url
+        company_type:
+          description: The company type.
+          type: string
+        company_name:
+          description: The name of the company.
+          type: string
+        currency:
+          description: A 3-letter ISO 4217 currency code (assigned according to the billing address).
+          type: string
+        vat_number:
+          description: The vat number of the user.
+          type: string
+        company_role:
+          description: The role of the user in the company.
+          type: string
+        website_url:
+          description: The user or company website.
+          type: string
+        new_ui:
+          description: Whether the new UI features are enabled for this user.
+          type: boolean
+        ui_colorscheme:
+          description: The user's chosen color scheme for user interfaces.
+          type: string
+        default_catalog:
+          description: The URL of a catalog file which overrides the default.
+          type: string
+        project_options_url:
+          description: The URL of an account-wide project options file.
+          type: string
+        marketing:
+          description: Flag if the user agreed to receive marketing communication.
+          type: boolean
+        created_at:
+          description: The timestamp representing when the user account was created.
+          type: string
+          format: date-time
+        updated_at:
+          description: The timestamp representing when the user account was last modified.
+          type: string
+          format: date-time
+        billing_contact:
+          description: The e-mail address of a contact to whom billing notices will be sent.
+          type: string
+          format: email
+        current_trial:
+          description: The current trial for the profile.
+          properties:
+            active:
+              description: The trial active status.
+              type: boolean
+            created:
+              description: The trial creation date.
+              type: string
+              format: date-time
+            description:
+              description: The trial description.
+              type: string
+            expiration:
+              description: The trial expiration-date.
+              type: string
+              format: date-time
+            current:
+              description: The total amount spent by the trial user at this point in time.
+              properties:
+                formatted:
+                  description: The total amount formatted.
+                  type: string
+                amount:
+                  description: The total amount.
+                  type: string
+                currency:
+                  description: The currency.
+                  type: string
+                currency_symbol:
+                  description: Currency symbol.
+                  type: string
+              type: object
+            spend:
+              description: The total amount available for the trial.
+              properties:
+                formatted:
+                  description: The total amount formatted.
+                  type: string
+                amount:
+                  description: The total amount.
+                  type: string
+                currency:
+                  description: The currency.
+                  type: string
+                currency_symbol:
+                  description: Currency symbol.
+                  type: string
+              type: object
+            spend_remaining:
+              description: The remaining amount available for the trial.
+              properties:
+                formatted:
+                  description: The total amount formatted.
+                  type: string
+                amount:
+                  description: The total amount.
+                  type: string
+                currency:
+                  description: The currency.
+                  type: string
+                currency_symbol:
+                  description: Currency symbol.
+                  type: string
+                unlimited:
+                  description: Spend limit is ignored (in favor of resource limitations).
+                  type: boolean
+              type: object
+            projects:
+              description: Projects active under trial
+              properties:
+                id:
+                  description: Trial project ID
+                  type: string
+                name:
+                  description: Trial project name
+                  type: string
+                total:
+                  properties:
+                    amount:
+                      description: Trial project cost
+                      type: integer
+                    currency_code:
+                      description: Currency code
+                      type: string
+                    currency_symbol:
+                      description: Currency symbol
+                      type: string
+                    formatted:
+                      description: Trial project cost formatted with currency sign
+                      type: string
+                  type: object
+              type: object
+            pending_verification:
+              description: Required verification method (if applicable).
+              type:
+              - string
+              - 'null'
+              enum:
+              - credit-card
+              deprecated: true
+            model:
+              description: The trial trial model.
+              type: string
+            days_remaining:
+              description: The amount of days until the trial expires.
+              type: integer
+          type: object
+        invoiced:
+          description: The customer is invoiced.
+          type: boolean
+      type: object
+    Address:
+      description: The address of the user.
+      properties:
+        country:
+          description: Two-letter country codes are used to represent countries and states
+          type: string
+          format: ISO ALPHA-2
+        name_line:
+          description: The full name of the user
+          type: string
+        premise:
+          description: Premise (i.e. Apt, Suite, Bldg.)
+          type: string
+        sub_premise:
+          description: Sub Premise (i.e. Suite, Apartment, Floor, Unknown.
+          type: string
+        thoroughfare:
+          description: The address of the user
+          type: string
+        administrative_area:
+          description: The administrative area of the user address
+          type: string
+          format: ISO ALPHA-2
+        sub_administrative_area:
+          description: The sub-administrative area of the user address
+          type: string
+        locality:
+          description: The locality of the user address
+          type: string
+        dependent_locality:
+          description: The dependant_locality area of the user address
+          type: string
+        postal_code:
+          description: The postal code area of the user address
+          type: string
+      type: object
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    Profile_2:
+      description: The user profile.
+      properties:
+        id:
+          description: The user's unique ID.
+          type: string
+          format: uuid
+        display_name:
+          description: The user's display name.
+          type: string
+        email:
+          description: The user's email address.
+          type: string
+          format: email
+        username:
+          description: The user's username.
+          type: string
+        type:
+          description: The user's type (user/organization).
+          type: string
+          enum:
+          - user
+          - organization
+        picture:
+          description: The URL of the user's picture.
+          type: string
+          format: url
+        company_type:
+          description: The company type.
+          type: string
+        company_name:
+          description: The name of the company.
+          type: string
+        currency:
+          description: A 3-letter ISO 4217 currency code (assigned according to the billing address).
+          type: string
+        vat_number:
+          description: The vat number of the user.
+          type: string
+        company_role:
+          description: The role of the user in the company.
+          type: string
+        website_url:
+          description: The user or company website.
+          type: string
+        new_ui:
+          description: Whether the new UI features are enabled for this user.
+          type: boolean
+        ui_colorscheme:
+          description: The user's chosen color scheme for user interfaces.
+          type: string
+        default_catalog:
+          description: The URL of a catalog file which overrides the default.
+          type: string
+        project_options_url:
+          description: The URL of an account-wide project options file.
+          type: string
+        marketing:
+          description: Flag if the user agreed to receive marketing communication.
+          type: boolean
+        created_at:
+          description: The timestamp representing when the user account was created.
+          type: string
+          format: date-time
+        updated_at:
+          description: The timestamp representing when the user account was last modified.
+          type: string
+          format: date-time
+        billing_contact:
+          description: The e-mail address of a contact to whom billing notices will be sent.
+          type: string
+          format: email
+        invoiced:
+          description: The customer is invoiced.
+          type: boolean
+        customer_type:
+          description: The customer type.
+          type: string
+          enum:
+          - individual
+          - corporation
+          - government
+        legal_entity_name:
+          description: The legal entity name of the customer.
+          type: string
+      type: object
+    Error_2:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+    Profile_3:
+      description: The user profile.
+      properties:
+        id:
+          description: The user's unique ID.
+          type: string
+          format: uuid
+        display_name:
+          description: The user's display name.
+          type: string
+        email:
+          description: The user's email address.
+          type: string
+          format: email
+        username:
+          description: The user's username.
+          type: string
+        type:
+          description: The user's type (user/organization).
+          type: string
+          enum:
+          - user
+          - organization
+        picture:
+          description: The URL of the user's picture.
+          type: string
+          format: url
+        company_type:
+          description: The company type.
+          type: string
+        company_name:
+          description: The name of the company.
+          type: string
+        currency:
+          description: A 3-letter ISO 4217 currency code (assigned according to the billing address).
+          type: string
+        vat_number:
+          description: The vat number of the user.
+          type: string
+        company_role:
+          description: The role of the user in the company.
+          type: string
+        website_url:
+          description: The user or company website.
+          type: string
+        new_ui:
+          description: Whether the new UI features are enabled for this user.
+          type: boolean
+        ui_colorscheme:
+          description: The user's chosen color scheme for user interfaces.
+          type: string
+        default_catalog:
+          description: The URL of a catalog file which overrides the default.
+          type: string
+        project_options_url:
+          description: The URL of an account-wide project options file.
+          type: string
+        marketing:
+          description: Flag if the user agreed to receive marketing communication.
+          type: boolean
+        created_at:
+          description: The timestamp representing when the user account was created.
+          type: string
+          format: date-time
+        updated_at:
+          description: The timestamp representing when the user account was last modified.
+          type: string
+          format: date-time
+        billing_contact:
+          description: The e-mail address of a contact to whom billing notices will be sent.
+          type: string
+          format: email
+        invoiced:
+          description: The customer is invoiced.
+          type: boolean
+        customer_type:
+          description: The customer type.
+          type: string
+          enum:
+          - individual
+          - corporation
+          - government
+        legal_entity_name:
+          description: The legal entity name of the customer.
+          type: string
+      type: object
+    Error_3:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+  parameters:
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

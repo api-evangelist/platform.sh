@@ -1,0 +1,225 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh SSH Keys API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged SSH Keys across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: SSH Keys
+paths:
+  /ssh_keys/{key_id}:
+    get:
+      tags:
+      - SSH Keys
+      summary: Get an SSH key
+      operationId: get-ssh-key
+      parameters:
+      - name: key_id
+        in: path
+        description: The ID of the ssh key.
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: A single SSH public key record.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SSHKey'
+      security:
+      - OAuth2: []
+    delete:
+      tags:
+      - SSH Keys
+      summary: Delete an SSH key
+      operationId: delete-ssh-key
+      parameters:
+      - name: key_id
+        in: path
+        description: The ID of the ssh key.
+        required: true
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: Success.
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /ssh_keys:
+    post:
+      tags:
+      - SSH Keys
+      summary: Add a new public SSH key to a user
+      operationId: create-ssh-key
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - value
+              properties:
+                value:
+                  description: The value of the ssh key.
+                  type: string
+                title:
+                  description: The title of the ssh key.
+                  type: string
+                uuid:
+                  description: The uuid of the user.
+                  type: string
+              type: object
+      responses:
+        '201':
+          description: The newly created ssh key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SSHKey'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    SSHKey:
+      description: The ssh key object.
+      properties:
+        key_id:
+          description: The ID of the public key.
+          type: integer
+        uid:
+          description: The internal user ID.
+          type: integer
+        fingerprint:
+          description: The fingerprint of the public key.
+          type: string
+        title:
+          description: The title of the public key.
+          type: string
+        value:
+          description: The actual value of the public key.
+          type: string
+        changed:
+          description: The time of the last key modification (ISO 8601)
+          type: string
+      type: object
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

@@ -1,0 +1,863 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Environment Backups API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Environment Backups across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Environment Backups
+  description: 'A snapshot is a complete backup of an environment, including all the
+
+    persistent data from all services running in an environment and all
+
+    files present in mounted volumes.
+
+
+    These endpoints can be used to trigger the creation of new backups,
+
+    get information about existing backups, delete existing backups or
+
+    restore a backup.
+
+    More information about backups can be found in our
+
+    [documentation](https://docs.upsun.com/anchors/environments/backup/).
+
+    '
+paths:
+  /projects/{projectId}/environments/{environmentId}/backup:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: backup-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentBackupInput'
+      tags:
+      - Environment Backups
+      summary: Create backup of environment
+      description: 'Trigger a new backup of an environment to be created. See the
+
+        [Backups](https://docs.upsun.com/anchors/environments/backup/)
+
+        section of the documentation for more information.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/backups:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: list-projects-environments-backups
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BackupCollection'
+      tags:
+      - Environment Backups
+      summary: Get an environment's backup list
+      description: 'Retrieve a list of objects representing backups of this environment.
+
+        '
+      x-stability: EXPERIMENTAL
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/backups/{backupId}:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: backupId
+      operationId: get-projects-environments-backups
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Backup'
+      tags:
+      - Environment Backups
+      summary: Get an environment backup's info
+      description: 'Get the details of a specific backup from an environment using the `id`
+
+        of the entry retrieved by the
+
+        [Get backups list](#tag/Environment-Backups%2Fpaths%2F~1projects~1%7BprojectId%7D~1environments~1%7BenvironmentId%7D~1backups%2Fget)
+
+        endpoint.
+
+        '
+      x-stability: EXPERIMENTAL
+      security:
+      - OAuth2: []
+    delete:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: backupId
+      operationId: delete-projects-environments-backups
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment Backups
+      summary: Delete an environment backup
+      description: 'Delete a specific backup from an environment using the `id`
+
+        of the entry retrieved by the
+
+        [Get backups list](#tag/Environment-Backups%2Fpaths%2F~1projects~1%7BprojectId%7D~1environments~1%7BenvironmentId%7D~1backups%2Fget)
+
+        endpoint.
+
+        '
+      x-stability: EXPERIMENTAL
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/backups/{backupId}/restore:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: backupId
+      operationId: restore-backup
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentRestoreInput'
+      tags:
+      - Environment Backups
+      summary: Restore an environment snapshot
+      description: 'Restore a specific backup from an environment using the `id`
+
+        of the entry retrieved by the
+
+        [Get backups list](#tag/Environment-Backups%2Fpaths%2F~1projects~1%7BprojectId%7D~1environments~1%7BenvironmentId%7D~1backups%2Fget)
+
+        endpoint.
+
+        '
+      x-stability: EXPERIMENTAL
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    EnvironmentBackupInput:
+      type: object
+      properties:
+        safe:
+          type: boolean
+          title: Safe or live backup
+          description: Take a safe or a live backup
+      required:
+      - safe
+      additionalProperties: false
+    Backup:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Backup Identifier
+          description: The identifier of Backup
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        status:
+          type: string
+          enum:
+          - CREATED
+          - DELETING
+          title: Status
+          description: The status of the backup
+        expires_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Expires At
+          description: Expiration date of the backup
+        index:
+          type:
+          - integer
+          - 'null'
+          title: Index
+          description: The index of this automated backup
+        commit_id:
+          type: string
+          title: Commit ID
+          description: The ID of the code commit attached to the backup
+        environment:
+          type: string
+          title: Environment
+          description: The environment the backup belongs to
+        safe:
+          type: boolean
+          title: Safe
+          description: Whether this backup was taken in a safe way
+        size_of_volumes:
+          type:
+          - integer
+          - 'null'
+          title: Size of volumes
+          description: Total size of volumes backed up
+        size_used:
+          type:
+          - integer
+          - 'null'
+          title: Size used
+          description: Total size of space used on volumes backed up
+        deployment:
+          type:
+          - string
+          - 'null'
+          title: Deployment
+          description: The current deployment at the time of backup
+        restorable:
+          type: boolean
+          title: Is restorable
+          description: Whether the backup is restorable
+        automated:
+          type: boolean
+          title: Is automated
+          description: Whether the backup is automated
+      required:
+      - id
+      - created_at
+      - updated_at
+      - attributes
+      - status
+      - expires_at
+      - index
+      - commit_id
+      - environment
+      - safe
+      - size_of_volumes
+      - size_used
+      - deployment
+      - restorable
+      - automated
+      additionalProperties: false
+    EnvironmentRestoreInput:
+      type: object
+      properties:
+        environment_name:
+          type:
+          - string
+          - 'null'
+          title: Environment name
+          description: ''
+        branch_from:
+          type:
+          - string
+          - 'null'
+          title: Branch from
+          description: ''
+        restore_code:
+          type: boolean
+          title: Is code or data restored
+          description: Whether we should restore the code or only the data
+        restore_resources:
+          type: boolean
+          title: Is resources restored
+          description: Whether we should restore resources configuration from the backup
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - backup
+              - default
+              - minimum
+              - parent
+              title: Init Resources
+              description: The resources used when initializing services of the environment
+          required:
+          - init
+          additionalProperties: false
+          title: Resources
+          description: ''
+      required:
+      - environment_name
+      - branch_from
+      - restore_code
+      - restore_resources
+      - resources
+      additionalProperties: false
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
+    BackupCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Backup'
+    EnvironmentBackupInput_2:
+      type: object
+      properties:
+        safe:
+          type: boolean
+          title: Safe or live backup
+          description: Take a safe or a live backup
+      additionalProperties: false
+    Backup_2:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Backup Identifier
+          description: The identifier of Backup
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        status:
+          type: string
+          enum:
+          - CREATED
+          - DELETING
+          title: Status
+          description: The status of the backup
+        expires_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Expires At
+          description: Expiration date of the backup
+        index:
+          type:
+          - integer
+          - 'null'
+          title: Index
+          description: The index of this automated backup
+        commit_id:
+          type: string
+          title: Commit ID
+          description: The ID of the code commit attached to the backup
+        environment:
+          type: string
+          title: Environment
+          description: The environment the backup belongs to
+        safe:
+          type: boolean
+          title: Safe
+          description: Whether this backup was taken in a safe way
+        size_of_volumes:
+          type:
+          - integer
+          - 'null'
+          title: Size of volumes
+          description: Total size of volumes backed up
+        size_used:
+          type:
+          - integer
+          - 'null'
+          title: Size used
+          description: Total size of space used on volumes backed up
+        size_object_storage:
+          type:
+          - integer
+          - 'null'
+          title: Size of object storage
+          description: Total object-storage quota configured on webapps at backup time
+        deployment:
+          type:
+          - string
+          - 'null'
+          title: Deployment
+          description: The current deployment at the time of backup
+        restorable:
+          type: boolean
+          title: Is restorable
+          description: Whether the backup is restorable
+        automated:
+          type: boolean
+          title: Is automated
+          description: Whether the backup is automated
+      required:
+      - id
+      - created_at
+      - updated_at
+      - attributes
+      - status
+      - expires_at
+      - index
+      - commit_id
+      - environment
+      - safe
+      - size_of_volumes
+      - size_used
+      - size_object_storage
+      - deployment
+      - restorable
+      - automated
+      additionalProperties: false
+    EnvironmentRestoreInput_2:
+      type: object
+      properties:
+        environment_name:
+          type:
+          - string
+          - 'null'
+          title: Environment name
+          description: ''
+        branch_from:
+          type:
+          - string
+          - 'null'
+          title: Branch from
+          description: ''
+        restore_code:
+          type: boolean
+          title: Is code or data restored
+          description: Whether we should restore the code or only the data
+        restore_resources:
+          type: boolean
+          title: Is resources restored
+          description: Whether we should restore resources configuration from the backup
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - backup
+              - default
+              - minimum
+              - parent
+              title: Init Resources
+              description: The resources used when initializing services of the environment
+          additionalProperties: false
+          title: Resources
+          description: ''
+      additionalProperties: false
+    EnvironmentBackupInput_3:
+      type: object
+      properties:
+        safe:
+          type: boolean
+          title: Safe or live backup
+          description: Take a safe or a live backup
+      additionalProperties: false
+    Backup_3:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Backup Identifier
+          description: The identifier of Backup
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        status:
+          type: string
+          enum:
+          - CREATED
+          - DELETING
+          title: Status
+          description: The status of the backup
+        expires_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Expires At
+          description: Expiration date of the backup
+        index:
+          type:
+          - integer
+          - 'null'
+          title: Index
+          description: The index of this automated backup
+        commit_id:
+          type: string
+          title: Commit ID
+          description: The ID of the code commit attached to the backup
+        environment:
+          type: string
+          title: Environment
+          description: The environment the backup belongs to
+        safe:
+          type: boolean
+          title: Safe
+          description: Whether this backup was taken in a safe way
+        size_of_volumes:
+          type:
+          - integer
+          - 'null'
+          title: Size of volumes
+          description: Total size of volumes backed up
+        size_used:
+          type:
+          - integer
+          - 'null'
+          title: Size used
+          description: Total size of space used on volumes backed up
+        size_object_storage:
+          type:
+          - integer
+          - 'null'
+          title: Size of object storage
+          description: Total object-storage quota configured on webapps at backup time
+        deployment:
+          type:
+          - string
+          - 'null'
+          title: Deployment
+          description: The current deployment at the time of backup
+        restorable:
+          type: boolean
+          title: Is restorable
+          description: Whether the backup is restorable
+        automated:
+          type: boolean
+          title: Is automated
+          description: Whether the backup is automated
+      required:
+      - id
+      - created_at
+      - updated_at
+      - attributes
+      - status
+      - expires_at
+      - index
+      - commit_id
+      - environment
+      - safe
+      - size_of_volumes
+      - size_used
+      - size_object_storage
+      - deployment
+      - restorable
+      - automated
+      additionalProperties: false
+    EnvironmentRestoreInput_3:
+      type: object
+      properties:
+        environment_name:
+          type:
+          - string
+          - 'null'
+          title: Environment name
+          description: ''
+        branch_from:
+          type:
+          - string
+          - 'null'
+          title: Branch from
+          description: ''
+        restore_code:
+          type: boolean
+          title: Is code or data restored
+          description: Whether we should restore the code or only the data
+        restore_resources:
+          type: boolean
+          title: Is resources restored
+          description: Whether we should restore resources configuration from the backup
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - backup
+              - default
+              - minimum
+              - parent
+              title: Init Resources
+              description: The resources used when initializing services of the environment
+          additionalProperties: false
+          title: Resources
+          description: ''
+      additionalProperties: false
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

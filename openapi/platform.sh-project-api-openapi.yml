@@ -1,0 +1,2829 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Project API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Project across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Project
+  description: '## Project Overview
+
+
+    On Upsun, a Project is backed by a single Git repository
+
+    and encompasses your entire application stack, the services
+
+    used by your application, the application''s data storage,
+
+    the production and staging environments, and the backups of those
+
+    environments.
+
+
+    When you create a new project, you start with a single
+
+    [Environment](#tag/Environment) called *Master*,
+
+    corresponding to the master branch in the Git repository of
+
+    the project—this will be your production environment.
+
+
+    If you connect your project to an external Git repo
+
+    using one of our [Third-Party Integrations](#tag/Third-Party-Integrations)
+
+    a new development environment can be created for each branch
+
+    or pull request created in the repository. When a new development
+
+    environment is created, the production environment''s data
+
+    will be cloned on-the-fly, giving you an isolated, production-ready
+
+    test environment.
+
+
+    This set of API endpoints can be used to retrieve a list of projects
+
+    associated with an API key, as well as create and update the parameters
+
+    of existing projects.
+
+
+    > **Note**:
+
+    >
+
+    > To list projects or to create a new project, use [`/subscriptions`](#tag/Subscriptions).
+
+    '
+paths:
+  /projects/{projectId}:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      operationId: get-projects
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+      tags:
+      - Project
+      summary: Get a project
+      description: Retrieve the details of a single project.
+      security:
+      - OAuth2: []
+    patch:
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectPatch'
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      operationId: update-projects
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Project
+      summary: Update a project
+      description: Update the details of an existing project.
+      security:
+      - OAuth2: []
+    delete:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      operationId: delete-projects
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Project
+      summary: Delete a project
+      description: Delete the entire project.
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/capabilities:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      operationId: get-projects-capabilities
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectCapabilities'
+      tags:
+      - Project
+      summary: Get a project's capabilities
+      description: 'Get a list of capabilities on a project, as defined by the billing system.
+
+        For instance, one special capability that could be defined on a project is
+
+        large development environments.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/clear_build_cache:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      operationId: action-projects-clear-build-cache
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Project
+      summary: Clear project build cache
+      description: 'On rare occasions, a project''s build cache can become corrupted. This
+
+        endpoint will entirely flush the project''s build cache. More information
+
+        on [clearing the build cache can be found in our user documentation.](https://docs.upsun.com/anchors/troubleshoot/clear-build-cache/)
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/maintenance-redeploy:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      operationId: maintenance-redeploy-project
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Project
+      security:
+      - BearerAuth: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
+    ProjectCapabilities:
+      type: object
+      properties:
+        custom_domains:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, custom domains can be added to the project.
+            environments_with_domains_limit:
+              type: integer
+              title: Domains limit
+              description: Limit on the amount of non-production environments that can have domains set
+          required:
+          - enabled
+          - environments_with_domains_limit
+          additionalProperties: false
+          title: Custom Domains
+          description: ''
+        source_operations:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, source operations can be triggered.
+          required:
+          - enabled
+          additionalProperties: false
+          title: Source Operations
+          description: ''
+        runtime_operations:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, runtime operations can be triggered.
+          required:
+          - enabled
+          additionalProperties: false
+          title: Runtime Operations
+          description: ''
+        outbound_firewall:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, outbound firewall can be used.
+          required:
+          - enabled
+          additionalProperties: false
+          title: Outbound Firewall
+          description: ''
+        metrics:
+          type: object
+          properties:
+            max_range:
+              type: string
+              title: Max range
+              description: Limit on the maximum time range allowed in metrics retrieval
+          required:
+          - max_range
+          additionalProperties: false
+          title: Metrics
+          description: ''
+        logs_forwarding:
+          type: object
+          properties:
+            max_extra_payload_size:
+              type: integer
+              title: Max extra payload size
+              description: Limit on the maximum size for the custom extra attributes added to the forwarded logs payload
+          required:
+          - max_extra_payload_size
+          additionalProperties: false
+          title: Logs Forwarding
+          description: ''
+        guaranteed_resources:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, guaranteed resources can be used
+            instance_limit:
+              type: integer
+              title: Instance limit
+              description: Instance limit for guaranteed resources
+          required:
+          - enabled
+          - instance_limit
+          additionalProperties: false
+          title: Guaranteed Resources
+          description: ''
+        images:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: object
+              properties:
+                available:
+                  type: boolean
+                  title: Available
+                  description: The image is available for deployment
+              required:
+              - available
+              additionalProperties: false
+          title: Images
+          description: ''
+        instance_limit:
+          type: integer
+          title: Instance limit
+          description: Maximum number of instance per service
+        build_resources:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, build resources can be modified.
+            max_cpu:
+              type: number
+              format: float
+              title: CPU
+              description: ''
+            max_memory:
+              type: integer
+              title: Memory
+              description: ''
+          required:
+          - enabled
+          - max_cpu
+          - max_memory
+          additionalProperties: false
+          title: Build Resources
+          description: ''
+        data_retention:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, data retention configuration can be modified.
+          required:
+          - enabled
+          additionalProperties: false
+          title: Data Retention
+          description: ''
+        autoscaling:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, autoscaling can be configured.
+          required:
+          - enabled
+          additionalProperties: false
+          title: Autoscaling
+          description: ''
+        integrations:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, integrations can be used
+            config:
+              type: object
+              properties:
+                newrelic:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: New Relic
+                  description: New Relic log-forwarding integration configurations
+                sumologic:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Sumo Logic
+                  description: Sumo Logic log-forwarding integration configurations
+                splunk:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Splunk
+                  description: Splunk log-forwarding integration configurations
+                httplog:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: HTTP log-forwarding
+                  description: HTTP log-forwarding integration configurations
+                syslog:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Syslog
+                  description: Syslog log-forwarding integration configurations
+                webhook:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Webhook
+                  description: Webhook integration configurations
+                script:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Script
+                  description: Script integration configurations
+                github:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: GitHub
+                  description: GitHub integration configurations
+                gitlab:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: GitLab
+                  description: GitLab integration configurations
+                bitbucket:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Bitbucket
+                  description: Bitbucket integration configurations
+                bitbucket_server:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Bitbucket Server
+                  description: Bitbucket server integration configurations
+                health.email:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Health Email
+                  description: Health Email notification integration configurations
+                health.webhook:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Health WebHook
+                  description: ''
+                health.pagerduty:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Health PagerDuty
+                  description: Health PagerDuty notification integration configurations
+                health.slack:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Health Slack
+                  description: Health Slack notification integration configurations
+                cdn.fastly:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Fastly CDN
+                  description: Fastly CDN integration configurations
+                blackfire:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Blackfire
+                  description: Blackfire integration configurations
+                otlplog:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: OpenTelemetry
+                  description: OpenTelemetry log-forwarding integration configurations
+              additionalProperties: false
+              title: Config
+              description: ''
+            allowed_integrations:
+              type: array
+              items:
+                type: string
+              title: Allowed Integrations
+              description: List of integrations allowed to be created
+          required:
+          - enabled
+          additionalProperties: false
+          title: Integrations
+          description: ''
+      required:
+      - metrics
+      - logs_forwarding
+      - guaranteed_resources
+      - images
+      - instance_limit
+      - build_resources
+      - data_retention
+      - autoscaling
+      additionalProperties: false
+    ProjectPatch:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        title:
+          type: string
+          title: Title
+          description: The title of the project
+        description:
+          type: string
+          title: Description
+          description: The description of the project
+        default_branch:
+          type:
+          - string
+          - 'null'
+          title: Default branch
+          description: The default branch of the project
+        timezone:
+          type: string
+          title: Timezone
+          description: Timezone of the project
+        region:
+          type: string
+          title: Region
+          description: The region of the project
+        default_domain:
+          type:
+          - string
+          - 'null'
+          title: Default domain
+          description: The default domain of the project
+      additionalProperties: false
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Project Identifier
+          description: The identifier of Project
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        title:
+          type: string
+          title: Title
+          description: The title of the project
+        description:
+          type: string
+          title: Description
+          description: The description of the project
+        owner:
+          type: string
+          title: Owner
+          description: The owner of the project
+          deprecated: true
+          x-stability: DEPRECATED
+        namespace:
+          type:
+          - string
+          - 'null'
+          title: Namespace
+          description: The namespace the project belongs in
+          x-stability: EXPERIMENTAL
+        organization:
+          type:
+          - string
+          - 'null'
+          title: Organization
+          description: The organization the project belongs in
+          x-stability: EXPERIMENTAL
+        default_branch:
+          type:
+          - string
+          - 'null'
+          title: Default branch
+          description: The default branch of the project
+        status:
+          type: object
+          properties:
+            code:
+              type: string
+              title: Status code
+              description: ''
+            message:
+              type: string
+              title: Status text
+              description: ''
+          required:
+          - code
+          - message
+          additionalProperties: false
+          title: Status
+          description: The status of the project
+        timezone:
+          type: string
+          title: Timezone
+          description: Timezone of the project
+        region:
+          type: string
+          title: Region
+          description: The region of the project
+        repository:
+          type: object
+          properties:
+            url:
+              type: string
+              title: Git URL
+              description: ''
+            client_ssh_key:
+              type:
+              - string
+              - 'null'
+              title: SSH Key
+              description: SSH Key used to access external private repositories.
+          required:
+          - url
+          - client_ssh_key
+          additionalProperties: false
+          title: Repository information
+          description: The repository information of the project
+        default_domain:
+          type:
+          - string
+          - 'null'
+          title: Default domain
+          description: The default domain of the project
+        subscription:
+          type: object
+          properties:
+            license_uri:
+              type: string
+              title: Subscription URI
+              description: URI of the subscription
+            plan:
+              type: string
+              enum:
+              - 2xlarge
+              - 2xlarge-high-memory
+              - 4xlarge
+              - 8xlarge
+              - development
+              - large
+              - large-high-memory
+              - medium
+              - medium-high-memory
+              - standard
+              - standard-high-memory
+              - xlarge
+              - xlarge-high-memory
+              title: Plan level
+              description: ''
+            environments:
+              type: integer
+              title: Environments number
+              description: Number of environments
+            storage:
+              type: integer
+              title: Storage
+              description: Size of storage (in MB)
+            included_users:
+              type: integer
+              title: Included users
+              description: Number of users
+            subscription_management_uri:
+              type: string
+              title: Subscription management URI
+              description: URI for managing the subscription
+            restricted:
+              type: boolean
+              title: Is subscription attributes frozen
+              description: True if subscription attributes, like number of users, are frozen
+            suspended:
+              type: boolean
+              title: Is subscription suspended
+              description: Whether or not the subscription is suspended
+            user_licenses:
+              type: integer
+              title: Current number of users
+              description: Current number of users
+            resources:
+              type: object
+              properties:
+                container_profiles:
+                  type: boolean
+                  title: Is Container profiles enabled
+                  description: Enable support for customizable container profiles.
+                production:
+                  type: object
+                  properties:
+                    legacy_development:
+                      type: boolean
+                      title: Legacy development sizing
+                      description: Enable legacy development sizing for this environment type.
+                    max_cpu:
+                      type:
+                      - number
+                      - 'null'
+                      format: float
+                      title: Maximum CPU units
+                      description: Maximum number of allocated CPU units.
+                    max_memory:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Maximum RAM
+                      description: Maximum amount of allocated RAM.
+                    max_environments:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Maximum environments
+                      description: Maximum number of environments
+                  required:
+                  - legacy_development
+                  - max_cpu
+                  - max_memory
+                  - max_environments
+                  additionalProperties: false
+                  title: Production resources
+                  description: Resources for production environments
+                development:
+                  type: object
+                  properties:
+                    legacy_development:
+                      type: boolean
+                      title: Legacy development sizing
+                      description: Enable legacy development sizing for this environment type.
+                    max_cpu:
+                      type:
+                      - number
+                      - 'null'
+                      format: float
+                      title: Maximum CPU units
+                      description: Maximum number of allocated CPU units.
+                    max_memory:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Maximum RAM
+                      description: Maximum amount of allocated RAM.
+                    max_environments:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Maximum environments
+                      description: Maximum number of environments
+                  required:
+                  - legacy_development
+                  - max_cpu
+                  - max_memory
+                  - max_environments
+                  additionalProperties: false
+                  title: Development resources
+                  description: Resources for development environments
+              required:
+              - container_profiles
+              - production
+              - development
+              additionalProperties: false
+              title: Resources limits
+              description: Resources limits
+            resource_validation_url:
+              type: string
+              title: Resource validation URL
+              description: URL for resources validation
+            image_types:
+              type: object
+              properties:
+                only:
+                  type: array
+                  items:
+                    type: string
+                  title: Allowed image types
+                  description: Image types to be allowed use.
+                exclude:
+                  type: array
+                  items:
+                    type: string
+                  title: Denied image types
+                  description: Image types to be denied use.
+              additionalProperties: false
+              title: Image type restrictions
+              description: Restricted and denied image types
+          required:
+          - license_uri
+          - storage
+          - included_users
+          - subscription_management_uri
+          - restricted
+          - suspended
+          - user_licenses
+          additionalProperties: false
+          title: Subscription information
+          description: The subscription information of the project
+      required:
+      - id
+      - created_at
+      - updated_at
+      - attributes
+      - title
+      - description
+      - owner
+      - namespace
+      - organization
+      - default_branch
+      - status
+      - timezone
+      - region
+      - repository
+      - default_domain
+      - subscription
+      additionalProperties: false
+    ProjectCapabilities_2:
+      type: object
+      properties:
+        custom_domains:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, custom domains can be added to the project.
+            environments_with_domains_limit:
+              type: integer
+              title: Domains limit
+              description: Limit on the amount of non-production environments that can have domains set
+          required:
+          - enabled
+          - environments_with_domains_limit
+          additionalProperties: false
+          title: Custom Domains
+          description: ''
+        source_operations:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, source operations can be triggered.
+          required:
+          - enabled
+          additionalProperties: false
+          title: Source Operations
+          description: ''
+        runtime_operations:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, runtime operations can be triggered.
+          required:
+          - enabled
+          additionalProperties: false
+          title: Runtime Operations
+          description: ''
+        tasks:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, background tasks can be triggered.
+          required:
+          - enabled
+          additionalProperties: false
+          title: Tasks
+          description: ''
+        outbound_firewall:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, outbound firewall can be used.
+          required:
+          - enabled
+          additionalProperties: false
+          title: Outbound Firewall
+          description: ''
+        egress_proxy:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: 'If true, the egress proxy is on for every container in the project: outbound traffic is denied by default and must traverse the proxy. Applies project-wide regardless of whether an application declares an egress allowlist.'
+          required:
+          - enabled
+          additionalProperties: false
+          title: Egress Proxy
+          description: ''
+        metrics:
+          type: object
+          properties:
+            max_range:
+              type: string
+              title: Max range
+              description: Limit on the maximum time range allowed in metrics retrieval
+          required:
+          - max_range
+          additionalProperties: false
+          title: Metrics
+          description: ''
+        logs_forwarding:
+          type: object
+          properties:
+            max_extra_payload_size:
+              type: integer
+              title: Max extra payload size
+              description: Limit on the maximum size for the custom extra attributes added to the forwarded logs payload
+          required:
+          - max_extra_payload_size
+          additionalProperties: false
+          title: Logs Forwarding
+          description: ''
+        guaranteed_resources:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, guaranteed resources can be used
+            instance_limit:
+              type: integer
+              title: Instance limit
+              description: Instance limit for guaranteed resources
+          required:
+          - enabled
+          - instance_limit
+          additionalProperties: false
+          title: Guaranteed Resources
+          description: ''
+        images:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: object
+              properties:
+                available:
+                  type: boolean
+                  title: Available
+                  description: The image is available for deployment
+              required:
+              - available
+              additionalProperties: false
+          title: Images
+          description: ''
+        instance_limit:
+          type: integer
+          title: Instance limit
+          description: Maximum number of instance per service
+        build_resources:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, build resources can be modified.
+            max_cpu:
+              type: number
+              format: float
+              title: CPU
+              description: ''
+            max_memory:
+              type: integer
+              title: Memory
+              description: ''
+          required:
+          - enabled
+          - max_cpu
+          - max_memory
+          additionalProperties: false
+          title: Build Resources
+          description: ''
+        object_storage:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, implicit object-storage can be used.
+            min_storage:
+              type: integer
+              title: Minimum storage
+              description: Lower bound for the size of implicit object-storage on the project, in MiB.
+            max_storage:
+              type: integer
+              title: Maximum storage
+              description: Upper bound for the size of implicit object-storage on the project, in MiB.
+            storage_step:
+              type: integer
+              title: Storage step
+              description: Granularity of implicit object-storage allocations, in MiB. resources.disk.object, min_storage and max_storage must all be multiples of this value.
+            cpu_per_step:
+              type: number
+              format: float
+              title: CPU per step
+              description: CPU granted to the implicit object-storage service for each storage_step of allocated quota.
+            memory_per_step:
+              type: integer
+              title: Memory per step
+              description: Memory granted to the implicit object-storage service for each storage_step of allocated quota, in MiB.
+            max_cpu:
+              type: number
+              format: float
+              title: Maximum CPU
+              description: Upper bound on the CPU granted to the implicit object-storage service, regardless of the configured quota.
+            max_memory:
+              type: integer
+              title: Maximum memory
+              description: Upper bound on the memory granted to the implicit object-storage service, in MiB, regardless of the configured quota.
+          required:
+          - enabled
+          - min_storage
+          - max_storage
+          - storage_step
+          - cpu_per_step
+          - memory_per_step
+          - max_cpu
+          - max_memory
+          additionalProperties: false
+          title: Object Storage
+          description: ''
+        data_retention:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, data retention configuration can be modified.
+          required:
+          - enabled
+          additionalProperties: false
+          title: Data Retention
+          description: ''
+        autoscaling:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, autoscaling can be configured.
+            supports_horizontal_scaling_services:
+              type: boolean
+              title: Enable autoscaling for services
+              description: Allow autoscaling to be configured for services (not just apps and workers)
+          required:
+          - enabled
+          - supports_horizontal_scaling_services
+          additionalProperties: false
+          title: Autoscaling
+          description: ''
+        integrations:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, integrations can be used
+            config:
+              type: object
+              properties:
+                newrelic:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: New Relic
+                  description: New Relic log-forwarding integration configurations
+                sumologic:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Sumo Logic
+                  description: Sumo Logic log-forwarding integration configurations
+                splunk:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Splunk
+                  description: Splunk log-forwarding integration configurations
+                httplog:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: HTTP log-forwarding
+                  description: HTTP log-forwarding integration configurations
+                syslog:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Syslog
+                  description: Syslog log-forwarding integration configurations
+                webhook:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Webhook
+                  description: Webhook integration configurations
+                script:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Script
+                  description: Script integration configurations
+                github:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: GitHub
+                  description: GitHub integration configurations
+                gitlab:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: GitLab
+                  description: GitLab integration configurations
+                bitbucket:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Bitbucket
+                  description: Bitbucket integration configurations
+                bitbucket_server:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Bitbucket Server
+                  description: Bitbucket server integration configurations
+                health.email:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Health Email
+                  description: Health Email notification integration configurations
+                health.webhook:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Health WebHook
+                  description: Health Webhook notification integration configurations
+                health.pagerduty:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Health PagerDuty
+                  description: Health PagerDuty notification integration configurations
+                health.slack:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Health Slack
+                  description: Health Slack notification integration configurations
+                cdn.fastly:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Fastly CDN
+                  description: Fastly CDN integration configurations
+                blackfire:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Blackfire
+                  description: Blackfire integration configurations
+                otlplog:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: OpenTelemetry
+                  description: OpenTelemetry log-forwarding integration configurations
+              additionalProperties: false
+              title: Config
+              description: ''
+            allowed_integrations:
+              type: array
+              items:
+                type: string
+              title: Allowed Integrations
+              description: List of integrations allowed to be created
+          required:
+          - enabled
+          additionalProperties: false
+          title: Integrations
+          description: ''
+      required:
+      - tasks
+      - metrics
+      - logs_forwarding
+      - guaranteed_resources
+      - images
+      - instance_limit
+      - build_resources
+      - object_storage
+      - data_retention
+      - autoscaling
+      additionalProperties: false
+    Project_2:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Project Identifier
+          description: The identifier of Project
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        title:
+          type: string
+          title: Title
+          description: The title of the project
+        description:
+          type: string
+          title: Description
+          description: The description of the project
+        owner:
+          type: string
+          title: Owner
+          description: The owner of the project
+          deprecated: true
+          x-stability: DEPRECATED
+        namespace:
+          type:
+          - string
+          - 'null'
+          title: Namespace
+          description: The namespace the project belongs in
+          x-stability: EXPERIMENTAL
+        organization:
+          type:
+          - string
+          - 'null'
+          title: Organization
+          description: The organization the project belongs in
+          x-stability: EXPERIMENTAL
+        default_branch:
+          type:
+          - string
+          - 'null'
+          title: Default branch
+          description: The default branch of the project
+        status:
+          type: object
+          properties:
+            code:
+              type: string
+              title: Status code
+              description: ''
+            message:
+              type: string
+              title: Status text
+              description: ''
+          required:
+          - code
+          - message
+          additionalProperties: false
+          title: Status
+          description: The status of the project
+        timezone:
+          type: string
+          title: Timezone
+          description: Timezone of the project
+        region:
+          type: string
+          title: Region
+          description: The region of the project
+        repository:
+          type: object
+          properties:
+            url:
+              type: string
+              title: Git URL
+              description: The Git URL
+            client_ssh_key:
+              type:
+              - string
+              - 'null'
+              title: SSH Key
+              description: SSH Key used to access external private repositories
+          required:
+          - url
+          - client_ssh_key
+          additionalProperties: false
+          title: Repository information
+          description: The repository information of the project
+        default_domain:
+          type:
+          - string
+          - 'null'
+          title: Default domain
+          description: The default domain of the project
+        subscription:
+          type: object
+          properties:
+            license_uri:
+              type: string
+              title: Subscription URI
+              description: URI of the subscription
+            plan:
+              type: string
+              enum:
+              - 2xlarge
+              - 2xlarge-high-memory
+              - 4xlarge
+              - 8xlarge
+              - development
+              - large
+              - large-high-memory
+              - medium
+              - medium-high-memory
+              - standard
+              - standard-high-memory
+              - xlarge
+              - xlarge-high-memory
+              title: Plan level
+              description: ''
+            environments:
+              type: integer
+              title: Environments number
+              description: Number of environments
+            storage:
+              type: integer
+              title: Storage
+              description: Size of storage (in MB)
+            included_users:
+              type: integer
+              title: Included users
+              description: Number of users
+            subscription_management_uri:
+              type: string
+              title: Subscription management URI
+              description: URI for managing the subscription
+            restricted:
+              type: boolean
+              title: Is subscription attributes frozen
+              description: True if subscription attributes, like number of users, are frozen
+            suspended:
+              type: boolean
+              title: Is subscription suspended
+              description: Whether or not the subscription is suspended
+            user_licenses:
+              type: integer
+              title: Current number of users
+              description: Current number of users
+            resources:
+              type: object
+              properties:
+                container_profiles:
+                  type: boolean
+                  title: Is Container profiles enabled
+                  description: Enable support for customizable container profiles
+                production:
+                  type: object
+                  properties:
+                    legacy_development:
+                      type: boolean
+                      title: Legacy development sizing
+                      description: Enable legacy development sizing for this environment type
+                    max_cpu:
+                      type:
+                      - number
+                      - 'null'
+                      format: float
+                      title: Maximum CPU units
+                      description: Maximum number of allocated CPU units
+                    max_memory:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Maximum RAM
+                      description: Maximum amount of allocated RAM
+                    max_environments:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Maximum environments
+                      description: Maximum number of environments
+                  required:
+                  - legacy_development
+                  - max_cpu
+                  - max_memory
+                  - max_environments
+                  additionalProperties: false
+                  title: Production resources
+                  description: Resources for production environments
+                development:
+                  type: object
+                  properties:
+                    legacy_development:
+                      type: boolean
+                      title: Legacy development sizing
+                      description: Enable legacy development sizing for this environment type
+                    max_cpu:
+                      type:
+                      - number
+                      - 'null'
+                      format: float
+                      title: Maximum CPU units
+                      description: Maximum number of allocated CPU units
+                    max_memory:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Maximum RAM
+                      description: Maximum amount of allocated RAM
+                    max_environments:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Maximum environments
+                      description: Maximum number of environments
+                  required:
+                  - legacy_development
+                  - max_cpu
+                  - max_memory
+                  - max_environments
+                  additionalProperties: false
+                  title: Development resources
+                  description: Resources for development environments
+              required:
+              - container_profiles
+              - production
+              - development
+              additionalProperties: false
+              title: Resources limits
+              description: Resources limits
+            resource_validation_url:
+              type: string
+              title: Resource validation URL
+              description: URL for resources validation
+            image_types:
+              type: object
+              properties:
+                only:
+                  type: array
+                  items:
+                    type: string
+                  title: Allowed image types
+                  description: Image types to be allowed use.
+                exclude:
+                  type: array
+                  items:
+                    type: string
+                  title: Denied image types
+                  description: Image types to be denied use.
+              additionalProperties: false
+              title: Image type restrictions
+              description: Restricted and denied image types
+          required:
+          - license_uri
+          - storage
+          - included_users
+          - subscription_management_uri
+          - restricted
+          - suspended
+          - user_licenses
+          additionalProperties: false
+          title: Subscription information
+          description: The subscription information of the project
+        maintenance:
+          type:
+          - object
+          - 'null'
+          properties:
+            next_maintenance:
+              type: string
+              format: date-time
+              title: Next maintenance date and time
+              description: Estimated date and time of the next maintenance activity
+          required:
+          - next_maintenance
+          additionalProperties: false
+          title: Maintenance
+          description: The maintenance information of the project
+      required:
+      - id
+      - created_at
+      - updated_at
+      - attributes
+      - title
+      - description
+      - owner
+      - namespace
+      - organization
+      - default_branch
+      - status
+      - timezone
+      - region
+      - repository
+      - default_domain
+      - subscription
+      - maintenance
+      additionalProperties: false
+    ProjectCapabilities_3:
+      type: object
+      properties:
+        custom_domains:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, custom domains can be added to the project.
+            environments_with_domains_limit:
+              type: integer
+              title: Domains limit
+              description: Limit on the amount of non-production environments that can have domains set
+          required:
+          - enabled
+          - environments_with_domains_limit
+          additionalProperties: false
+          title: Custom Domains
+          description: ''
+        source_operations:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, source operations can be triggered.
+          required:
+          - enabled
+          additionalProperties: false
+          title: Source Operations
+          description: ''
+        runtime_operations:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, runtime operations can be triggered.
+          required:
+          - enabled
+          additionalProperties: false
+          title: Runtime Operations
+          description: ''
+        tasks:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, background tasks can be triggered.
+          required:
+          - enabled
+          additionalProperties: false
+          title: Tasks
+          description: ''
+        outbound_firewall:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, outbound firewall can be used.
+          required:
+          - enabled
+          additionalProperties: false
+          title: Outbound Firewall
+          description: ''
+        egress_proxy:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: 'If true, the egress proxy is on for every container in the project: outbound traffic is denied by default and must traverse the proxy. Applies project-wide regardless of whether an application declares an egress allowlist.'
+          required:
+          - enabled
+          additionalProperties: false
+          title: Egress Proxy
+          description: ''
+        metrics:
+          type: object
+          properties:
+            max_range:
+              type: string
+              title: Max range
+              description: Limit on the maximum time range allowed in metrics retrieval
+          required:
+          - max_range
+          additionalProperties: false
+          title: Metrics
+          description: ''
+        logs_forwarding:
+          type: object
+          properties:
+            max_extra_payload_size:
+              type: integer
+              title: Max extra payload size
+              description: Limit on the maximum size for the custom extra attributes added to the forwarded logs payload
+          required:
+          - max_extra_payload_size
+          additionalProperties: false
+          title: Logs Forwarding
+          description: ''
+        guaranteed_resources:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, guaranteed resources can be used
+            instance_limit:
+              type: integer
+              title: Instance limit
+              description: Instance limit for guaranteed resources
+          required:
+          - enabled
+          - instance_limit
+          additionalProperties: false
+          title: Guaranteed Resources
+          description: ''
+        images:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: object
+              properties:
+                available:
+                  type: boolean
+                  title: Available
+                  description: The image is available for deployment
+              required:
+              - available
+              additionalProperties: false
+          title: Images
+          description: ''
+        instance_limit:
+          type: integer
+          title: Instance limit
+          description: Maximum number of instance per service
+        build_resources:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, build resources can be modified.
+            max_cpu:
+              type: number
+              format: float
+              title: CPU
+              description: ''
+            max_memory:
+              type: integer
+              title: Memory
+              description: ''
+          required:
+          - enabled
+          - max_cpu
+          - max_memory
+          additionalProperties: false
+          title: Build Resources
+          description: ''
+        object_storage:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, implicit object-storage can be used.
+            min_storage:
+              type: integer
+              title: Minimum storage
+              description: Lower bound for the size of implicit object-storage on the project, in MiB.
+            max_storage:
+              type: integer
+              title: Maximum storage
+              description: Upper bound for the size of implicit object-storage on the project, in MiB.
+            storage_step:
+              type: integer
+              title: Storage step
+              description: Granularity of implicit object-storage allocations, in MiB. resources.disk.object, min_storage and max_storage must all be multiples of this value.
+            cpu_per_step:
+              type: number
+              format: float
+              title: CPU per step
+              description: CPU granted to the implicit object-storage service for each storage_step of allocated quota.
+            memory_per_step:
+              type: integer
+              title: Memory per step
+              description: Memory granted to the implicit object-storage service for each storage_step of allocated quota, in MiB.
+            max_cpu:
+              type: number
+              format: float
+              title: Maximum CPU
+              description: Upper bound on the CPU granted to the implicit object-storage service, regardless of the configured quota.
+            max_memory:
+              type: integer
+              title: Maximum memory
+              description: Upper bound on the memory granted to the implicit object-storage service, in MiB, regardless of the configured quota.
+          required:
+          - enabled
+          - min_storage
+          - max_storage
+          - storage_step
+          - cpu_per_step
+          - memory_per_step
+          - max_cpu
+          - max_memory
+          additionalProperties: false
+          title: Object Storage
+          description: ''
+        data_retention:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, data retention configuration can be modified.
+          required:
+          - enabled
+          additionalProperties: false
+          title: Data Retention
+          description: ''
+        autoscaling:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, autoscaling can be configured.
+            supports_horizontal_scaling_services:
+              type: boolean
+              title: Enable autoscaling for services
+              description: Allow autoscaling to be configured for services (not just apps and workers)
+          required:
+          - enabled
+          - supports_horizontal_scaling_services
+          additionalProperties: false
+          title: Autoscaling
+          description: ''
+        integrations:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Enabled
+              description: If true, integrations can be used
+            config:
+              type: object
+              properties:
+                newrelic:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: New Relic
+                  description: New Relic log-forwarding integration configurations
+                sumologic:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Sumo Logic
+                  description: Sumo Logic log-forwarding integration configurations
+                splunk:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Splunk
+                  description: Splunk log-forwarding integration configurations
+                httplog:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: HTTP log-forwarding
+                  description: HTTP log-forwarding integration configurations
+                syslog:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Syslog
+                  description: Syslog log-forwarding integration configurations
+                webhook:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Webhook
+                  description: Webhook integration configurations
+                script:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Script
+                  description: Script integration configurations
+                github:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: GitHub
+                  description: GitHub integration configurations
+                gitlab:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: GitLab
+                  description: GitLab integration configurations
+                bitbucket:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Bitbucket
+                  description: Bitbucket integration configurations
+                bitbucket_server:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Bitbucket Server
+                  description: Bitbucket server integration configurations
+                health.email:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Health Email
+                  description: Health Email notification integration configurations
+                health.webhook:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Health WebHook
+                  description: Health Webhook notification integration configurations
+                health.pagerduty:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Health PagerDuty
+                  description: Health PagerDuty notification integration configurations
+                health.slack:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Health Slack
+                  description: Health Slack notification integration configurations
+                cdn.fastly:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Fastly CDN
+                  description: Fastly CDN integration configurations
+                blackfire:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: Blackfire
+                  description: Blackfire integration configurations
+                otlplog:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      title: Enabled
+                      description: The integration is enabled.
+                    role:
+                      type: string
+                      title: Role
+                      description: Minimum required role for creating the integration.
+                  additionalProperties: false
+                  title: OpenTelemetry
+                  description: OpenTelemetry log-forwarding integration configurations
+              additionalProperties: false
+              title: Config
+              description: ''
+            allowed_integrations:
+              type: array
+              items:
+                type: string
+              title: Allowed Integrations
+              description: List of integrations allowed to be created
+          required:
+          - enabled
+          additionalProperties: false
+          title: Integrations
+          description: ''
+      required:
+      - tasks
+      - metrics
+      - logs_forwarding
+      - guaranteed_resources
+      - images
+      - instance_limit
+      - build_resources
+      - object_storage
+      - data_retention
+      - autoscaling
+      additionalProperties: false
+    Project_3:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Project Identifier
+          description: The identifier of Project
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        title:
+          type: string
+          title: Title
+          description: The title of the project
+        description:
+          type: string
+          title: Description
+          description: The description of the project
+        owner:
+          type: string
+          title: Owner
+          description: The owner of the project
+          deprecated: true
+          x-stability: DEPRECATED
+        namespace:
+          type:
+          - string
+          - 'null'
+          title: Namespace
+          description: The namespace the project belongs in
+          x-stability: EXPERIMENTAL
+        organization:
+          type:
+          - string
+          - 'null'
+          title: Organization
+          description: The organization the project belongs in
+          x-stability: EXPERIMENTAL
+        default_branch:
+          type:
+          - string
+          - 'null'
+          title: Default branch
+          description: The default branch of the project
+        status:
+          type: object
+          properties:
+            code:
+              type: string
+              title: Status code
+              description: ''
+            message:
+              type: string
+              title: Status text
+              description: ''
+          required:
+          - code
+          - message
+          additionalProperties: false
+          title: Status
+          description: The status of the project
+        timezone:
+          type: string
+          title: Timezone
+          description: Timezone of the project
+        region:
+          type: string
+          title: Region
+          description: The region of the project
+        repository:
+          type: object
+          properties:
+            url:
+              type: string
+              title: Git URL
+              description: The Git URL
+            client_ssh_key:
+              type:
+              - string
+              - 'null'
+              title: SSH Key
+              description: SSH Key used to access external private repositories
+          required:
+          - url
+          - client_ssh_key
+          additionalProperties: false
+          title: Repository information
+          description: The repository information of the project
+        default_domain:
+          type:
+          - string
+          - 'null'
+          title: Default domain
+          description: The default domain of the project
+        subscription:
+          type: object
+          properties:
+            license_uri:
+              type: string
+              title: Subscription URI
+              description: URI of the subscription
+            plan:
+              type: string
+              enum:
+              - 2xlarge
+              - 2xlarge-high-memory
+              - 4xlarge
+              - 8xlarge
+              - development
+              - large
+              - large-high-memory
+              - medium
+              - medium-high-memory
+              - standard
+              - standard-high-memory
+              - xlarge
+              - xlarge-high-memory
+              title: Plan level
+              description: ''
+            environments:
+              type: integer
+              title: Environments number
+              description: Number of environments
+            storage:
+              type: integer
+              title: Storage
+              description: Size of storage (in MB)
+            included_users:
+              type: integer
+              title: Included users
+              description: Number of users
+            subscription_management_uri:
+              type: string
+              title: Subscription management URI
+              description: URI for managing the subscription
+            restricted:
+              type: boolean
+              title: Is subscription attributes frozen
+              description: True if subscription attributes, like number of users, are frozen
+            suspended:
+              type: boolean
+              title: Is subscription suspended
+              description: Whether or not the subscription is suspended
+            user_licenses:
+              type: integer
+              title: Current number of users
+              description: Current number of users
+            resources:
+              type: object
+              properties:
+                container_profiles:
+                  type: boolean
+                  title: Is Container profiles enabled
+                  description: Enable support for customizable container profiles
+                production:
+                  type: object
+                  properties:
+                    legacy_development:
+                      type: boolean
+                      title: Legacy development sizing
+                      description: Enable legacy development sizing for this environment type
+                    max_cpu:
+                      type:
+                      - number
+                      - 'null'
+                      format: float
+                      title: Maximum CPU units
+                      description: Maximum number of allocated CPU units
+                    max_memory:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Maximum RAM
+                      description: Maximum amount of allocated RAM
+                    max_environments:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Maximum environments
+                      description: Maximum number of environments
+                  required:
+                  - legacy_development
+                  - max_cpu
+                  - max_memory
+                  - max_environments
+                  additionalProperties: false
+                  title: Production resources
+                  description: Resources for production environments
+                development:
+                  type: object
+                  properties:
+                    legacy_development:
+                      type: boolean
+                      title: Legacy development sizing
+                      description: Enable legacy development sizing for this environment type
+                    max_cpu:
+                      type:
+                      - number
+                      - 'null'
+                      format: float
+                      title: Maximum CPU units
+                      description: Maximum number of allocated CPU units
+                    max_memory:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Maximum RAM
+                      description: Maximum amount of allocated RAM
+                    max_environments:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Maximum environments
+                      description: Maximum number of environments
+                  required:
+                  - legacy_development
+                  - max_cpu
+                  - max_memory
+                  - max_environments
+                  additionalProperties: false
+                  title: Development resources
+                  description: Resources for development environments
+              required:
+              - container_profiles
+              - production
+              - development
+              additionalProperties: false
+              title: Resources limits
+              description: Resources limits
+            resource_validation_url:
+              type: string
+              title: Resource validation URL
+              description: URL for resources validation
+            image_types:
+              type: object
+              properties:
+                only:
+                  type: array
+                  items:
+                    type: string
+                  title: Allowed image types
+                  description: Image types to be allowed use.
+                exclude:
+                  type: array
+                  items:
+                    type: string
+                  title: Denied image types
+                  description: Image types to be denied use.
+              additionalProperties: false
+              title: Image type restrictions
+              description: Restricted and denied image types
+          required:
+          - license_uri
+          - storage
+          - included_users
+          - subscription_management_uri
+          - restricted
+          - suspended
+          - user_licenses
+          additionalProperties: false
+          title: Subscription information
+          description: The subscription information of the project
+        maintenance:
+          type:
+          - object
+          - 'null'
+          properties:
+            next_maintenance:
+              type: string
+              format: date-time
+              title: Next maintenance date and time
+              description: Estimated date and time of the next maintenance activity
+          required:
+          - next_maintenance
+          additionalProperties: false
+          title: Maintenance
+          description: The maintenance information of the project
+      required:
+      - id
+      - created_at
+      - updated_at
+      - attributes
+      - title
+      - description
+      - owner
+      - namespace
+      - organization
+      - default_branch
+      - status
+      - timezone
+      - region
+      - repository
+      - default_domain
+      - subscription
+      - maintenance
+      additionalProperties: false
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

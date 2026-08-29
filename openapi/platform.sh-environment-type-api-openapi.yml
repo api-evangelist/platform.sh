@@ -1,0 +1,239 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Environment Type API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Environment Type across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Environment Type
+  description: 'Environment Types is the way Upsun manages access. We currently have 3 environment types:
+
+    * Development
+
+    * Staging
+
+    * Production
+
+
+    Each environment type will contain a group of users and their accesses. We manage access,
+
+    adding, updating and removing users and their roles, here.
+
+
+    Each environment will have a type, pointing to one of these 3 environment types.
+
+    See `type` in [Environments](#tag/Environment).
+
+
+    In general:
+
+    * Production will be reserved for the default branch, and cannot be set manually.
+
+    * An environment can be set to be type `staging` or development manually and when branching.
+
+
+    Dedicated Generation 2 projects have different rules for environment types. If your project
+
+    contains at least one of those Dedicated Generation 2 environments, the rules are slightly different:
+
+    * All non-dedicated environments in your project can be `development` or `staging`, but never `production`.
+
+    * Dedicated Generation 2 environments can be set either to `staging` or `production`, but never `development`.
+
+    * The default branch is not considered to be a special case.
+
+    '
+paths:
+  /projects/{projectId}/environment-types:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      operationId: list-projects-environment-types
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentTypeCollection'
+      tags:
+      - Environment Type
+      summary: Get environment types
+      description: List all available environment types
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environment-types/{environmentTypeId}:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentTypeId
+      operationId: get-environment-type
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentType'
+      tags:
+      - Environment Type
+      summary: Get environment type links
+      description: Lists the endpoints used to retrieve info about the environment type.
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    EnvironmentType:
+      type: object
+      properties:
+        id:
+          type: string
+          title: EnvironmentType Identifier
+          description: The identifier of EnvironmentType
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+      required:
+      - id
+      - attributes
+      additionalProperties: false
+    EnvironmentTypeCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/EnvironmentType'
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

@@ -1,0 +1,429 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Invoices API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Invoices across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Invoices
+  description: 'These endpoints can be used to retrieve invoices from our billing system.
+
+    An invoice of type "invoice" is generated automatically every month, if the customer has active projects.
+
+    Invoices of type "credit_memo" are a result of manual action when there was a refund or an invoice correction.
+
+    '
+paths:
+  /organizations/{organization_id}/invoices:
+    get:
+      summary: List invoices
+      description: Retrieves a list of invoices for the specified organization.
+      operationId: list-org-invoices
+      tags:
+      - Invoices
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIDName'
+      - $ref: '#/components/parameters/filter_invoice_status'
+      - $ref: '#/components/parameters/filter_invoice_type'
+      - $ref: '#/components/parameters/filter_order_id'
+      - $ref: '#/components/parameters/page'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Invoice'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}/invoices/{invoice_id}:
+    get:
+      summary: Get invoice
+      description: Retrieves an invoice for the specified organization.
+      operationId: get-org-invoice
+      tags:
+      - Invoices
+      parameters:
+      - $ref: '#/components/parameters/InvoiceID'
+      - $ref: '#/components/parameters/OrganizationIDName'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  parameters:
+    filter_invoice_type:
+      name: filter[type]
+      in: query
+      description: The invoice type. Use invoice for standard invoices, credit_memo for refund/credit invoices.
+      schema:
+        type: string
+        enum:
+        - credit_memo
+        - invoice
+    filter_order_id:
+      name: filter[order_id]
+      in: query
+      description: The order id of Invoice.
+      schema:
+        type: string
+    filter_invoice_status:
+      name: filter[status]
+      in: query
+      description: The status of the invoice.
+      schema:
+        type: string
+        enum:
+        - paid
+        - charged_off
+        - pending
+        - refunded
+        - canceled
+        - refund_pending
+    page:
+      name: page
+      in: query
+      description: Page to be displayed. Defaults to 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+    InvoiceID:
+      in: path
+      name: invoice_id
+      description: The ID of the invoice.
+      required: true
+      schema:
+        type: string
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
+      schema:
+        type: string
+  schemas:
+    InvoicePDF:
+      description: Invoice PDF document details.
+      properties:
+        url:
+          description: A link to the PDF invoice.
+          type: string
+        status:
+          description: The status of the PDF document. We generate invoice PDF asyncronously in batches. An invoice PDF document may not be immediately available to download. If status is 'ready', the PDF is ready to download. 'pending' means the PDF is not created but queued up. If you get this status, try again later.
+          type: string
+          enum:
+          - ready
+          - pending
+      type: object
+    Address:
+      description: The address of the user.
+      properties:
+        country:
+          description: Two-letter country codes are used to represent countries and states
+          type: string
+          format: ISO ALPHA-2
+        name_line:
+          description: The full name of the user
+          type: string
+        premise:
+          description: Premise (i.e. Apt, Suite, Bldg.)
+          type: string
+        sub_premise:
+          description: Sub Premise (i.e. Suite, Apartment, Floor, Unknown.
+          type: string
+        thoroughfare:
+          description: The address of the user
+          type: string
+        administrative_area:
+          description: The administrative area of the user address
+          type: string
+          format: ISO ALPHA-2
+        sub_administrative_area:
+          description: The sub-administrative area of the user address
+          type: string
+        locality:
+          description: The locality of the user address
+          type: string
+        dependent_locality:
+          description: The dependant_locality area of the user address
+          type: string
+        postal_code:
+          description: The postal code area of the user address
+          type: string
+      type: object
+    Invoice:
+      type: object
+      description: The invoice object.
+      properties:
+        id:
+          type: string
+          description: The invoice id.
+        invoice_number:
+          description: The invoice number.
+          type: string
+        type:
+          description: Invoice type.
+          type: string
+          enum:
+          - invoice
+          - credit_memo
+        order_id:
+          description: The id of the related order.
+          type: string
+        related_invoice_id:
+          description: If the invoice is a credit memo (type=credit_memo), this field stores the id of the related/original invoice.
+          type:
+          - string
+          - 'null'
+        status:
+          description: The invoice status.
+          type: string
+          enum:
+          - paid
+          - charged_off
+          - pending
+          - refunded
+          - canceled
+          - refund_pending
+        owner:
+          description: The ULID of the owner.
+          type: string
+          format: ulid
+        invoice_date:
+          description: The invoice date.
+          type:
+          - string
+          - 'null'
+          format: date-time
+        invoice_due:
+          description: The invoice due date.
+          type:
+          - string
+          - 'null'
+          format: date-time
+        created:
+          description: The time when the invoice was created.
+          type:
+          - string
+          - 'null'
+          format: date-time
+        changed:
+          description: The time when the invoice was changed.
+          type:
+          - string
+          - 'null'
+          format: date-time
+        company:
+          description: Company name (if any).
+          type: string
+        total:
+          description: The invoice total.
+          type: number
+          format: double
+        address:
+          $ref: '#/components/schemas/Address'
+        notes:
+          description: The invoice note.
+          type: string
+        invoice_pdf:
+          $ref: '#/components/schemas/InvoicePDF'
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    Error_2:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+    Error_3:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

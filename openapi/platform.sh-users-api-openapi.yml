@@ -1,0 +1,1031 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Users API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Users across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Users
+paths:
+  /me:
+    get:
+      tags:
+      - Users
+      summary: Get current logged-in user info
+      description: Retrieve information about the currently logged-in user (the user associated with the access token).
+      operationId: get-current-user-deprecated
+      responses:
+        '200':
+          description: The user object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUser'
+      deprecated: true
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /me/phone:
+    post:
+      tags:
+      - Users
+      summary: Check if phone verification is required
+      description: Find out if the current logged in user requires phone verification to create projects.
+      operationId: get-current-user-verification-status
+      responses:
+        '200':
+          description: The information pertinent to determine if the account requires phone verification before project creation.
+          content:
+            application/json:
+              schema:
+                properties:
+                  verify_phone:
+                    description: Does this user need to verify their phone number for project creation.
+                    type: boolean
+                type: object
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /me/verification:
+    post:
+      tags:
+      - Users
+      summary: Check if verification is required
+      description: Find out if the current logged in user requires verification (phone or staff) to create projects.
+      operationId: get-current-user-verification-status-full
+      responses:
+        '200':
+          description: The information pertinent to determine if the account requires any type of verification before project creation.
+          content:
+            application/json:
+              schema:
+                properties:
+                  state:
+                    description: Does this user need verification for project creation.
+                    type: boolean
+                  type:
+                    description: What type of verification is needed (phone or ticket)
+                    type: string
+                type: object
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /users/me:
+    get:
+      summary: Get the current user
+      description: Retrieves the current user, determined from the used access token.
+      operationId: get-current-user
+      tags:
+      - Users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /users/email={email}:
+    parameters:
+    - schema:
+        type: string
+        format: email
+        example: hello@example.com
+      name: email
+      in: path
+      required: true
+      description: The user's email address.
+    get:
+      summary: Get a user by email
+      description: Retrieves a user matching the specified email address.
+      operationId: get-user-by-email-address
+      tags:
+      - Users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /users/username={username}:
+    parameters:
+    - schema:
+        type: string
+        example: platform-sh
+      name: username
+      in: path
+      required: true
+      description: The user's username.
+    get:
+      summary: Get a user by username
+      description: Retrieves a user matching the specified username.
+      operationId: get-user-by-username
+      tags:
+      - Users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples: {}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /users/{user_id}:
+    parameters:
+    - $ref: '#/components/parameters/UserID'
+    get:
+      summary: Get a user
+      description: Retrieves the specified user.
+      operationId: get-user
+      tags:
+      - Users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+      security:
+      - OAuth2: []
+    patch:
+      summary: Update a user
+      description: Updates the specified user.
+      operationId: update-user
+      tags:
+      - Users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: The user's username.
+                first_name:
+                  type: string
+                  description: The user's first name.
+                last_name:
+                  type: string
+                  description: The user's last name.
+                picture:
+                  type: string
+                  format: uri
+                  description: The user's picture.
+                company:
+                  type: string
+                  description: The user's company.
+                website:
+                  type: string
+                  format: uri
+                  description: The user's website.
+                country:
+                  type: string
+                  maxLength: 2
+                  minLength: 2
+                  description: The user's country (2-letter country code).
+              x-examples:
+                example-1:
+                  company: Platform.sh SAS
+                  country: EU
+                  first_name: Hello
+                  last_name: World
+                  picture: https://accounts.platform.sh/profiles/blimp_profile/themes/platformsh_theme/images/mail/logo.png
+                  username: username
+                  website: https://platform.sh
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /users/{user_id}/emailaddress:
+    parameters:
+    - $ref: '#/components/parameters/UserID'
+    post:
+      summary: Reset email address
+      description: Requests a reset of the user's email address. A confirmation email will be sent to the new address when the request is accepted.
+      operationId: reset-email-address
+      tags:
+      - Users
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email_address:
+                  type: string
+                  format: email
+              required:
+              - email_address
+        description: ''
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /users/{user_id}/resetpassword:
+    parameters:
+    - $ref: '#/components/parameters/UserID'
+    post:
+      summary: Reset user password
+      description: Requests a reset of the user's password. A password reset email will be sent to the user when the request is accepted.
+      operationId: reset-password
+      tags:
+      - Users
+      responses:
+        '204':
+          description: No Content
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    CurrentUser:
+      description: The user object.
+      properties:
+        id:
+          description: The UUID of the owner.
+          type: string
+          format: uuid
+        uuid:
+          description: The UUID of the owner.
+          type: string
+          format: uuid
+        username:
+          description: The username of the owner.
+          type: string
+        display_name:
+          description: The full name of the owner.
+          type: string
+        status:
+          description: Status of the user. 0 = blocked; 1 = active.
+          type: integer
+        mail:
+          description: The email address of the owner.
+          type: string
+          format: email
+        ssh_keys:
+          description: The list of user's public SSH keys.
+          type: array
+          items:
+            $ref: '#/components/schemas/SSHKey'
+        has_key:
+          description: The indicator whether the user has a public ssh key on file or not.
+          type: boolean
+        projects:
+          type: array
+          items:
+            properties:
+              id:
+                description: The unique ID string of the project.
+                type: string
+              name:
+                description: The name given to the project. Appears as the title in the user interface.
+                type: string
+              title:
+                description: The name given to the project. Appears as the title in the user interface.
+                type: string
+              cluster:
+                description: The machine name of the region where the project is located. Cannot be changed after project creation.
+                type: string
+              cluster_label:
+                description: The human-readable name of the region where the project is located.
+                type: string
+              region:
+                description: The machine name of the region where the project is located. Cannot be changed after project creation.
+                type: string
+              region_label:
+                description: The human-readable name of the region where the project is located.
+                type: string
+              uri:
+                description: The URL for the project's user interface.
+                type: string
+              endpoint:
+                description: The project API endpoint for the project.
+                type: string
+              license_id:
+                description: The ID of the subscription.
+                type: integer
+              owner:
+                description: The UUID of the owner.
+                type: string
+                format: uuid
+              owner_info:
+                $ref: '#/components/schemas/OwnerInfo'
+              plan:
+                description: The plan type of the subscription.
+                type: string
+              subscription_id:
+                description: The ID of the subscription.
+                type: integer
+              status:
+                description: The status of the project.
+                type: string
+              vendor:
+                description: The machine name of the vendor the subscription belongs to.
+                type: string
+              vendor_label:
+                description: The machine name of the vendor the subscription belongs to.
+                type: string
+              vendor_website:
+                description: The URL of the vendor the subscription belongs to.
+                type: string
+                format: url
+              vendor_resources:
+                description: The link to the resources of the vendor the subscription belongs to.
+                type: string
+              created_at:
+                description: The creation date of the subscription.
+                type: string
+                format: date-time
+            type: object
+        sequence:
+          description: The sequential ID of the user.
+          type: integer
+        roles:
+          type: array
+          items:
+            description: The user role name.
+            type: string
+        picture:
+          description: The URL of the user image.
+          type: string
+          format: url
+        tickets:
+          description: Number of support tickets by status.
+          type: object
+        trial:
+          description: The indicator whether the user is in trial or not.
+          type: boolean
+        current_trial:
+          type: array
+          items:
+            properties:
+              created:
+                description: The ISO timestamp of the trial creation date time.
+                type: string
+                format: date-time
+              description:
+                description: The human readable trial description
+                type: string
+              spend_remaining:
+                description: Total spend amount of the voucher minus existing project costs for the existing billing cycle.
+                type: string
+              expiration:
+                description: Date the trial expires.
+                type: string
+                format: date-time
+            type: object
+      type: object
+    User:
+      description: ''
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of the user.
+        deactivated:
+          type: boolean
+          description: Whether the user has been deactivated.
+        namespace:
+          type: string
+          description: The namespace in which the user's username is unique.
+        username:
+          type: string
+          description: The user's username.
+        email:
+          type: string
+          format: email
+          description: The user's email address.
+        email_verified:
+          type: boolean
+          description: Whether the user's email address has been verified.
+        first_name:
+          type: string
+          description: The user's first name.
+        last_name:
+          type: string
+          description: The user's last name.
+        picture:
+          type: string
+          format: uri
+          description: The user's picture.
+        company:
+          type: string
+          description: The user's company.
+        website:
+          type: string
+          format: uri
+          description: The user's website.
+        country:
+          type: string
+          maxLength: 2
+          minLength: 2
+          description: The user's ISO 3166-1 alpha-2 country code.
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the user was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the user was last updated.
+        consented_at:
+          type: string
+          format: date-time
+          description: The date and time when the user consented to the Terms of Service.
+        consent_method:
+          type: string
+          description: The method by which the user consented to the Terms of Service.
+          enum:
+          - opt-in
+          - text-ref
+      required:
+      - id
+      - deactivated
+      - namespace
+      - username
+      - email
+      - email_verified
+      - first_name
+      - last_name
+      - picture
+      - company
+      - website
+      - country
+      - created_at
+      - updated_at
+      x-examples:
+        example-1:
+          company: Platform.sh SAS
+          country: FR
+          created_at: '2010-04-19T10:00:00Z'
+          deactivated: false
+          email: hello@platform.sh
+          email_verified: true
+          first_name: Hello
+          id: d81c8ee2-44b3-429f-b944-a33ad7437690
+          last_name: World
+          namespace: platformsh
+          picture: https://accounts.platform.sh/profiles/blimp_profile/themes/platformsh_theme/images/mail/logo.png
+          updated_at: '2021-01-27T13:58:38.06968Z'
+          username: platform-sh
+          website: https://platform.sh
+          consented_at: '2010-04-19T10:00:00Z'
+          consent_method: opt-in
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    OwnerInfo:
+      description: Project owner information that can be exposed to collaborators.
+      properties:
+        type:
+          description: Type of the owner, usually 'user'.
+          type: string
+        username:
+          description: The username of the owner.
+          type: string
+        display_name:
+          description: The full name of the owner.
+          type: string
+      type: object
+    SSHKey:
+      description: The ssh key object.
+      properties:
+        key_id:
+          description: The ID of the public key.
+          type: integer
+        uid:
+          description: The internal user ID.
+          type: integer
+        fingerprint:
+          description: The fingerprint of the public key.
+          type: string
+        title:
+          description: The title of the public key.
+          type: string
+        value:
+          description: The actual value of the public key.
+          type: string
+        changed:
+          description: The time of the last key modification (ISO 8601)
+          type: string
+      type: object
+    CurrentUser_2:
+      description: The user object.
+      properties:
+        id:
+          description: The UUID of the owner.
+          type: string
+          format: uuid
+        uuid:
+          description: The UUID of the owner.
+          type: string
+          format: uuid
+        username:
+          description: The username of the owner.
+          type: string
+        display_name:
+          description: The full name of the owner.
+          type: string
+        status:
+          description: Status of the user. 0 = blocked; 1 = active.
+          type: integer
+        mail:
+          description: The email address of the owner.
+          type: string
+          format: email
+        ssh_keys:
+          description: The list of user's public SSH keys.
+          type: array
+          items:
+            $ref: '#/components/schemas/SSHKey'
+        has_key:
+          description: The indicator whether the user has a public ssh key on file or not.
+          type: boolean
+        projects:
+          type: array
+          items:
+            properties:
+              id:
+                description: The unique ID string of the project.
+                type: string
+              name:
+                description: The name given to the project. Appears as the title in the user interface.
+                type: string
+              title:
+                description: The name given to the project. Appears as the title in the user interface.
+                type: string
+              cluster:
+                description: The machine name of the region where the project is located. Cannot be changed after project creation.
+                type: string
+              cluster_label:
+                description: The human-readable name of the region where the project is located.
+                type: string
+              region:
+                description: The machine name of the region where the project is located. Cannot be changed after project creation.
+                type: string
+              region_label:
+                description: The human-readable name of the region where the project is located.
+                type: string
+              uri:
+                description: The URL for the project's user interface.
+                type: string
+              endpoint:
+                description: The project API endpoint for the project.
+                type: string
+              license_id:
+                description: The ID of the subscription.
+                type: integer
+              owner:
+                description: The UUID of the owner.
+                type: string
+                format: uuid
+              owner_info:
+                $ref: '#/components/schemas/OwnerInfo'
+              plan:
+                description: The plan type of the subscription.
+                type: string
+              subscription_id:
+                description: The ID of the subscription.
+                type: integer
+              status:
+                description: The status of the project.
+                type: string
+              vendor:
+                description: The machine name of the vendor the subscription belongs to.
+                type: string
+              vendor_label:
+                description: The machine name of the vendor the subscription belongs to.
+                type: string
+              vendor_website:
+                description: The URL of the vendor the subscription belongs to.
+                type: string
+                format: url
+              vendor_resources:
+                description: The link to the resources of the vendor the subscription belongs to.
+                type: string
+              created_at:
+                description: The creation date of the subscription.
+                type: string
+                format: date-time
+            type: object
+        sequence:
+          description: The sequential ID of the user.
+          type: integer
+        roles:
+          type: array
+          items:
+            description: The user role name.
+            type: string
+        picture:
+          description: The URL of the user image.
+          type: string
+          format: url
+        tickets:
+          description: Number of support tickets by status.
+          type: object
+      type: object
+    Error_2:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+    CurrentUser_3:
+      description: The user object.
+      properties:
+        id:
+          description: The UUID of the owner.
+          type: string
+          format: uuid
+        uuid:
+          description: The UUID of the owner.
+          type: string
+          format: uuid
+        username:
+          description: The username of the owner.
+          type: string
+        display_name:
+          description: The full name of the owner.
+          type: string
+        status:
+          description: Status of the user. 0 = blocked; 1 = active.
+          type: integer
+        mail:
+          description: The email address of the owner.
+          type: string
+          format: email
+        ssh_keys:
+          description: The list of user's public SSH keys.
+          type: array
+          items:
+            $ref: '#/components/schemas/SSHKey'
+        has_key:
+          description: The indicator whether the user has a public ssh key on file or not.
+          type: boolean
+        projects:
+          type: array
+          items:
+            properties:
+              id:
+                description: The unique ID string of the project.
+                type: string
+              name:
+                description: The name given to the project. Appears as the title in the user interface.
+                type: string
+              title:
+                description: The name given to the project. Appears as the title in the user interface.
+                type: string
+              cluster:
+                description: The machine name of the region where the project is located. Cannot be changed after project creation.
+                type: string
+              cluster_label:
+                description: The human-readable name of the region where the project is located.
+                type: string
+              region:
+                description: The machine name of the region where the project is located. Cannot be changed after project creation.
+                type: string
+              region_label:
+                description: The human-readable name of the region where the project is located.
+                type: string
+              uri:
+                description: The URL for the project's user interface.
+                type: string
+              endpoint:
+                description: The project API endpoint for the project.
+                type: string
+              license_id:
+                description: The ID of the subscription.
+                type: integer
+              owner:
+                description: The UUID of the owner.
+                type: string
+                format: uuid
+              owner_info:
+                $ref: '#/components/schemas/OwnerInfo'
+              plan:
+                description: The plan type of the subscription.
+                type: string
+              subscription_id:
+                description: The ID of the subscription.
+                type: integer
+              status:
+                description: The status of the project.
+                type: string
+              vendor:
+                description: The machine name of the vendor the subscription belongs to.
+                type: string
+              vendor_label:
+                description: The machine name of the vendor the subscription belongs to.
+                type: string
+              vendor_website:
+                description: The URL of the vendor the subscription belongs to.
+                type: string
+                format: url
+              vendor_resources:
+                description: The link to the resources of the vendor the subscription belongs to.
+                type: string
+              created_at:
+                description: The creation date of the subscription.
+                type: string
+                format: date-time
+            type: object
+        sequence:
+          description: The sequential ID of the user.
+          type: integer
+        roles:
+          type: array
+          items:
+            description: The user role name.
+            type: string
+        picture:
+          description: The URL of the user image.
+          type: string
+          format: url
+        tickets:
+          description: Number of support tickets by status.
+          type: object
+      type: object
+    Error_3:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+  parameters:
+    UserID:
+      name: user_id
+      in: path
+      required: true
+      description: The ID of the user.
+      schema:
+        type: string
+        example: d81c8ee2-44b3-429f-b944-a33ad7437690
+        format: uuid
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

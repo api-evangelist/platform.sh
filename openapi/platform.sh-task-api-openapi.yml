@@ -1,0 +1,471 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Task API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Task across 2 of this provider''s published API definitions: platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+security:
+- BearerAuth: []
+tags:
+- name: Task
+  description: 'These endpoints can be used to manage tasks, which are one-off commands that can be run in the context of
+
+    an environment. Tasks are useful for running database migrations, executing maintenance scripts, or performing
+
+    any ad-hoc operations that need to be executed within the environment. For more information on how to use tasks,
+
+    see the [Tasks](https://docs.upsun.com/anchors/environments/actions#environment-actions/) section of the
+
+    documentation.
+
+    '
+paths:
+  /projects/{projectId}/environments/{environmentId}/tasks:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: list-projects-environments-tasks
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskCollection'
+      tags:
+      - Task
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/tasks/{taskId}:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: taskId
+      operationId: get-projects-environments-tasks
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+      tags:
+      - Task
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/tasks/{taskId}/run:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: taskId
+      operationId: run-task
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskTriggerInput'
+      tags:
+      - Task
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
+    TaskTriggerInput:
+      type: object
+      properties:
+        variables:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties: {}
+          title: Variables
+          description: Environment variables for the task
+      additionalProperties: false
+    TaskCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Task'
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Task Identifier
+          description: The identifier of Task
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            base_memory:
+              type: integer
+              title: Base memory
+              description: The base memory for the container
+            memory_ratio:
+              type: integer
+              title: Memory ratio
+              description: The amount of memory to allocate per units of CPU
+          required:
+          - base_memory
+          - memory_ratio
+          additionalProperties: false
+          title: Resources
+          description: Resources configuration (base memory and memory ratio)
+        authorizations:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                - env
+                - task
+                title: Authorization Type
+                description: The resource type for this authorization.
+              action:
+                type: string
+                title: Authorization Action
+                description: The action to authorize on the target resource.
+              resource:
+                type:
+                - string
+                - 'null'
+                title: Authorization Resource
+                description: The target resource for this authorization.
+            required:
+            - type
+            - action
+            - resource
+            additionalProperties: false
+          title: Authorizations
+          description: Authorizations available to this container
+        relationships:
+          type: object
+          additionalProperties:
+            type:
+            - object
+            - 'null'
+            properties:
+              service:
+                type:
+                - string
+                - 'null'
+                title: Service Name
+                description: The name of the service.
+              endpoint:
+                type:
+                - string
+                - 'null'
+                title: Endpoint Name
+                description: The name of the endpoint on the service.
+            required:
+            - service
+            - endpoint
+            additionalProperties: false
+          title: Service Relationships
+          description: The relationships of the container to defined services
+        additional_hosts:
+          type: object
+          additionalProperties:
+            type: string
+          title: Additional hosts
+          description: A mapping of hostname to ip address to be added to the container's hosts file
+        mounts:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              source:
+                type: string
+                enum:
+                - instance
+                - local
+                - service
+                - storage
+                - temporary
+                - tmp
+                title: Mount type
+                description: The type of mount that will provide the data.
+              source_path:
+                type: string
+                title: Source Path
+                description: The path to be mounted, relative to the root directory of the volume that's being mounted from.
+              service:
+                type:
+                - string
+                - 'null'
+                title: Service Name
+                description: The name of the service that the volume will be mounted from. Must be a service in `services.yaml` of type `network-storage`.
+            required:
+            - source
+            - source_path
+            additionalProperties: false
+          title: Mounts
+          description: Filesystem mounts of this container. If not specified the container will have no writeable disk space
+        timezone:
+          type:
+          - string
+          - 'null'
+          title: Timezone
+          description: The timezone of the task. Defaults to the project's timezone if not specified
+        variables:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties: {}
+          title: Environment Variables
+          description: Variables provide environment-sensitive information to control how this container behaves. To set a Unix environment variable, specify a key of `env:`, and then each sub-item of that is a key/value pair that will be injected into the environment
+        container_profile:
+          type:
+          - string
+          - 'null'
+          title: Container Profile
+          description: Selected container profile for this container
+        type:
+          type: string
+          title: Image type
+          description: The runtime type and version for the task (e.g., python:3.8)
+        source:
+          type: object
+          properties:
+            root:
+              type: string
+              title: Task Source Root
+              description: The root of the task relative to the repository root
+          required:
+          - root
+          additionalProperties: false
+          title: Source Code Configuration
+          description: Configuration related to the source code of the task
+        hooks:
+          type: object
+          properties:
+            build:
+              type:
+              - string
+              - 'null'
+              title: Build Hook
+              description: Hook executed after the build process
+            deploy:
+              type:
+              - string
+              - 'null'
+              title: Deploy Hook
+              description: Hook executed before the task's run command
+          required:
+          - build
+          - deploy
+          additionalProperties: false
+          title: Hooks
+          description: Scripts executed at various points in the lifecycle of the task
+        dependencies:
+          type: object
+          additionalProperties:
+            type: object
+          title: Dependencies
+          description: External global dependencies of this task. They will be downloaded by the language's package manager
+        runtime:
+          type: object
+          title: Runtime Configuration
+          description: Runtime-specific configuration
+        run:
+          type: object
+          properties:
+            command:
+              type: string
+              title: Run Command
+              description: The command to execute when running the task
+            timeout:
+              type: integer
+              title: Timeout
+              description: The maximum timeout in seconds after which the task will be forcefully killed
+          required:
+          - command
+          - timeout
+          additionalProperties: false
+          title: Run Configuration
+          description: Configuration for task execution
+        name:
+          type: string
+          title: Task name
+          description: The unique name of the task
+      required:
+      - id
+      - resources
+      - authorizations
+      - relationships
+      - additional_hosts
+      - mounts
+      - timezone
+      - variables
+      - container_profile
+      - type
+      - source
+      - hooks
+      - dependencies
+      - runtime
+      - run
+      - name
+      additionalProperties: false
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

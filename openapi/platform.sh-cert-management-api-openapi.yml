@@ -1,0 +1,607 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Cert Management API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Cert Management across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Cert Management
+  description: 'User-supplied SSL/TLS certificates can be managed using these
+
+    endpoints. You can now list and modify certificate provisioners
+
+    using the `/projects/{projectId}/provisioners` and
+
+    `/projects/{projectId}/provisioners/{certificateProvisionerDocumentId}`
+
+    endpoints. For more information, see our
+
+    [Third-party TLS certificate](https://docs.upsun.com/anchors/domains/custom/custom-certificates/)
+
+    documentation. These endpoints are not for managing certificates
+
+    that are automatically supplied by Upsun via Let''s Encrypt.
+
+    '
+paths:
+  /projects/{projectId}/certificates:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      operationId: list-projects-certificates
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertificateCollection'
+      tags:
+      - Cert Management
+      summary: Get list of SSL certificates
+      description: 'Retrieve a list of objects representing the SSL certificates
+
+        associated with a project.
+
+        '
+      security:
+      - OAuth2: []
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      operationId: create-projects-certificates
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertificateCreateInput'
+      tags:
+      - Cert Management
+      summary: Add an SSL certificate
+      description: 'Add a single SSL certificate to a project.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/certificates/{certificateId}:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: certificateId
+      operationId: get-projects-certificates
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Certificate'
+      tags:
+      - Cert Management
+      summary: Get an SSL certificate
+      description: 'Retrieve information about a single SSL certificate
+
+        associated with a project.
+
+        '
+      security:
+      - OAuth2: []
+    patch:
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertificatePatch'
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: certificateId
+      operationId: update-projects-certificates
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Cert Management
+      summary: Update an SSL certificate
+      description: 'Update a single SSL certificate associated with a project.
+
+        '
+      security:
+      - OAuth2: []
+    delete:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: certificateId
+      operationId: delete-projects-certificates
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Cert Management
+      summary: Delete an SSL certificate
+      description: 'Delete a single SSL certificate associated with a project.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/provisioners:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      operationId: list-projects-provisioners
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertificateProvisionerCollection'
+      tags:
+      - Cert Management
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/provisioners/{certificateProvisionerDocumentId}:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: certificateProvisionerDocumentId
+      operationId: get-projects-provisioners
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertificateProvisioner'
+      tags:
+      - Cert Management
+      security:
+      - OAuth2: []
+    patch:
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertificateProvisionerPatch'
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: certificateProvisionerDocumentId
+      operationId: update-projects-provisioners
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Cert Management
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    CertificateProvisionerCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/CertificateProvisioner'
+    CertificateCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Certificate'
+    CertificateCreateInput:
+      type: object
+      properties:
+        certificate:
+          type: string
+          title: Certificate
+          description: The PEM-encoded certificate
+        key:
+          type: string
+          title: Private Key
+          description: The PEM-encoded private key
+        chain:
+          type: array
+          items:
+            type: string
+          title: Certificate chain
+          description: The certificate chain
+        is_invalid:
+          type: boolean
+          title: Is Invalid
+          description: Whether this certificate should be skipped during provisioning
+      required:
+      - certificate
+      - key
+      additionalProperties: false
+    CertificatePatch:
+      type: object
+      properties:
+        chain:
+          type: array
+          items:
+            type: string
+          title: Certificate chain
+          description: The certificate chain
+        is_invalid:
+          type: boolean
+          title: Is Invalid
+          description: Whether this certificate should be skipped during provisioning
+      additionalProperties: false
+    CertificateProvisionerPatch:
+      type: object
+      properties:
+        directory_url:
+          type: string
+          title: ACME directory url
+          description: The URL to the ACME directory
+        email:
+          type: string
+          title: Contacted email address
+          description: The email address for contact information
+        eab_kid:
+          type:
+          - string
+          - 'null'
+          title: EAB Key identifier
+          description: The key identifier for Entity Attestation Binding
+        eab_hmac_key:
+          type:
+          - string
+          - 'null'
+          title: EAB HMAC Key
+          description: The Keyed-'Hashing Message Authentication Code' for Entity Attestation Binding
+      additionalProperties: false
+    CertificateProvisioner:
+      type: object
+      properties:
+        id:
+          type: string
+          title: CertificateProvisioner Identifier
+          description: The identifier of CertificateProvisioner
+        directory_url:
+          type: string
+          title: ACME directory url
+          description: The URL to the ACME directory
+        email:
+          type: string
+          title: Contacted email address
+          description: The email address for contact information
+        eab_kid:
+          type:
+          - string
+          - 'null'
+          title: EAB Key identifier
+          description: The key identifier for Entity Attestation Binding
+        eab_hmac_key:
+          type:
+          - string
+          - 'null'
+          title: EAB HMAC Key
+          description: The Keyed-'Hashing Message Authentication Code' for Entity Attestation Binding
+      required:
+      - id
+      - directory_url
+      - email
+      - eab_kid
+      - eab_hmac_key
+      additionalProperties: false
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
+    Certificate:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Certificate Identifier
+          description: The identifier of Certificate
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        certificate:
+          type: string
+          title: Certificate
+          description: The PEM-encoded certificate
+        chain:
+          type: array
+          items:
+            type: string
+          title: Certificate chain
+          description: The certificate chain
+        is_provisioned:
+          type: boolean
+          title: Is Provisioned
+          description: Whether this certificate is automatically provisioned
+        is_invalid:
+          type: boolean
+          title: Is Invalid
+          description: Whether this certificate should be skipped during provisioning
+        is_root:
+          type: boolean
+          title: Is Root
+          description: Whether this certificate is root type
+        domains:
+          type: array
+          items:
+            type: string
+          title: Domains
+          description: The domains covered by this certificate
+        auth_type:
+          type: array
+          items:
+            type: string
+          title: Authentication Type
+          description: The type of authentication the certificate supports
+        issuer:
+          type: array
+          items:
+            type: object
+            properties:
+              oid:
+                type: string
+                title: OID
+                description: The OID of the attribute
+              alias:
+                type:
+                - string
+                - 'null'
+                title: Alias
+                description: The alias of the attribute, if known
+              value:
+                type: string
+                title: Value
+                description: The value
+            required:
+            - oid
+            - alias
+            - value
+            additionalProperties: false
+          title: Issuer
+          description: The issuer of the certificate
+        expires_at:
+          type: string
+          format: date-time
+          title: Expiration date
+          description: Expiration date
+      required:
+      - id
+      - created_at
+      - updated_at
+      - certificate
+      - chain
+      - is_provisioned
+      - is_invalid
+      - is_root
+      - domains
+      - auth_type
+      - issuer
+      - expires_at
+      additionalProperties: false
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

@@ -1,0 +1,1499 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Subscriptions API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Subscriptions across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Subscriptions
+  description: 'Each project is represented by a subscription that holds the plan information.
+
+    These endpoints can be used to go to a larger plan, add more storage, or subscribe to
+
+    optional features.
+
+    '
+paths:
+  /subscriptions/{subscriptionId}/can-update:
+    get:
+      tags:
+      - Subscriptions
+      summary: Checks if the user is able to update a project.
+      operationId: can-update-subscription
+      parameters:
+      - $ref: '#/components/parameters/subscription_id'
+      - $ref: '#/components/parameters/subscription_plan'
+      - $ref: '#/components/parameters/subscription_environments'
+      - $ref: '#/components/parameters/subscription_storage'
+      - $ref: '#/components/parameters/subscription_user_licenses'
+      responses:
+        '200':
+          description: Check result with error message if presented
+          content:
+            application/json:
+              schema:
+                properties:
+                  can_update:
+                    description: Boolean result of the check.
+                    type: boolean
+                  message:
+                    description: Details in case of negative check result.
+                    type: string
+                  required_action:
+                    description: Required action impeding project update.
+                    type: object
+                type: object
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}/subscriptions/estimate:
+    get:
+      summary: Estimate the price of a new subscription
+      operationId: estimate-new-org-subscription
+      tags:
+      - Subscriptions
+      parameters:
+      - $ref: '#/components/parameters/OrganizationID'
+      - in: query
+        name: plan
+        description: The plan type of the subscription.
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: environments
+        description: The maximum number of environments which can be provisioned on the project.
+        required: true
+        schema:
+          type: integer
+      - in: query
+        name: storage
+        description: The total storage available to each environment, in MiB.
+        required: true
+        schema:
+          type: integer
+      - in: query
+        name: user_licenses
+        description: The number of user licenses.
+        required: true
+        schema:
+          type: integer
+      - in: query
+        name: format
+        description: The format of the estimation output.
+        required: false
+        schema:
+          type: string
+          enum:
+          - formatted
+          - complex
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EstimationObject'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}/subscriptions/can-create:
+    get:
+      summary: Checks if the user is able to create a new project.
+      operationId: can-create-new-org-subscription
+      tags:
+      - Subscriptions
+      parameters:
+      - $ref: '#/components/parameters/OrganizationID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  can_create:
+                    description: Boolean result of the check.
+                    type: boolean
+                  message:
+                    description: Details in case of negative check result.
+                    type: string
+                  required_action:
+                    description: Required action impending project creation.
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      action:
+                        description: Machine readable definition of requirement.
+                        type: string
+                      type:
+                        description: Specification of the type of action.
+                        type: string
+                type: object
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}/subscriptions/{subscription_id}/estimate:
+    get:
+      summary: Estimate the price of a subscription
+      operationId: estimate-org-subscription
+      tags:
+      - Subscriptions
+      parameters:
+      - $ref: '#/components/parameters/OrganizationID'
+      - $ref: '#/components/parameters/SubscriptionID'
+      - in: query
+        name: plan
+        description: The plan type of the subscription.
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: environments
+        description: The maximum number of environments which can be provisioned on the project.
+        schema:
+          type: integer
+      - in: query
+        name: storage
+        description: The total storage available to each environment, in MiB.
+        schema:
+          type: integer
+      - in: query
+        name: user_licenses
+        description: The number of user licenses.
+        schema:
+          type: integer
+      - in: query
+        name: format
+        description: The format of the estimation output.
+        schema:
+          type: string
+          enum:
+          - formatted
+          - complex
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EstimationObject'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}/subscriptions/{subscription_id}/current_usage:
+    get:
+      summary: Get current usage for a subscription
+      operationId: get-org-subscription-current-usage
+      tags:
+      - Subscriptions
+      parameters:
+      - $ref: '#/components/parameters/OrganizationID'
+      - $ref: '#/components/parameters/SubscriptionID'
+      - in: query
+        name: usage_groups
+        description: A list of usage groups to retrieve current usage for.
+        schema:
+          type: string
+      - in: query
+        name: include_not_charged
+        description: Whether to include not charged usage groups.
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionCurrentUsageObject'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}/subscriptions/{subscription_id}/addons:
+    get:
+      summary: List addons for a subscription
+      operationId: list-subscription-addons
+      tags:
+      - Subscriptions
+      parameters:
+      - $ref: '#/components/parameters/OrganizationID'
+      - $ref: '#/components/parameters/SubscriptionID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionAddonsObject'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-vendor: upsun
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}/alerts/subscriptions/{subscription_id}/usage:
+    get:
+      summary: Get usage alerts
+      description: Retrieves current and available usage alerts.
+      operationId: get-subscription-usage-alerts
+      tags:
+      - Subscriptions
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIDName'
+      - $ref: '#/components/parameters/SubscriptionID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  current:
+                    type: array
+                    description: The list of currently set usage alerts.
+                    items:
+                      $ref: '#/components/schemas/UsageAlert'
+                  available:
+                    type: array
+                    description: The list of available usage alerts.
+                    items:
+                      $ref: '#/components/schemas/UsageAlert'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    patch:
+      summary: Update usage alerts.
+      description: Updates usage alerts for a subscription.
+      operationId: update-subscription-usage-alerts
+      tags:
+      - Subscriptions
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIDName'
+      - $ref: '#/components/parameters/SubscriptionID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                alerts:
+                  type: array
+                  description: The list of alerts to update.
+                  items:
+                    type: object
+                    description: An alert object.
+                    properties:
+                      id:
+                        type: string
+                        description: The usage alert identifier.
+                      active:
+                        type: boolean
+                        description: Whether the alert is activated.
+                      config:
+                        type: object
+                        description: The configuration for the usage alerts.
+                        properties:
+                          threshold:
+                            type: integer
+                            description: The amount after which an alert should be triggered.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  current:
+                    type: array
+                    description: The list of currently set usage alerts.
+                    items:
+                      $ref: '#/components/schemas/UsageAlert'
+                  available:
+                    type: array
+                    description: The list of available usage alerts.
+                    items:
+                      $ref: '#/components/schemas/UsageAlert'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}/subscriptions:
+    get:
+      summary: List subscriptions
+      description: Retrieves subscriptions for the specified organization.
+      operationId: list-org-subscriptions
+      tags:
+      - Subscriptions
+      parameters:
+      - $ref: '#/components/parameters/OrganizationID'
+      - $ref: '#/components/parameters/subscription_status'
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/project_id'
+      - $ref: '#/components/parameters/project_title'
+      - $ref: '#/components/parameters/region'
+      - $ref: '#/components/parameters/updated_at'
+      - $ref: '#/components/parameters/page_size'
+      - $ref: '#/components/parameters/page_before'
+      - $ref: '#/components/parameters/page_after'
+      - $ref: '#/components/parameters/subscription_sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Subscription'
+                  _links:
+                    $ref: '#/components/schemas/ListLinks'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    post:
+      summary: Create subscription
+      description: Creates a subscription for the specified organization.
+      operationId: create-org-subscription
+      tags:
+      - Subscriptions
+      parameters:
+      - $ref: '#/components/parameters/OrganizationID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - project_region
+              properties:
+                plan:
+                  $ref: '#/components/schemas/ProjectPlan'
+                project_region:
+                  type: string
+                  description: The machine name of the region where the project is located. Cannot be changed after project creation.
+                project_title:
+                  type: string
+                  description: The name given to the project. Appears as the title in the UI.
+                options_url:
+                  type: string
+                  description: The URL of the project options file.
+                default_branch:
+                  type: string
+                  description: The default Git branch name for the project.
+                environments:
+                  type: integer
+                  description: The maximum number of active environments on the project.
+                storage:
+                  type: integer
+                  description: The total storage available to each environment, in MiB. Only multiples of 1024 are accepted as legal values.
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}/subscriptions/{subscription_id}:
+    get:
+      summary: Get subscription
+      description: Retrieves a subscription for the specified organization.
+      operationId: get-org-subscription
+      tags:
+      - Subscriptions
+      parameters:
+      - $ref: '#/components/parameters/OrganizationID'
+      - $ref: '#/components/parameters/SubscriptionID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    patch:
+      summary: Update subscription
+      description: Updates a subscription for the specified organization.
+      operationId: update-org-subscription
+      tags:
+      - Subscriptions
+      parameters:
+      - $ref: '#/components/parameters/OrganizationID'
+      - $ref: '#/components/parameters/SubscriptionID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                project_title:
+                  $ref: '#/components/schemas/ProjectTitle'
+                plan:
+                  $ref: '#/components/schemas/ProjectPlan'
+                timezone:
+                  $ref: '#/components/schemas/ProjectTimeZone'
+                environments:
+                  type: integer
+                  description: The maximum number of environments which can be provisioned on the project.
+                storage:
+                  type: integer
+                  description: The total storage available to each environment, in MiB.
+                big_dev:
+                  type: string
+                  description: The development environment plan.
+                big_dev_service:
+                  type: string
+                  description: The development service plan.
+                backups:
+                  type: string
+                  description: The backups plan.
+                observability_suite:
+                  type: string
+                  description: The observability suite option.
+                blackfire:
+                  type: string
+                  description: The Blackfire integration option.
+                continuous_profiling:
+                  type: string
+                  description: The Blackfire continuous profiling option.
+                project_support_level:
+                  type: string
+                  description: The project uptime option.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    delete:
+      summary: Delete subscription
+      description: Deletes a subscription for the specified organization.
+      operationId: delete-org-subscription
+      tags:
+      - Subscriptions
+      parameters:
+      - $ref: '#/components/parameters/OrganizationID'
+      - $ref: '#/components/parameters/SubscriptionID'
+      responses:
+        '204':
+          description: No Content
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /subscriptions/{subscriptionId}/can-afford:
+    post:
+      tags:
+      - Subscriptions
+      summary: Checks if the user can afford the requested resources.
+      operationId: can-afford-subscription
+      parameters:
+      - $ref: '#/components/parameters/subscription_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                resources:
+                  description: A map of resource keys to quantities (both strings).
+                  type: object
+                  additionalProperties: {}
+              type: object
+      responses:
+        '200':
+          description: Proposed resource change is affordable.
+        '402':
+          description: Proposed change is not affordable.
+      security:
+      - BearerAuth: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    ProjectTimeZone:
+      type: string
+      description: Timezone of the project.
+    Subscription:
+      description: The subscription object.
+      properties:
+        id:
+          description: The internal ID of the subscription.
+          type: string
+        status:
+          description: The status of the subscription.
+          type: string
+          enum:
+          - requested
+          - provisioning failure
+          - provisioning
+          - active
+          - suspended
+          - deleted
+        created_at:
+          description: The date and time when the subscription was created.
+          type: string
+          format: date-time
+        updated_at:
+          description: The date and time when the subscription was last updated.
+          type: string
+          format: date-time
+        owner:
+          description: The UUID of the owner.
+          type: string
+          format: uuid
+        owner_info:
+          $ref: '#/components/schemas/OwnerInfo'
+        vendor:
+          description: The machine name of the vendor the subscription belongs to.
+          type: string
+        plan:
+          description: The plan type of the subscription.
+          type: string
+        environments:
+          description: The number of environments which can be provisioned on the project.
+          type: integer
+        storage:
+          description: The total storage available to each environment, in MiB. Only multiples of 1024 are accepted as legal values.
+          type: integer
+        user_licenses:
+          description: The number of chargeable users who currently have access to the project. Manage this value by adding and removing users through the Platform project API. Staff and billing/administrative contacts can be added to a project for no charge. Contact support for questions about user licenses.
+          type: integer
+        project_id:
+          description: The unique ID string of the project.
+          type: string
+        project_endpoint:
+          description: The project API endpoint for the project.
+          type: string
+        project_title:
+          description: The name given to the project. Appears as the title in the UI.
+          type: string
+        project_region:
+          description: The machine name of the region where the project is located. Cannot be changed after project creation.
+          type: string
+        project_region_label:
+          description: The human-readable name of the region where the project is located.
+          type: string
+        project_ui:
+          description: The URL for the project's user interface.
+          type: string
+        project_options:
+          $ref: '#/components/schemas/ProjectOptions'
+        agency_site:
+          description: True if the project is an agency site.
+          type: boolean
+        invoiced:
+          description: Whether the subscription is invoiced.
+          type: boolean
+        hipaa:
+          description: Whether the project is marked as HIPAA.
+          type: boolean
+        is_trial_plan:
+          description: Whether the project is currently on a trial plan.
+          type: boolean
+        services:
+          description: Details of the attached services.
+          type: array
+          items:
+            description: Details of a service
+            type: object
+        green:
+          description: Whether the subscription is considered green (on a green region, belonging to a green vendor) for billing purposes.
+          type: boolean
+      type: object
+    SubscriptionAddonsObject:
+      type: object
+      description: The list of available and current addons for the license.
+      properties:
+        available:
+          type: object
+          description: The list of available addons.
+          properties:
+            continuous_profiling:
+              type: object
+              description: Information about the continuous profiling options available.
+              additionalProperties:
+                type: number
+                description: The number of commitment days for the addon.
+            project_support_level:
+              type: object
+              description: Information about the project uptime options available.
+              additionalProperties:
+                type: number
+                description: The number of commitment days for the addon.
+        current:
+          type: object
+          description: The list of existing addons and their current values.
+          properties:
+            continuous_profiling:
+              type: object
+              description: The current continuous profiling level of the license.
+              additionalProperties:
+                type: number
+                description: The number of remaining commitment days for the addon.
+            project_support_level:
+              type: object
+              description: The current project uptime level of the license.
+              additionalProperties:
+                type: number
+                description: The number of remaining commitment days for the addon.
+        upgrades_available:
+          type: object
+          description: The upgrades available for current addons.
+          properties:
+            continuous_profiling:
+              type: array
+              description: Available upgrade options for continuous profiling.
+              items:
+                type: string
+            project_support_level:
+              type: array
+              description: Available upgrade options for project uptime.
+              items:
+                type: string
+    UsageGroupCurrentUsageProperties:
+      description: Current usage info for a usage group.
+      properties:
+        title:
+          description: The title of the usage group.
+          type: string
+        type:
+          description: The usage group type.
+          type: boolean
+        current_usage:
+          description: The value of current usage for the group.
+          type: number
+        current_usage_formatted:
+          description: The formatted value of current usage for the group.
+          type: string
+        not_charged:
+          description: Whether the group is not charged for the subscription.
+          type: boolean
+        free_quantity:
+          description: The amount of free usage for the group.
+          type: number
+        free_quantity_formatted:
+          description: The formatted amount of free usage for the group.
+          type: string
+        daily_average:
+          description: The daily average usage calculated for the group.
+          type: number
+        daily_average_formatted:
+          description: The formatted daily average usage calculated for the group.
+          type: string
+      type: object
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
+    SubscriptionCurrentUsageObject:
+      description: A subscription's usage group current usage object.
+      properties:
+        cpu_app:
+          $ref: '#/components/schemas/UsageGroupCurrentUsageProperties'
+        storage_app_services:
+          $ref: '#/components/schemas/UsageGroupCurrentUsageProperties'
+        memory_app:
+          $ref: '#/components/schemas/UsageGroupCurrentUsageProperties'
+        cpu_services:
+          $ref: '#/components/schemas/UsageGroupCurrentUsageProperties'
+        memory_services:
+          $ref: '#/components/schemas/UsageGroupCurrentUsageProperties'
+        backup_storage:
+          $ref: '#/components/schemas/UsageGroupCurrentUsageProperties'
+        build_cpu:
+          $ref: '#/components/schemas/UsageGroupCurrentUsageProperties'
+        build_memory:
+          $ref: '#/components/schemas/UsageGroupCurrentUsageProperties'
+        egress_bandwidth:
+          $ref: '#/components/schemas/UsageGroupCurrentUsageProperties'
+        ingress_requests:
+          $ref: '#/components/schemas/UsageGroupCurrentUsageProperties'
+        logs_fwd_content_size:
+          $ref: '#/components/schemas/UsageGroupCurrentUsageProperties'
+        fastly_bandwidth:
+          $ref: '#/components/schemas/UsageGroupCurrentUsageProperties'
+        fastly_requests:
+          $ref: '#/components/schemas/UsageGroupCurrentUsageProperties'
+      type: object
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    ProjectPlan:
+      type: string
+      description: The project plan.
+    DateTimeFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        between:
+          type: string
+          description: Between (comma-separated list)
+        gt:
+          type: string
+          description: Greater than
+        gte:
+          type: string
+          description: Greater than or equal
+        lt:
+          type: string
+          description: Less than
+        lte:
+          type: string
+          description: Less than or equal
+    EstimationObject:
+      type: object
+      description: A price estimate object.
+      properties:
+        plan:
+          type: string
+          description: The monthly price of the plan.
+        user_licenses:
+          type: string
+          description: The monthly price of the user licenses.
+        environments:
+          type: string
+          description: The monthly price of the environments.
+        storage:
+          type: string
+          description: The monthly price of the storage.
+        total:
+          type: string
+          description: The total monthly price.
+        options:
+          type: object
+          description: The unit prices of the options.
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
+    OwnerInfo:
+      description: Project owner information that can be exposed to collaborators.
+      properties:
+        type:
+          description: Type of the owner, usually 'user'.
+          type: string
+        username:
+          description: The username of the owner.
+          type: string
+        display_name:
+          description: The full name of the owner.
+          type: string
+      type: object
+    UsageAlert:
+      type: object
+      description: The usage alert for a subscription.
+      properties:
+        id:
+          type: string
+          description: Tidentifier of the alert.
+        active:
+          type: boolean
+          description: Whether the usage alert is activated.
+        alerts_sent:
+          type: number
+          description: Number of alerts sent.
+        last_alert_at:
+          type:
+          - string
+          - 'null'
+          description: The datetime the alert was last sent.
+        updated_at:
+          type:
+          - string
+          - 'null'
+          description: The datetime the alert was last updated.
+        config:
+          type:
+          - object
+          - 'null'
+          description: Configuration for the usage alert.
+          properties:
+            threshold:
+              type: object
+              description: Data regarding threshold spend.
+              properties:
+                formatted:
+                  type: string
+                  description: Formatted threshold value.
+                amount:
+                  type: number
+                  description: Threshold value.
+                unit:
+                  type: string
+                  description: Threshold unit.
+    StringFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
+        between:
+          type: string
+          description: Between (comma-separated list)
+        contains:
+          type: string
+          description: Contains
+        starts:
+          type: string
+          description: Starts with
+        ends:
+          type: string
+          description: Ends with
+    ProjectTitle:
+      type: string
+      description: The title of the project.
+    ProjectOptions:
+      description: The project options object.
+      properties:
+        defaults:
+          description: The initial values applied to the project.
+          properties:
+            settings:
+              description: The project settings.
+              type: object
+            variables:
+              description: The project variables.
+              type: object
+            access:
+              description: The project access list.
+              type: object
+            capabilities:
+              description: The project capabilities.
+              type: object
+          type: object
+        enforced:
+          description: The enforced values applied to the project.
+          properties:
+            settings:
+              description: The project settings.
+              type: object
+            capabilities:
+              description: The project capabilities.
+              type: object
+          type: object
+        regions:
+          description: The available regions.
+          type: array
+          items:
+            type: string
+        plans:
+          description: The available plans.
+          type: array
+          items:
+            type: string
+        billing:
+          description: The billing settings.
+          type: object
+      type: object
+    Error_2:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+    Error_3:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+  parameters:
+    page_size:
+      in: query
+      name: page[size]
+      description: Determines the number of items to show.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: null
+    project_title:
+      in: query
+      name: filter[project_title]
+      description: Allows filtering by `project_title` using one or more operators.
+      style: deepObject
+      explode: true
+      schema:
+        $ref: '#/components/schemas/StringFilter'
+    subscription_environments:
+      name: environments
+      in: query
+      description: The number of environments which can be provisioned on the project.
+      schema:
+        type: integer
+        default: null
+    updated_at:
+      in: query
+      name: filter[updated_at]
+      description: Allows filtering by `updated_at` using one or more operators.
+      style: deepObject
+      explode: true
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    id:
+      name: filter[id]
+      in: query
+      description: Machine name of the region.
+      schema:
+        type: string
+    page_after:
+      in: query
+      name: page[after]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
+    region:
+      in: query
+      name: filter[region]
+      description: Allows filtering by `region` using one or more operators.
+      style: deepObject
+      explode: true
+      schema:
+        $ref: '#/components/schemas/StringFilter'
+    subscription_plan:
+      name: plan
+      in: query
+      description: The plan type of the subscription.
+      schema:
+        type: string
+        enum:
+        - development
+        - standard
+        - medium
+        - large
+        - xlarge
+        - 2xlarge
+    subscription_sort:
+      in: query
+      name: sort
+      description: 'Allows sorting by a single field.<br>
+
+        Use a dash ("-") to sort descending.<br>
+
+        Supported fields: `region`, `project_title`, `type`, `plan`, `status`, `created_at`, `updated_at`.
+
+        '
+      schema:
+        type: string
+        example: -updated_at
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
+    subscription_storage:
+      name: storage
+      in: query
+      description: The total storage available to each environment, in MiB. Only multiples of 1024 are accepted as legal values.
+      schema:
+        type: integer
+        default: null
+    subscription_status:
+      name: filter[status]
+      in: query
+      description: 'The status of the subscription. '
+      schema:
+        type: string
+        enum:
+        - active
+        - provisioning
+        - provisioning failure
+        - suspended
+        - deleted
+    subscription_id:
+      name: subscriptionId
+      in: path
+      description: The ID of the subscription
+      required: true
+      schema:
+        type: string
+    subscription_user_licenses:
+      name: user_licenses
+      in: query
+      description: The number of user licenses.
+      schema:
+        type: integer
+    project_id:
+      name: filter[project_id]
+      in: query
+      description: Allows filtering by `project_id` using one or more operators.
+      style: deepObject
+      explode: true
+      schema:
+        $ref: '#/components/schemas/StringFilter'
+    SubscriptionID:
+      in: path
+      name: subscription_id
+      description: The ID of the subscription.
+      required: true
+      schema:
+        type: string
+    page_before:
+      in: query
+      name: page[before]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
+      schema:
+        type: string
+    PageBefore:
+      in: query
+      name: page[before]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
+    PageAfter:
+      in: query
+      name: page[after]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
+    PageSize:
+      in: query
+      name: page[size]
+      description: Determines the number of items to show.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: null
+    FilterRegion:
+      in: query
+      name: filter[region]
+      description: Allows filtering by `region` using one or more operators.
+      style: deepObject
+      explode: true
+      schema:
+        $ref: '#/components/schemas/StringFilter'
+    FilterUpdatedAt:
+      in: query
+      name: filter[updated_at]
+      description: Allows filtering by `updated_at` using one or more operators.
+      style: deepObject
+      explode: true
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    FilterProjectID:
+      in: query
+      name: filter[project_id]
+      description: Allows filtering by `project_id` using one or more operators.
+      style: deepObject
+      explode: true
+      schema:
+        $ref: '#/components/schemas/StringFilter'
+  responses:
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error_2'
+    NoContent:
+      description: No Content
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error_2'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error_2'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error_2'
+    Forbidden_2:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error_3'
+    BadRequest_2:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error_3'
+    NotFound_2:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error_3'
+    Conflict_2:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error_3'
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

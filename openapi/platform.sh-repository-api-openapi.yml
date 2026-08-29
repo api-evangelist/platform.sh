@@ -1,0 +1,571 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Repository API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Repository across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Repository
+  description: 'The Git repository backing projects hosted on Upsun can be
+
+    accessed in a **read-only** manner through the `/projects/{projectId}/git/*`
+
+    family of endpoints. With these endpoints, you can retrieve objects from
+
+    the Git repository in the same way that you would in a local environment.
+
+    '
+paths:
+  /projects/{projectId}/git/blobs/{repositoryBlobId}:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: repositoryBlobId
+      operationId: get-projects-git-blobs
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blob'
+      tags:
+      - Repository
+      summary: Get a blob object
+      description: 'Retrieve, by hash, an object representing a blob in the repository
+
+        backing a project. This endpoint allows direct read-only access
+
+        to the contents of files in a repo. It returns the file in the
+
+        `content` field of the response object, encoded according to the
+
+        format in the `encoding` field, e.g. `base64`.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/git/commits/{repositoryCommitId}:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: repositoryCommitId
+      operationId: get-projects-git-commits
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Commit'
+      tags:
+      - Repository
+      summary: Get a commit object
+      description: 'Retrieve, by hash, an object representing a commit in the repository backing
+
+        a project. This endpoint functions similarly to `git cat-file -p <commit-id>`.
+
+        The returned object contains the hash of the Git tree that it
+
+        belongs to, as well as the ID of parent commits.
+
+
+        The commit represented by a parent ID can be retrieved using this
+
+        endpoint, while the tree state represented by this commit can
+
+        be retrieved using the
+
+        [Get a tree object](#tag/Git-Repo%2Fpaths%2F~1projects~1%7BprojectId%7D~1git~1trees~1%7BrepositoryTreeId%7D%2Fget)
+
+        endpoint.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/git/refs:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      operationId: list-projects-git-refs
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefCollection'
+      tags:
+      - Repository
+      summary: Get list of repository refs
+      description: 'Retrieve a list of `refs/*` in the repository backing a project.
+
+        This endpoint functions similarly to `git show-ref`, with each
+
+        returned object containing a `ref` field with the ref''s name,
+
+        and an object containing the associated commit ID.
+
+
+        The returned commit ID can be used with the
+
+        [Get a commit object](#tag/Git-Repo%2Fpaths%2F~1projects~1%7BprojectId%7D~1git~1commits~1%7BrepositoryCommitId%7D%2Fget)
+
+        endpoint to retrieve information about that specific commit.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/git/refs/{repositoryRefId}:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: repositoryRefId
+      operationId: get-projects-git-refs
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ref'
+      tags:
+      - Repository
+      summary: Get a ref object
+      description: 'Retrieve the details of a single `refs` object in the repository
+
+        backing a project. This endpoint functions similarly to
+
+        `git show-ref <pattern>`, although the pattern must be a full ref `id`,
+
+        rather than a matching pattern.
+
+
+        *NOTE: The `{repositoryRefId}` must be properly escaped.*
+
+        That is, the ref `refs/heads/master` is accessible via
+
+        `/projects/{projectId}/git/refs/heads%2Fmaster`.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/git/trees/{repositoryTreeId}:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: repositoryTreeId
+      operationId: get-projects-git-trees
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tree'
+      tags:
+      - Repository
+      summary: Get a tree object
+      description: 'Retrieve, by hash, the tree state represented by a commit.
+
+        The returned object''s `tree` field contains a list of files and
+
+        directories present in the tree.
+
+
+        Directories in the tree can be recursively retrieved by this endpoint
+
+        through their hashes. Files in the tree can be retrieved by the
+
+        [Get a blob object](#tag/Git-Repo%2Fpaths%2F~1projects~1%7BprojectId%7D~1git~1blobs~1%7BrepositoryBlobId%7D%2Fget)
+
+        endpoint.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    Tree:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Tree Identifier
+          description: The identifier of Tree
+        sha:
+          type: string
+          title: SHA
+          description: The identifier of the tree
+        tree:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+                title: Item path
+                description: The path of the item
+              mode:
+                type: string
+                enum:
+                - '040000'
+                - '100644'
+                - '100755'
+                - '120000'
+                - '160000'
+                title: Item mode
+                description: The mode of the item
+              type:
+                type: string
+                title: Item type
+                description: The type of the item (blob or tree)
+              sha:
+                type:
+                - string
+                - 'null'
+                title: Item SHA
+                description: The sha of the item
+            required:
+            - path
+            - mode
+            - type
+            - sha
+            additionalProperties: false
+          title: Tree items
+          description: The tree items
+      required:
+      - id
+      - sha
+      - tree
+      additionalProperties: false
+    Ref:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Ref Identifier
+          description: The identifier of Ref
+        ref:
+          type: string
+          title: Name
+          description: The name of the reference
+        object:
+          type: object
+          properties:
+            type:
+              type: string
+              title: Type
+              description: The type of object pointed to
+            sha:
+              type: string
+              title: The SHA of the object pointed to
+              description: ''
+          required:
+          - type
+          - sha
+          additionalProperties: false
+          title: Object
+          description: The object the reference points to
+        sha:
+          type: string
+          title: SHA
+          description: The commit sha of the ref
+      required:
+      - id
+      - ref
+      - object
+      - sha
+      additionalProperties: false
+    Commit:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Commit Identifier
+          description: The identifier of Commit
+        sha:
+          type: string
+          title: SHA
+          description: The identifier of the commit
+        author:
+          type: object
+          properties:
+            date:
+              type: string
+              format: date-time
+              title: Date
+              description: The time of the author or committer
+            name:
+              type: string
+              title: Name
+              description: The name of the author or committer
+            email:
+              type: string
+              title: Email
+              description: The email of the author or committer
+          required:
+          - date
+          - name
+          - email
+          additionalProperties: false
+          title: Author
+          description: The information about the author
+        committer:
+          type: object
+          properties:
+            date:
+              type: string
+              format: date-time
+              title: Date
+              description: The time of the author or committer
+            name:
+              type: string
+              title: Name
+              description: The name of the author or committer
+            email:
+              type: string
+              title: Email
+              description: The email of the author or committer
+          required:
+          - date
+          - name
+          - email
+          additionalProperties: false
+          title: Committer
+          description: The information about the committer
+        message:
+          type: string
+          title: Message
+          description: The commit message
+        tree:
+          type: string
+          title: Tree identifier
+          description: The identifier of the tree
+        parents:
+          type: array
+          items:
+            type: string
+          title: Parent identifiers
+          description: The identifiers of the parents of the commit
+      required:
+      - id
+      - sha
+      - author
+      - committer
+      - message
+      - tree
+      - parents
+      additionalProperties: false
+    Blob:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Blob Identifier
+          description: The identifier of Blob
+        sha:
+          type: string
+          title: SHA
+          description: The identifier of the tag
+        size:
+          type: integer
+          title: Size
+          description: The size of the blob
+        encoding:
+          type: string
+          enum:
+          - base64
+          - utf-8
+          title: Encoding
+          description: The encoding of the contents
+        content:
+          type: string
+          title: Content
+          description: The contents
+      required:
+      - id
+      - sha
+      - size
+      - encoding
+      - content
+      additionalProperties: false
+    RefCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Ref'
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

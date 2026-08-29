@@ -1,0 +1,501 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Project Invitations API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Project Invitations across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Project Invitations
+paths:
+  /projects/{project_id}/invitations:
+    parameters:
+    - $ref: '#/components/parameters/ProjectID'
+    post:
+      summary: Invite user to a project by email
+      description: Creates an invitation to a project for a user with the specified email address.
+      operationId: create-project-invite
+      tags:
+      - Project Invitations
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectInvitation'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '402':
+          description: Payment Required when the number of users exceeds the subscription limit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Conflict when there already is a pending invitation for the invitee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+                  enum:
+                  - admin
+                  - viewer
+                  description: The role the invitee should be given on the project.
+                  default: null
+                email:
+                  type: string
+                  format: email
+                  description: The email address of the invitee.
+                permissions:
+                  type: array
+                  description: Specifying the role on each environment type.
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - production
+                        - staging
+                        - development
+                        description: The environment type.
+                      role:
+                        type: string
+                        enum:
+                        - admin
+                        - viewer
+                        - contributor
+                        description: The role the invitee should be given on the environment type.
+                environments:
+                  deprecated: true
+                  type: array
+                  description: (Deprecated, use permissions instead) Specifying the role on each environment.
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: The ID of the environment.
+                      role:
+                        type: string
+                        enum:
+                        - admin
+                        - viewer
+                        - contributor
+                        description: The role the invitee should be given on the environment.
+                force:
+                  type: boolean
+                  description: Whether to cancel any pending invitation for the specified invitee, and create a new invitation.
+              required:
+              - email
+      security:
+      - OAuth2: []
+    get:
+      summary: List invitations to a project
+      description: Returns a list of invitations to a project.
+      operationId: list-project-invites
+      tags:
+      - Project Invitations
+      parameters:
+      - in: query
+        name: filter[state]
+        description: 'Allows filtering by `state` of the invtations: "pending" (default), "error".'
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/StringFilter'
+      - in: query
+        name: page[size]
+        description: Determines the number of items to show.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: null
+      - in: query
+        name: page[before]
+        description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+        schema:
+          type: string
+      - in: query
+        name: page[after]
+        description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+        schema:
+          type: string
+      - in: query
+        name: sort
+        description: 'Allows sorting by a single field.<br>
+
+          Use a dash ("-") to sort descending.
+
+          '
+        schema:
+          type: string
+          enum:
+          - updated_at
+          - -updated_at
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectInvitation'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{project_id}/invitations/{invitation_id}:
+    parameters:
+    - $ref: '#/components/parameters/ProjectID'
+    - $ref: '#/components/parameters/InvitationID'
+    delete:
+      summary: Cancel a pending invitation to a project
+      description: Cancels the specified invitation.
+      operationId: cancel-project-invite
+      tags:
+      - Project Invitations
+      responses:
+        '204':
+          description: No Content
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    ProjectInvitation:
+      title: ''
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of the invitation.
+        state:
+          type: string
+          enum:
+          - pending
+          - processing
+          - accepted
+          - cancelled
+          - error
+          description: The invitation state.
+        project_id:
+          type: string
+          description: The ID of the project.
+        role:
+          type: string
+          enum:
+          - admin
+          - viewer
+          description: The project role.
+        email:
+          type: string
+          format: email
+          description: The email address of the invitee.
+        owner:
+          type: object
+          description: The inviter.
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: The ID of the user.
+            display_name:
+              type: string
+              description: The user's display name.
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the invitation was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the invitation was last updated.
+        finished_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The date and time when the invitation was finished.
+        environments:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: The ID of the environment.
+              type:
+                type: string
+                description: The environment type.
+              role:
+                type: string
+                enum:
+                - admin
+                - viewer
+                - contributor
+                description: The environment role.
+              title:
+                type: string
+                description: The environment title.
+      x-examples:
+        example-1:
+          id: 97f46eca-6276-4993-bfeb-bbb53cba6f08
+          state: pending
+          project_id: 652soceglkw4u
+          role: admin
+          email: bob@example.com
+          owner:
+            id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            display_name: Alice
+          created_at: '2019-08-24T14:15:22Z'
+          updated_at: '2019-08-24T14:15:22Z'
+          finished_at: null
+          environments: []
+    StringFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
+        between:
+          type: string
+          description: Between (comma-separated list)
+        contains:
+          type: string
+          description: Contains
+        starts:
+          type: string
+          description: Starts with
+        ends:
+          type: string
+          description: Ends with
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    Error_2:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+    Error_3:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+  parameters:
+    ProjectID:
+      name: project_id
+      in: path
+      required: true
+      description: The ID of the project.
+      schema:
+        type: string
+    InvitationID:
+      name: invitation_id
+      in: path
+      required: true
+      description: The ID of the invitation.
+      schema:
+        type: string
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

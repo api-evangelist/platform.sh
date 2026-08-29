@@ -1,0 +1,2089 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Project Settings API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Project Settings across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Project Settings
+  description: 'These endpoints can be used to retrieve and manipulate project-level
+
+    settings. Only the `initialize` property can be set by end users. It is used
+
+    to initialize a project from an existing Git repository.
+
+
+    The other properties can only be set by a privileged user.
+
+    '
+paths:
+  /projects/{projectId}/settings:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      operationId: get-projects-settings
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectSettings'
+      tags:
+      - Project Settings
+      summary: Get list of project settings
+      description: Retrieve the global settings for a project.
+      security:
+      - OAuth2: []
+    patch:
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectSettingsPatch'
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      operationId: update-projects-settings
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Project Settings
+      summary: Update a project setting
+      description: Update one or more project-level settings.
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    ProjectSettings:
+      type: object
+      properties:
+        initialize:
+          type: object
+          title: Initialization key
+          description: ''
+        product_name:
+          type: string
+          title: Product Name
+          description: The name of the product.
+        product_code:
+          type: string
+          title: Product Code
+          description: The lowercase ASCII code of the product.
+        ui_uri_template:
+          type: string
+          title: UI URI Template
+          description: The template of the project UI uri
+        variables_prefix:
+          type: string
+          title: Variables Prefix
+          description: The prefix of the generated environment variables.
+        bot_email:
+          type: string
+          title: Bot Email
+          description: The email of the bot.
+        application_config_file:
+          type: string
+          title: Application Config File
+          description: The name of the application-specific configuration file.
+        project_config_dir:
+          type: string
+          title: Project Config Directory
+          description: The name of the project configuration directory.
+        use_drupal_defaults:
+          type: boolean
+          title: Use Drupal Defaults
+          description: Whether to use the default Drupal-centric configuration files when missing from the repository.
+        use_legacy_subdomains:
+          type: boolean
+          title: Use Legacy Subdomains
+          description: Whether to use legacy subdomain scheme, that replaces `.` by `---` in development subdomains.
+        development_service_size:
+          type: string
+          enum:
+          - 2XL
+          - 4XL
+          - L
+          - M
+          - S
+          - XL
+          title: Development Service Size
+          description: The size of development services.
+        development_application_size:
+          type: string
+          enum:
+          - 2XL
+          - 4XL
+          - L
+          - M
+          - S
+          - XL
+          title: Development Application Size
+          description: The size of development applications.
+        enable_certificate_provisioning:
+          type: boolean
+          title: Enable Certificate Provisioning
+          description: Enable automatic certificate provisioning.
+        certificate_style:
+          type: string
+          enum:
+          - ecdsa
+          - rsa
+          title: Certificate Style
+          description: ''
+        certificate_renewal_activity:
+          type: boolean
+          title: Certificate Renewal Activity
+          description: Create an activity for certificate renewal
+        development_domain_template:
+          type:
+          - string
+          - 'null'
+          title: Development Domain Template
+          description: The template of the development domain, can include {project} and {environment} placeholders.
+        enable_state_api_deployments:
+          type: boolean
+          title: Enable State API Deployments
+          description: Enable the State API-driven deployments on regions that support them.
+        temporary_disk_size:
+          type:
+          - integer
+          - 'null'
+          title: Temporary Disk Size
+          description: Set the size of the temporary disk (/tmp, in MB).
+        local_disk_size:
+          type:
+          - integer
+          - 'null'
+          title: Local Disk Size
+          description: Set the size of the instance disk (in MB).
+        cron_minimum_interval:
+          type: integer
+          title: Minimum cron interval
+          description: Minimum interval between cron runs (in minutes)
+        cron_maximum_jitter:
+          type: integer
+          title: Maximum cron jitter
+          description: Maximum jitter inserted in cron runs (in minutes)
+        cron_production_expiry_interval:
+          type: integer
+          title: Cron Production Expiry Interval
+          description: The interval (in days) for which cron activity and logs are kept around
+        cron_non_production_expiry_interval:
+          type: integer
+          title: Cron Non-Production Expiry Interval
+          description: The interval (in days) for which cron activity and logs are kept around
+        concurrency_limits:
+          type: object
+          additionalProperties:
+            type:
+            - integer
+            - 'null'
+          title: Concurrency Limits
+          description: The concurrency limits applied to different kind of activities
+        flexible_build_cache:
+          type: boolean
+          title: Enable Flexible Build Cache
+          description: Enable the flexible build cache implementation
+        strict_configuration:
+          type: boolean
+          title: Enable Strict Configuration
+          description: Strict configuration validation.
+        has_sleepy_crons:
+          type: boolean
+          title: Enable sleepy crons.
+          description: ''
+        crons_in_git:
+          type: boolean
+          title: Enable crons from git.
+          description: ''
+        custom_error_template:
+          type:
+          - string
+          - 'null'
+          title: Custom error template
+          description: Custom error template for the router.
+        app_error_page_template:
+          type:
+          - string
+          - 'null'
+          title: Application error template
+          description: Custom error template for the application.
+        environment_name_strategy:
+          type: string
+          enum:
+          - hash
+          - name-and-hash
+          title: Environment Name Strategy
+          description: The strategy used to generate environment machine names
+        data_retention:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: object
+            properties:
+              max_backups:
+                type: integer
+                title: Maximum Backups
+                description: The maximum number of backups per environment
+              default_config:
+                type: object
+                properties:
+                  manual_count:
+                    type: integer
+                    title: Manual Count
+                    description: The number of manual backups to keep.
+                  schedule:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        interval:
+                          type: string
+                          title: Interval
+                          description: The policy interval specification.
+                        count:
+                          type: integer
+                          title: Count
+                          description: The number of backups to keep under this interval.
+                      required:
+                      - interval
+                      - count
+                      additionalProperties: false
+                    title: Schedule
+                    description: The backup schedule specification.
+                required:
+                - manual_count
+                - schedule
+                additionalProperties: false
+                title: Default Config
+                description: ''
+                x-stability: EXPERIMENTAL
+            required:
+            - max_backups
+            - default_config
+            additionalProperties: false
+          title: Data retention configuration
+          description: Data retention configuration
+        enable_codesource_integration_push:
+          type: boolean
+          title: Enable pushing commits
+          description: Enable pushing commits to codesource integration.
+        enforce_mfa:
+          type: boolean
+          title: Enforce multi-factor authentication.
+          description: Enforce multi-factor authentication.
+        systemd:
+          type: boolean
+          title: Use systemd
+          description: Use systemd images.
+        router_gen2:
+          type: boolean
+          title: Router v2
+          description: Use the router v2 image.
+        build_resources:
+          type: object
+          properties:
+            cpu:
+              type: number
+              format: float
+              title: CPU
+              description: ''
+            memory:
+              type: integer
+              title: Memory
+              description: ''
+          required:
+          - cpu
+          - memory
+          additionalProperties: false
+          title: Build Resources
+          description: ''
+        outbound_restrictions_default_policy:
+          type: string
+          enum:
+          - allow
+          - deny
+          title: Outbound Restrictions Default Policy
+          description: The default policy for firewall outbound restrictions
+        self_upgrade:
+          type: boolean
+          title: Self Upgrade
+          description: Whether self-upgrades are enabled
+        self_upgrade_latest_major:
+          type: boolean
+          title: Whether to check for n+1 major version when self-upgrades are enabled
+          description: ''
+        additional_hosts:
+          type: object
+          additionalProperties:
+            type: string
+          title: Additional Hosts
+          description: A mapping of hostname to ip address to be added to the container's hosts file
+        max_allowed_routes:
+          type: integer
+          title: Maximum allowed routes
+          description: Maximum number of routes allowed
+        max_allowed_redirects_paths:
+          type: integer
+          title: Maximum allowed redirect paths
+          description: Maximum number of redirect paths allowed
+        enable_incremental_backups:
+          type: boolean
+          title: Enable incremental backups
+          description: Enable incremental backups on regions that support them.
+        sizing_api_enabled:
+          type: boolean
+          title: Enable sizing api
+          description: Enable sizing api.
+        enable_cache_grace_period:
+          type: boolean
+          title: Enable cache grace period
+          description: Enable cache grace period.
+        enable_zero_downtime_deployments:
+          type: boolean
+          title: Enable zero-downtime deployments
+          description: Enable zero-downtime deployments for resource-only changes.
+        enable_admin_agent:
+          type: boolean
+          title: Enable admin agent
+          description: ''
+        certifier_url:
+          type: string
+          title: Certifier URL
+          description: The certifier url
+        centralized_permissions:
+          type: boolean
+          title: Centralized Permissions
+          description: Whether centralized permissions are enabled
+        glue_server_max_request_size:
+          type: integer
+          title: Glue Server Max Request Size
+          description: Maximum size of request to glue-server (in MB)
+        persistent_endpoints_ssh:
+          type: boolean
+          title: Persistent Endpoints SSH
+          description: Enable SSH access update with persistent endpoint
+        persistent_endpoints_ssl_certificates:
+          type: boolean
+          title: Persistent Endpoints SSL Certificates
+          description: Enable SSL certificate update with persistent endpoint
+        enable_disk_health_monitoring:
+          type: boolean
+          title: Enable disk health monitoring
+          description: ''
+        enable_paused_environments:
+          type: boolean
+          title: Enable paused environments
+          description: ''
+        enable_unified_configuration:
+          type: boolean
+          title: Enable unified configuration files
+          description: ''
+        enable_routes_tracing:
+          type: boolean
+          title: Enable routes tracing
+          description: Enable tracing support in routes
+        image_deployment_validation:
+          type: boolean
+          title: Image Deployment Validation
+          description: Enable extended deployment validation by images
+        support_generic_images:
+          type: boolean
+          title: Support composable images
+          description: ''
+        enable_github_app_token_exchange:
+          type: boolean
+          title: Enable GitHub App token exchange
+          description: Enable fetching the GitHub App token from SIA.
+        continuous_profiling:
+          type: object
+          properties:
+            supported_runtimes:
+              type: array
+              items:
+                type: string
+              title: Supported runtimes
+              description: List of images supported for continuous profiling
+          required:
+          - supported_runtimes
+          additionalProperties: false
+          title: Continuous profiling configuration
+          description: The continuous profiling configuration
+        disable_agent_error_reporter:
+          type: boolean
+          title: Disable agent error reporter
+          description: ''
+        requires_domain_ownership:
+          type: boolean
+          title: Require domain ownership
+          description: Require ownership proof before domains are added to environments.
+        enable_guaranteed_resources:
+          type: boolean
+          title: Enable guaranteed resources feature
+          description: Enable guaranteed resources feature
+        git_server:
+          type: object
+          properties:
+            push_size_hard_limit:
+              type: integer
+              title: Push Size Hard Limit
+              description: Push Size Reject Limit
+          required:
+          - push_size_hard_limit
+          additionalProperties: false
+          title: Git Server configuration
+          description: ''
+        activity_logs_max_size:
+          type: integer
+          title: Activity Logs Max Size
+          description: The maximum size of activity logs in bytes. This limit is applied on the pre-compressed log size.
+        allow_manual_deployments:
+          type: boolean
+          title: Allow Manual Deployments
+          description: If deployments can be manual, i.e. explicitly triggered by user.
+        allow_rolling_deployments:
+          type: boolean
+          title: Allow Rolling Deployments
+          description: If the project can use rolling deployments.
+        allow_burst:
+          type: boolean
+          title: Allow burst
+          description: ''
+        router_resources:
+          type: object
+          properties:
+            baseline_cpu:
+              type: number
+              format: float
+              title: Baseline CPU
+              description: Router baseline CPU for flex plan
+            baseline_memory:
+              type: integer
+              title: Baseline Memory
+              description: Router baseline memory (MB) for flex plan
+            max_cpu:
+              type: number
+              format: float
+              title: Max CPU
+              description: Router max CPU for flex plan
+            max_memory:
+              type: integer
+              title: Max Memory
+              description: Router max memory (MB) for flex plan
+          required:
+          - baseline_cpu
+          - baseline_memory
+          - max_cpu
+          - max_memory
+          additionalProperties: false
+          title: Router Resources
+          description: Router resource settings for flex plan
+      required:
+      - initialize
+      - product_name
+      - product_code
+      - ui_uri_template
+      - variables_prefix
+      - bot_email
+      - application_config_file
+      - project_config_dir
+      - use_drupal_defaults
+      - use_legacy_subdomains
+      - development_service_size
+      - development_application_size
+      - enable_certificate_provisioning
+      - certificate_style
+      - certificate_renewal_activity
+      - development_domain_template
+      - enable_state_api_deployments
+      - temporary_disk_size
+      - local_disk_size
+      - cron_minimum_interval
+      - cron_maximum_jitter
+      - cron_production_expiry_interval
+      - cron_non_production_expiry_interval
+      - concurrency_limits
+      - flexible_build_cache
+      - strict_configuration
+      - has_sleepy_crons
+      - crons_in_git
+      - custom_error_template
+      - app_error_page_template
+      - environment_name_strategy
+      - data_retention
+      - enable_codesource_integration_push
+      - enforce_mfa
+      - systemd
+      - router_gen2
+      - build_resources
+      - outbound_restrictions_default_policy
+      - self_upgrade
+      - self_upgrade_latest_major
+      - additional_hosts
+      - max_allowed_routes
+      - max_allowed_redirects_paths
+      - enable_incremental_backups
+      - sizing_api_enabled
+      - enable_cache_grace_period
+      - enable_zero_downtime_deployments
+      - enable_admin_agent
+      - certifier_url
+      - centralized_permissions
+      - glue_server_max_request_size
+      - persistent_endpoints_ssh
+      - persistent_endpoints_ssl_certificates
+      - enable_disk_health_monitoring
+      - enable_paused_environments
+      - enable_unified_configuration
+      - enable_routes_tracing
+      - image_deployment_validation
+      - support_generic_images
+      - enable_github_app_token_exchange
+      - continuous_profiling
+      - disable_agent_error_reporter
+      - requires_domain_ownership
+      - enable_guaranteed_resources
+      - git_server
+      - activity_logs_max_size
+      - allow_manual_deployments
+      - allow_rolling_deployments
+      - allow_burst
+      - router_resources
+      additionalProperties: false
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
+    ProjectSettingsPatch:
+      type: object
+      properties:
+        initialize:
+          type: object
+          title: Initialization key
+          description: ''
+        data_retention:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: object
+            properties:
+              max_backups:
+                type: integer
+                title: Maximum Backups
+                description: The maximum number of backups per environment
+              default_config:
+                type: object
+                properties:
+                  manual_count:
+                    type: integer
+                    title: Manual Count
+                    description: The number of manual backups to keep.
+                  schedule:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        interval:
+                          type: string
+                          title: Interval
+                          description: The policy interval specification.
+                        count:
+                          type: integer
+                          title: Count
+                          description: The number of backups to keep under this interval.
+                      required:
+                      - interval
+                      - count
+                      additionalProperties: false
+                    title: Schedule
+                    description: The backup schedule specification.
+                additionalProperties: false
+                title: Default Config
+                description: ''
+                x-stability: EXPERIMENTAL
+            required:
+            - default_config
+            additionalProperties: false
+          title: Data retention configuration
+          description: Data retention configuration
+        build_resources:
+          type: object
+          properties:
+            cpu:
+              type: number
+              format: float
+              title: CPU
+              description: ''
+            memory:
+              type: integer
+              title: Memory
+              description: ''
+          additionalProperties: false
+          title: Build Resources
+          description: ''
+      additionalProperties: false
+    ProjectSettings_2:
+      type: object
+      properties:
+        initialize:
+          type: object
+          title: Initialization key
+          description: ''
+        product_name:
+          type: string
+          title: Product Name
+          description: The name of the product.
+        product_code:
+          type: string
+          title: Product Code
+          description: The lowercase ASCII code of the product.
+        ui_uri_template:
+          type: string
+          title: UI URI Template
+          description: The template of the project UI uri
+        variables_prefix:
+          type: string
+          title: Variables Prefix
+          description: The prefix of the generated environment variables.
+        bot_email:
+          type: string
+          title: Bot Email
+          description: The email of the bot.
+        application_config_file:
+          type: string
+          title: Application Config File
+          description: The name of the application-specific configuration file.
+        project_config_dir:
+          type: string
+          title: Project Config Directory
+          description: The name of the project configuration directory.
+        use_drupal_defaults:
+          type: boolean
+          title: Use Drupal Defaults
+          description: Whether to use the default Drupal-centric configuration files when missing from the repository.
+        use_legacy_subdomains:
+          type: boolean
+          title: Use Legacy Subdomains
+          description: Whether to use legacy subdomain scheme, that replaces `.` by `---` in development subdomains.
+        development_service_size:
+          type: string
+          enum:
+          - 2XL
+          - 4XL
+          - L
+          - M
+          - S
+          - XL
+          title: Development Service Size
+          description: The size of development services.
+        development_application_size:
+          type: string
+          enum:
+          - 2XL
+          - 4XL
+          - L
+          - M
+          - S
+          - XL
+          title: Development Application Size
+          description: The size of development applications.
+        enable_certificate_provisioning:
+          type: boolean
+          title: Enable Certificate Provisioning
+          description: Enable automatic certificate provisioning.
+        certificate_style:
+          type: string
+          enum:
+          - ecdsa
+          - rsa
+          title: Certificate Style
+          description: ''
+        certificate_renewal_activity:
+          type: boolean
+          title: Certificate Renewal Activity
+          description: Create an activity for certificate renewal
+        development_domain_template:
+          type:
+          - string
+          - 'null'
+          title: Development Domain Template
+          description: The template of the development domain, can include {project} and {environment} placeholders.
+        enable_state_api_deployments:
+          type: boolean
+          title: Enable State API Deployments
+          description: Enable the State API-driven deployments on regions that support them.
+        temporary_disk_size:
+          type:
+          - integer
+          - 'null'
+          title: Temporary Disk Size
+          description: Set the size of the temporary disk (/tmp, in MB).
+        local_disk_size:
+          type:
+          - integer
+          - 'null'
+          title: Local Disk Size
+          description: Set the size of the instance disk (in MB).
+        cron_minimum_interval:
+          type: integer
+          title: Minimum cron interval
+          description: Minimum interval between cron runs (in minutes)
+        cron_maximum_jitter:
+          type: integer
+          title: Maximum cron jitter
+          description: Maximum jitter inserted in cron runs (in minutes)
+        cron_production_expiry_interval:
+          type: integer
+          title: Cron Production Expiry Interval
+          description: The interval (in days) for which cron activity and logs are kept around
+        cron_non_production_expiry_interval:
+          type: integer
+          title: Cron Non-Production Expiry Interval
+          description: The interval (in days) for which cron activity and logs are kept around
+        concurrency_limits:
+          type: object
+          additionalProperties:
+            type:
+            - integer
+            - 'null'
+          title: Concurrency Limits
+          description: The concurrency limits applied to different kind of activities
+        flexible_build_cache:
+          type: boolean
+          title: Enable Flexible Build Cache
+          description: Enable the flexible build cache implementation
+        strict_configuration:
+          type: boolean
+          title: Enable Strict Configuration
+          description: Strict configuration validation.
+        has_sleepy_crons:
+          type: boolean
+          title: Enable sleepy crons.
+          description: ''
+        crons_in_git:
+          type: boolean
+          title: Enable crons from git.
+          description: ''
+        custom_error_template:
+          type:
+          - string
+          - 'null'
+          title: Custom error template
+          description: Custom error template for the router.
+        app_error_page_template:
+          type:
+          - string
+          - 'null'
+          title: Application error template
+          description: Custom error template for the application.
+        environment_name_strategy:
+          type: string
+          enum:
+          - hash
+          - name-and-hash
+          title: Environment Name Strategy
+          description: The strategy used to generate environment machine names
+        data_retention:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: object
+            properties:
+              max_backups:
+                type: integer
+                title: Maximum Backups
+                description: The maximum number of backups per environment
+              default_config:
+                type: object
+                properties:
+                  manual_count:
+                    type: integer
+                    title: Manual Count
+                    description: The number of manual backups to keep.
+                  schedule:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        interval:
+                          type: string
+                          title: Interval
+                          description: The policy interval specification.
+                        count:
+                          type: integer
+                          title: Count
+                          description: The number of backups to keep under this interval.
+                      required:
+                      - interval
+                      - count
+                      additionalProperties: false
+                    title: Schedule
+                    description: The backup schedule specification.
+                required:
+                - manual_count
+                - schedule
+                additionalProperties: false
+                title: Default Config
+                description: ''
+                x-stability: EXPERIMENTAL
+            required:
+            - max_backups
+            - default_config
+            additionalProperties: false
+          title: Data retention configuration
+          description: Data retention configuration
+        enable_codesource_integration_push:
+          type: boolean
+          title: Enable pushing commits
+          description: Enable pushing commits to codesource integration.
+        enforce_mfa:
+          type: boolean
+          title: Enforce multi-factor authentication.
+          description: Enforce multi-factor authentication.
+        systemd:
+          type: boolean
+          title: Use systemd
+          description: Use systemd images.
+        router_gen2:
+          type: boolean
+          title: Router v2
+          description: Use the router v2 image.
+        build_resources:
+          type: object
+          properties:
+            cpu:
+              type: number
+              format: float
+              title: CPU
+              description: ''
+            memory:
+              type: integer
+              title: Memory
+              description: ''
+          required:
+          - cpu
+          - memory
+          additionalProperties: false
+          title: Build Resources
+          description: ''
+        outbound_restrictions_default_policy:
+          type: string
+          enum:
+          - allow
+          - deny
+          title: Outbound Restrictions Default Policy
+          description: The default policy for firewall outbound restrictions
+        self_upgrade:
+          type: boolean
+          title: Self Upgrade
+          description: Whether self-upgrades are enabled
+        self_upgrade_latest_major:
+          type: boolean
+          title: Whether to check for n+1 major version when self-upgrades are enabled
+          description: ''
+        additional_hosts:
+          type: object
+          additionalProperties:
+            type: string
+          title: Additional Hosts
+          description: A mapping of hostname to ip address to be added to the container's hosts file
+        max_allowed_routes:
+          type: integer
+          title: Maximum allowed routes
+          description: Maximum number of routes allowed
+        max_allowed_redirects_paths:
+          type: integer
+          title: Maximum allowed redirect paths
+          description: Maximum number of redirect paths allowed
+        enable_incremental_backups:
+          type: boolean
+          title: Enable incremental backups
+          description: Enable incremental backups on regions that support them.
+        sizing_api_enabled:
+          type: boolean
+          title: Enable sizing api
+          description: Enable sizing api.
+        enable_cache_grace_period:
+          type: boolean
+          title: Enable cache grace period
+          description: Enable cache grace period.
+        enable_zero_downtime_deployments:
+          type: boolean
+          title: Enable zero-downtime deployments
+          description: Enable zero-downtime deployments for resource-only changes.
+        enable_admin_agent:
+          type: boolean
+          title: Enable admin agent
+          description: ''
+        certifier_url:
+          type: string
+          title: Certifier URL
+          description: The certifier url
+        centralized_permissions:
+          type: boolean
+          title: Centralized Permissions
+          description: Whether centralized permissions are enabled
+        glue_server_max_request_size:
+          type: integer
+          title: Glue Server Max Request Size
+          description: Maximum size of request to glue-server (in MB)
+        persistent_endpoints_ssh:
+          type: boolean
+          title: Persistent Endpoints SSH
+          description: Enable SSH access update with persistent endpoint
+        persistent_endpoints_ssl_certificates:
+          type: boolean
+          title: Persistent Endpoints SSL Certificates
+          description: Enable SSL certificate update with persistent endpoint
+        enable_disk_health_monitoring:
+          type: boolean
+          title: Enable disk health monitoring
+          description: ''
+        enable_paused_environments:
+          type: boolean
+          title: Enable paused environments
+          description: ''
+        enable_unified_configuration:
+          type: boolean
+          title: Enable unified configuration files
+          description: ''
+        enable_explicit_empty_routes:
+          type: boolean
+          title: Enable explicit empty routes
+          description: 'When enabled, explicitly empty routes configuration (routes: or routes: {}) will result in no routes being generated instead of fallback routes.'
+        enable_routes_tracing:
+          type: boolean
+          title: Enable routes tracing
+          description: Enable tracing support in routes
+        image_deployment_validation:
+          type: boolean
+          title: Image Deployment Validation
+          description: Enable extended deployment validation by images
+        support_generic_images:
+          type: boolean
+          title: Support composable images
+          description: ''
+        enable_github_app_token_exchange:
+          type: boolean
+          title: Enable GitHub App token exchange
+          description: Enable fetching the GitHub App token from SIA.
+        continuous_profiling:
+          type: object
+          properties:
+            supported_runtimes:
+              type: array
+              items:
+                type: string
+              title: Supported runtimes
+              description: List of images supported for continuous profiling
+          required:
+          - supported_runtimes
+          additionalProperties: false
+          title: Continuous profiling configuration
+          description: The continuous profiling configuration
+        disable_agent_error_reporter:
+          type: boolean
+          title: Disable agent error reporter
+          description: ''
+        requires_domain_ownership:
+          type: boolean
+          title: Require domain ownership
+          description: Require ownership proof before domains are added to environments.
+        enable_guaranteed_resources:
+          type: boolean
+          title: Enable guaranteed resources feature
+          description: Enable guaranteed resources feature
+        git_server:
+          type: object
+          properties:
+            push_size_hard_limit:
+              type: integer
+              title: Push Size Hard Limit
+              description: Push Size Reject Limit
+          required:
+          - push_size_hard_limit
+          additionalProperties: false
+          title: Git Server configuration
+          description: ''
+        activity_logs_max_size:
+          type: integer
+          title: Activity Logs Max Size
+          description: The maximum size of activity logs in bytes. This limit is applied on the pre-compressed log size.
+        allow_manual_deployments:
+          type: boolean
+          title: Allow Manual Deployments
+          description: If deployments can be manual, i.e. explicitly triggered by user
+        allow_rolling_deployments:
+          type: boolean
+          title: Allow Rolling Deployments
+          description: If the project can use rolling deployments
+        maintenance_window:
+          type:
+          - object
+          - 'null'
+          properties:
+            recurrence:
+              type: object
+              properties:
+                interval:
+                  type: string
+                  title: Interval
+                  description: Interval in weeks, either 2w or 4w
+                day_of_week:
+                  type: integer
+                  title: Day of week
+                  description: Day of week, where Monday is 0
+                time:
+                  type: string
+                  title: Time
+                  description: Exact time in HH:MM format
+              required:
+              - interval
+              - day_of_week
+              - time
+              additionalProperties: false
+              title: Recurrence
+              description: Defines the recurring schedule for the maintenance window
+          required:
+          - recurrence
+          additionalProperties: false
+          title: Maintenance window configuration
+          description: Configuration for the maintenance window schedule
+        allow_activity_reschedule:
+          type: boolean
+          title: Allow activity reschedule
+          description: Allow certain types of activities to be rescheduled
+        allow_burst:
+          type: boolean
+          title: Allow burst
+          description: ''
+        router_resources:
+          type: object
+          properties:
+            baseline_cpu:
+              type: number
+              format: float
+              title: Baseline CPU
+              description: Router baseline CPU for flex plan
+            baseline_memory:
+              type: integer
+              title: Baseline Memory
+              description: Router baseline memory (MB) for flex plan
+            max_cpu:
+              type: number
+              format: float
+              title: Max CPU
+              description: Router max CPU for flex plan
+            max_memory:
+              type: integer
+              title: Max Memory
+              description: Router max memory (MB) for flex plan
+          required:
+          - baseline_cpu
+          - baseline_memory
+          - max_cpu
+          - max_memory
+          additionalProperties: false
+          title: Router Resources
+          description: Router resource settings for flex plan
+        allow_scaling_to_zero:
+          type: boolean
+          title: Allow scaling apps and workers without a relationship pointing to them to 0
+          description: ''
+        save_applications_vendors:
+          type: boolean
+          title: Save Applications Vendors
+          description: Save vendors.json files locally after builds for SBOM generation.
+        locations_script_default:
+          type: boolean
+          title: Set the default for script execution in web locations
+          description: ''
+        support_oci_images:
+          type: boolean
+          title: Support OCI images
+          description: ''
+      required:
+      - initialize
+      - product_name
+      - product_code
+      - ui_uri_template
+      - variables_prefix
+      - bot_email
+      - application_config_file
+      - project_config_dir
+      - use_drupal_defaults
+      - use_legacy_subdomains
+      - development_service_size
+      - development_application_size
+      - enable_certificate_provisioning
+      - certificate_style
+      - certificate_renewal_activity
+      - development_domain_template
+      - enable_state_api_deployments
+      - temporary_disk_size
+      - local_disk_size
+      - cron_minimum_interval
+      - cron_maximum_jitter
+      - cron_production_expiry_interval
+      - cron_non_production_expiry_interval
+      - concurrency_limits
+      - flexible_build_cache
+      - strict_configuration
+      - has_sleepy_crons
+      - crons_in_git
+      - custom_error_template
+      - app_error_page_template
+      - environment_name_strategy
+      - data_retention
+      - enable_codesource_integration_push
+      - enforce_mfa
+      - systemd
+      - router_gen2
+      - build_resources
+      - outbound_restrictions_default_policy
+      - self_upgrade
+      - self_upgrade_latest_major
+      - additional_hosts
+      - max_allowed_routes
+      - max_allowed_redirects_paths
+      - enable_incremental_backups
+      - sizing_api_enabled
+      - enable_cache_grace_period
+      - enable_zero_downtime_deployments
+      - enable_admin_agent
+      - certifier_url
+      - centralized_permissions
+      - glue_server_max_request_size
+      - persistent_endpoints_ssh
+      - persistent_endpoints_ssl_certificates
+      - enable_disk_health_monitoring
+      - enable_paused_environments
+      - enable_unified_configuration
+      - enable_explicit_empty_routes
+      - enable_routes_tracing
+      - image_deployment_validation
+      - support_generic_images
+      - enable_github_app_token_exchange
+      - continuous_profiling
+      - disable_agent_error_reporter
+      - requires_domain_ownership
+      - enable_guaranteed_resources
+      - git_server
+      - activity_logs_max_size
+      - allow_manual_deployments
+      - allow_rolling_deployments
+      - maintenance_window
+      - allow_activity_reschedule
+      - allow_burst
+      - router_resources
+      - allow_scaling_to_zero
+      - save_applications_vendors
+      - locations_script_default
+      - support_oci_images
+      additionalProperties: false
+    ProjectSettingsPatch_2:
+      type: object
+      properties:
+        initialize:
+          type: object
+          title: Initialization key
+          description: ''
+        data_retention:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: object
+            properties:
+              max_backups:
+                type: integer
+                title: Maximum Backups
+                description: The maximum number of backups per environment
+              default_config:
+                type: object
+                properties:
+                  manual_count:
+                    type: integer
+                    title: Manual Count
+                    description: The number of manual backups to keep.
+                  schedule:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        interval:
+                          type: string
+                          title: Interval
+                          description: The policy interval specification.
+                        count:
+                          type: integer
+                          title: Count
+                          description: The number of backups to keep under this interval.
+                      required:
+                      - interval
+                      - count
+                      additionalProperties: false
+                    title: Schedule
+                    description: The backup schedule specification.
+                additionalProperties: false
+                title: Default Config
+                description: ''
+                x-stability: EXPERIMENTAL
+            required:
+            - default_config
+            additionalProperties: false
+          title: Data retention configuration
+          description: Data retention configuration
+        build_resources:
+          type: object
+          properties:
+            cpu:
+              type: number
+              format: float
+              title: CPU
+              description: ''
+            memory:
+              type: integer
+              title: Memory
+              description: ''
+          additionalProperties: false
+          title: Build Resources
+          description: ''
+        maintenance_window:
+          type:
+          - object
+          - 'null'
+          properties:
+            recurrence:
+              type: object
+              properties:
+                interval:
+                  type: string
+                  title: Interval
+                  description: Interval in weeks, either 2w or 4w
+                day_of_week:
+                  type: integer
+                  title: Day of week
+                  description: Day of week, where Monday is 0
+                time:
+                  type: string
+                  title: Time
+                  description: Exact time in HH:MM format
+              required:
+              - interval
+              - day_of_week
+              - time
+              additionalProperties: false
+              title: Recurrence
+              description: Defines the recurring schedule for the maintenance window
+          required:
+          - recurrence
+          additionalProperties: false
+          title: Maintenance window configuration
+          description: Configuration for the maintenance window schedule
+      additionalProperties: false
+    ProjectSettings_3:
+      type: object
+      properties:
+        initialize:
+          type: object
+          title: Initialization key
+          description: ''
+        product_name:
+          type: string
+          title: Product Name
+          description: The name of the product.
+        product_code:
+          type: string
+          title: Product Code
+          description: The lowercase ASCII code of the product.
+        ui_uri_template:
+          type: string
+          title: UI URI Template
+          description: The template of the project UI uri
+        variables_prefix:
+          type: string
+          title: Variables Prefix
+          description: The prefix of the generated environment variables.
+        bot_email:
+          type: string
+          title: Bot Email
+          description: The email of the bot.
+        application_config_file:
+          type: string
+          title: Application Config File
+          description: The name of the application-specific configuration file.
+        project_config_dir:
+          type: string
+          title: Project Config Directory
+          description: The name of the project configuration directory.
+        use_drupal_defaults:
+          type: boolean
+          title: Use Drupal Defaults
+          description: Whether to use the default Drupal-centric configuration files when missing from the repository.
+        use_legacy_subdomains:
+          type: boolean
+          title: Use Legacy Subdomains
+          description: Whether to use legacy subdomain scheme, that replaces `.` by `---` in development subdomains.
+        development_service_size:
+          type: string
+          enum:
+          - 2XL
+          - 4XL
+          - L
+          - M
+          - S
+          - XL
+          title: Development Service Size
+          description: The size of development services.
+        development_application_size:
+          type: string
+          enum:
+          - 2XL
+          - 4XL
+          - L
+          - M
+          - S
+          - XL
+          title: Development Application Size
+          description: The size of development applications.
+        enable_certificate_provisioning:
+          type: boolean
+          title: Enable Certificate Provisioning
+          description: Enable automatic certificate provisioning.
+        certificate_style:
+          type: string
+          enum:
+          - ecdsa
+          - rsa
+          title: Certificate Style
+          description: ''
+        certificate_renewal_activity:
+          type: boolean
+          title: Certificate Renewal Activity
+          description: Create an activity for certificate renewal
+        development_domain_template:
+          type:
+          - string
+          - 'null'
+          title: Development Domain Template
+          description: The template of the development domain, can include {project} and {environment} placeholders.
+        enable_state_api_deployments:
+          type: boolean
+          title: Enable State API Deployments
+          description: Enable the State API-driven deployments on regions that support them.
+        temporary_disk_size:
+          type:
+          - integer
+          - 'null'
+          title: Temporary Disk Size
+          description: Set the size of the temporary disk (/tmp, in MB).
+        local_disk_size:
+          type:
+          - integer
+          - 'null'
+          title: Local Disk Size
+          description: Set the size of the instance disk (in MB).
+        cron_minimum_interval:
+          type: integer
+          title: Minimum cron interval
+          description: Minimum interval between cron runs (in minutes)
+        cron_maximum_jitter:
+          type: integer
+          title: Maximum cron jitter
+          description: Maximum jitter inserted in cron runs (in minutes)
+        cron_production_expiry_interval:
+          type: integer
+          title: Cron Production Expiry Interval
+          description: The interval (in days) for which cron activity and logs are kept around
+        cron_non_production_expiry_interval:
+          type: integer
+          title: Cron Non-Production Expiry Interval
+          description: The interval (in days) for which cron activity and logs are kept around
+        concurrency_limits:
+          type: object
+          additionalProperties:
+            type:
+            - integer
+            - 'null'
+          title: Concurrency Limits
+          description: The concurrency limits applied to different kind of activities
+        flexible_build_cache:
+          type: boolean
+          title: Enable Flexible Build Cache
+          description: Enable the flexible build cache implementation
+        strict_configuration:
+          type: boolean
+          title: Enable Strict Configuration
+          description: Strict configuration validation.
+        has_sleepy_crons:
+          type: boolean
+          title: Enable sleepy crons.
+          description: ''
+        crons_in_git:
+          type: boolean
+          title: Enable crons from git.
+          description: ''
+        custom_error_template:
+          type:
+          - string
+          - 'null'
+          title: Custom error template
+          description: Custom error template for the router.
+        app_error_page_template:
+          type:
+          - string
+          - 'null'
+          title: Application error template
+          description: Custom error template for the application.
+        environment_name_strategy:
+          type: string
+          enum:
+          - hash
+          - name-and-hash
+          title: Environment Name Strategy
+          description: The strategy used to generate environment machine names
+        data_retention:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: object
+            properties:
+              max_backups:
+                type: integer
+                title: Maximum Backups
+                description: The maximum number of backups per environment
+              default_config:
+                type: object
+                properties:
+                  manual_count:
+                    type: integer
+                    title: Manual Count
+                    description: The number of manual backups to keep.
+                  schedule:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        interval:
+                          type: string
+                          title: Interval
+                          description: The policy interval specification.
+                        count:
+                          type: integer
+                          title: Count
+                          description: The number of backups to keep under this interval.
+                      required:
+                      - interval
+                      - count
+                      additionalProperties: false
+                    title: Schedule
+                    description: The backup schedule specification.
+                required:
+                - manual_count
+                - schedule
+                additionalProperties: false
+                title: Default Config
+                description: ''
+                x-stability: EXPERIMENTAL
+            required:
+            - max_backups
+            - default_config
+            additionalProperties: false
+          title: Data retention configuration
+          description: Data retention configuration
+        enable_codesource_integration_push:
+          type: boolean
+          title: Enable pushing commits
+          description: Enable pushing commits to codesource integration.
+        enforce_mfa:
+          type: boolean
+          title: Enforce multi-factor authentication.
+          description: Enforce multi-factor authentication.
+        systemd:
+          type: boolean
+          title: Use systemd
+          description: Use systemd images.
+        router_gen2:
+          type: boolean
+          title: Router v2
+          description: Use the router v2 image.
+        build_resources:
+          type: object
+          properties:
+            cpu:
+              type: number
+              format: float
+              title: CPU
+              description: ''
+            memory:
+              type: integer
+              title: Memory
+              description: ''
+          required:
+          - cpu
+          - memory
+          additionalProperties: false
+          title: Build Resources
+          description: ''
+        outbound_restrictions_default_policy:
+          type: string
+          enum:
+          - allow
+          - deny
+          title: Outbound Restrictions Default Policy
+          description: The default policy for firewall outbound restrictions
+        self_upgrade:
+          type: boolean
+          title: Self Upgrade
+          description: Whether self-upgrades are enabled
+        self_upgrade_latest_major:
+          type: boolean
+          title: Whether to check for n+1 major version when self-upgrades are enabled
+          description: ''
+        additional_hosts:
+          type: object
+          additionalProperties:
+            type: string
+          title: Additional Hosts
+          description: A mapping of hostname to ip address to be added to the container's hosts file
+        max_allowed_routes:
+          type: integer
+          title: Maximum allowed routes
+          description: Maximum number of routes allowed
+        max_allowed_redirects_paths:
+          type: integer
+          title: Maximum allowed redirect paths
+          description: Maximum number of redirect paths allowed
+        enable_incremental_backups:
+          type: boolean
+          title: Enable incremental backups
+          description: Enable incremental backups on regions that support them.
+        sizing_api_enabled:
+          type: boolean
+          title: Enable sizing api
+          description: Enable sizing api.
+        enable_cache_grace_period:
+          type: boolean
+          title: Enable cache grace period
+          description: Enable cache grace period.
+        enable_zero_downtime_deployments:
+          type: boolean
+          title: Enable zero-downtime deployments
+          description: Enable zero-downtime deployments for resource-only changes.
+        enable_admin_agent:
+          type: boolean
+          title: Enable admin agent
+          description: ''
+        certifier_url:
+          type: string
+          title: Certifier URL
+          description: The certifier url
+        centralized_permissions:
+          type: boolean
+          title: Centralized Permissions
+          description: Whether centralized permissions are enabled
+        glue_server_max_request_size:
+          type: integer
+          title: Glue Server Max Request Size
+          description: Maximum size of request to glue-server (in MB)
+        persistent_endpoints_ssh:
+          type: boolean
+          title: Persistent Endpoints SSH
+          description: Enable SSH access update with persistent endpoint
+        persistent_endpoints_ssl_certificates:
+          type: boolean
+          title: Persistent Endpoints SSL Certificates
+          description: Enable SSL certificate update with persistent endpoint
+        enable_disk_health_monitoring:
+          type: boolean
+          title: Enable disk health monitoring
+          description: ''
+        enable_paused_environments:
+          type: boolean
+          title: Enable paused environments
+          description: ''
+        enable_unified_configuration:
+          type: boolean
+          title: Enable unified configuration files
+          description: ''
+        enable_explicit_empty_routes:
+          type: boolean
+          title: Enable explicit empty routes
+          description: 'When enabled, explicitly empty routes configuration (routes: or routes: {}) will result in no routes being generated instead of fallback routes.'
+        enable_routes_tracing:
+          type: boolean
+          title: Enable routes tracing
+          description: Enable tracing support in routes
+        image_deployment_validation:
+          type: boolean
+          title: Image Deployment Validation
+          description: Enable extended deployment validation by images
+        support_generic_images:
+          type: boolean
+          title: Support composable images
+          description: ''
+        enable_github_app_token_exchange:
+          type: boolean
+          title: Enable GitHub App token exchange
+          description: Enable fetching the GitHub App token from SIA.
+        continuous_profiling:
+          type: object
+          properties:
+            supported_runtimes:
+              type: array
+              items:
+                type: string
+              title: Supported runtimes
+              description: List of images supported for continuous profiling
+          required:
+          - supported_runtimes
+          additionalProperties: false
+          title: Continuous profiling configuration
+          description: The continuous profiling configuration
+        disable_agent_error_reporter:
+          type: boolean
+          title: Disable agent error reporter
+          description: ''
+        requires_domain_ownership:
+          type: boolean
+          title: Require domain ownership
+          description: Require ownership proof before domains are added to environments.
+        enable_guaranteed_resources:
+          type: boolean
+          title: Enable guaranteed resources feature
+          description: Enable guaranteed resources feature
+        git_server:
+          type: object
+          properties:
+            push_size_hard_limit:
+              type: integer
+              title: Push Size Hard Limit
+              description: Push Size Reject Limit
+          required:
+          - push_size_hard_limit
+          additionalProperties: false
+          title: Git Server configuration
+          description: ''
+        activity_logs_max_size:
+          type: integer
+          title: Activity Logs Max Size
+          description: The maximum size of activity logs in bytes. This limit is applied on the pre-compressed log size.
+        allow_manual_deployments:
+          type: boolean
+          title: Allow Manual Deployments
+          description: If deployments can be manual, i.e. explicitly triggered by user
+        allow_rolling_deployments:
+          type: boolean
+          title: Allow Rolling Deployments
+          description: If the project can use rolling deployments
+        maintenance_window:
+          type:
+          - object
+          - 'null'
+          properties:
+            recurrence:
+              type: object
+              properties:
+                interval:
+                  type: string
+                  title: Interval
+                  description: Interval in weeks, either 2w or 4w
+                day_of_week:
+                  type: integer
+                  title: Day of week
+                  description: Day of week, where Monday is 0
+                time:
+                  type: string
+                  title: Time
+                  description: Exact time in HH:MM format
+              required:
+              - interval
+              - day_of_week
+              - time
+              additionalProperties: false
+              title: Recurrence
+              description: Defines the recurring schedule for the maintenance window
+          required:
+          - recurrence
+          additionalProperties: false
+          title: Maintenance window configuration
+          description: Configuration for the maintenance window schedule
+        allow_activity_reschedule:
+          type: boolean
+          title: Allow activity reschedule
+          description: Allow certain types of activities to be rescheduled
+        allow_burst:
+          type: boolean
+          title: Allow burst
+          description: ''
+        router_resources:
+          type: object
+          properties:
+            baseline_cpu:
+              type: number
+              format: float
+              title: Baseline CPU
+              description: Router baseline CPU for flex plan
+            baseline_memory:
+              type: integer
+              title: Baseline Memory
+              description: Router baseline memory (MB) for flex plan
+            max_cpu:
+              type: number
+              format: float
+              title: Max CPU
+              description: Router max CPU for flex plan
+            max_memory:
+              type: integer
+              title: Max Memory
+              description: Router max memory (MB) for flex plan
+          required:
+          - baseline_cpu
+          - baseline_memory
+          - max_cpu
+          - max_memory
+          additionalProperties: false
+          title: Router Resources
+          description: Router resource settings for flex plan
+        allow_scaling_to_zero:
+          type: boolean
+          title: Allow scaling apps and workers without a relationship pointing to them to 0
+          description: ''
+        save_applications_vendors:
+          type: boolean
+          title: Save Applications Vendors
+          description: Save vendors.json files locally after builds for SBOM generation.
+        locations_script_default:
+          type: boolean
+          title: Set the default for script execution in web locations
+          description: ''
+        support_oci_images:
+          type: boolean
+          title: Support OCI images
+          description: ''
+      required:
+      - initialize
+      - product_name
+      - product_code
+      - ui_uri_template
+      - variables_prefix
+      - bot_email
+      - application_config_file
+      - project_config_dir
+      - use_drupal_defaults
+      - use_legacy_subdomains
+      - development_service_size
+      - development_application_size
+      - enable_certificate_provisioning
+      - certificate_style
+      - certificate_renewal_activity
+      - development_domain_template
+      - enable_state_api_deployments
+      - temporary_disk_size
+      - local_disk_size
+      - cron_minimum_interval
+      - cron_maximum_jitter
+      - cron_production_expiry_interval
+      - cron_non_production_expiry_interval
+      - concurrency_limits
+      - flexible_build_cache
+      - strict_configuration
+      - has_sleepy_crons
+      - crons_in_git
+      - custom_error_template
+      - app_error_page_template
+      - environment_name_strategy
+      - data_retention
+      - enable_codesource_integration_push
+      - enforce_mfa
+      - systemd
+      - router_gen2
+      - build_resources
+      - outbound_restrictions_default_policy
+      - self_upgrade
+      - self_upgrade_latest_major
+      - additional_hosts
+      - max_allowed_routes
+      - max_allowed_redirects_paths
+      - enable_incremental_backups
+      - sizing_api_enabled
+      - enable_cache_grace_period
+      - enable_zero_downtime_deployments
+      - enable_admin_agent
+      - certifier_url
+      - centralized_permissions
+      - glue_server_max_request_size
+      - persistent_endpoints_ssh
+      - persistent_endpoints_ssl_certificates
+      - enable_disk_health_monitoring
+      - enable_paused_environments
+      - enable_unified_configuration
+      - enable_explicit_empty_routes
+      - enable_routes_tracing
+      - image_deployment_validation
+      - support_generic_images
+      - enable_github_app_token_exchange
+      - continuous_profiling
+      - disable_agent_error_reporter
+      - requires_domain_ownership
+      - enable_guaranteed_resources
+      - git_server
+      - activity_logs_max_size
+      - allow_manual_deployments
+      - allow_rolling_deployments
+      - maintenance_window
+      - allow_activity_reschedule
+      - allow_burst
+      - router_resources
+      - allow_scaling_to_zero
+      - save_applications_vendors
+      - locations_script_default
+      - support_oci_images
+      additionalProperties: false
+    ProjectSettingsPatch_3:
+      type: object
+      properties:
+        initialize:
+          type: object
+          title: Initialization key
+          description: ''
+        data_retention:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: object
+            properties:
+              max_backups:
+                type: integer
+                title: Maximum Backups
+                description: The maximum number of backups per environment
+              default_config:
+                type: object
+                properties:
+                  manual_count:
+                    type: integer
+                    title: Manual Count
+                    description: The number of manual backups to keep.
+                  schedule:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        interval:
+                          type: string
+                          title: Interval
+                          description: The policy interval specification.
+                        count:
+                          type: integer
+                          title: Count
+                          description: The number of backups to keep under this interval.
+                      required:
+                      - interval
+                      - count
+                      additionalProperties: false
+                    title: Schedule
+                    description: The backup schedule specification.
+                additionalProperties: false
+                title: Default Config
+                description: ''
+                x-stability: EXPERIMENTAL
+            required:
+            - default_config
+            additionalProperties: false
+          title: Data retention configuration
+          description: Data retention configuration
+        build_resources:
+          type: object
+          properties:
+            cpu:
+              type: number
+              format: float
+              title: CPU
+              description: ''
+            memory:
+              type: integer
+              title: Memory
+              description: ''
+          additionalProperties: false
+          title: Build Resources
+          description: ''
+        maintenance_window:
+          type:
+          - object
+          - 'null'
+          properties:
+            recurrence:
+              type: object
+              properties:
+                interval:
+                  type: string
+                  title: Interval
+                  description: Interval in weeks, either 2w or 4w
+                day_of_week:
+                  type: integer
+                  title: Day of week
+                  description: Day of week, where Monday is 0
+                time:
+                  type: string
+                  title: Time
+                  description: Exact time in HH:MM format
+              required:
+              - interval
+              - day_of_week
+              - time
+              additionalProperties: false
+              title: Recurrence
+              description: Defines the recurring schedule for the maintenance window
+          required:
+          - recurrence
+          additionalProperties: false
+          title: Maintenance window configuration
+          description: Configuration for the maintenance window schedule
+      additionalProperties: false
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

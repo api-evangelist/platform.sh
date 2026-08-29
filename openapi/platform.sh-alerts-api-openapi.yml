@@ -1,0 +1,224 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Alerts API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Alerts across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Alerts
+paths:
+  /alerts/subscriptions/{subscriptionId}/usage:
+    get:
+      tags:
+      - Alerts
+      summary: Get usage alerts for a subscription
+      operationId: get-usage-alerts
+      parameters:
+      - $ref: '#/components/parameters/subscription_id'
+      responses:
+        '200':
+          description: The list of current and available alerts for the subscription.
+          content:
+            application/json:
+              schema:
+                properties:
+                  available:
+                    description: The list of available usage alerts.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Alert'
+                  current:
+                    description: The list of the current usage alerts.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Alert'
+                type: object
+      security:
+      - OAuth2: []
+    patch:
+      tags:
+      - Alerts
+      summary: Update usage alerts.
+      operationId: update-usage-alerts
+      parameters:
+      - $ref: '#/components/parameters/subscription_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                alerts:
+                  description: The list of usage alerts to create or update.
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Alert'
+              type: object
+      responses:
+        '200':
+          description: The list of current and available alerts for the subscription.
+          content:
+            application/json:
+              schema:
+                properties:
+                  available:
+                    description: The list of available usage alerts.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Alert'
+                  current:
+                    description: The list of the current usage alerts.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Alert'
+                type: object
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  parameters:
+    subscription_id:
+      name: subscriptionId
+      in: path
+      description: The ID of the subscription
+      required: true
+      schema:
+        type: string
+  schemas:
+    Alert:
+      description: The alert object.
+      properties:
+        id:
+          description: The identification of the alert type.
+          type: string
+        active:
+          description: Whether the alert is currently active.
+          type: boolean
+        alerts_sent:
+          description: The amount of alerts of this type that have been sent so far.
+          type: integer
+        last_alert_at:
+          description: The time the last alert has been sent.
+          type: string
+          format: date-time
+        updated_at:
+          description: The time the alert has last been updated.
+          type: string
+          format: date-time
+        config:
+          description: The alert type specific configuration.
+          type: object
+      type: object
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

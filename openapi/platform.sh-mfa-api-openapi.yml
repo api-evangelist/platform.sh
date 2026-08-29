@@ -1,0 +1,499 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh MFA API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged MFA across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: MFA
+  description: "Multi-factor authentication (MFA) requires the user to present two (or more) types of evidence (or factors) to prove their identity.\n\nFor example, the evidence might be a password and a device-generated code, which show the user has the knowledge factor (\"something you know\") \nas well as the possession factor (\"something you have\"). In this way MFA offers good protection against the compromise of any single factor, \nsuch as a stolen password.\n\nUsing the MFA API you can set up time-based one-time passcodes (TOTP), which can be generated on a single registered device (\"something you have\") such as a mobile phone.\n"
+paths:
+  /users/{user_id}/totp:
+    parameters:
+    - $ref: '#/components/parameters/UserID'
+    get:
+      summary: Get information about TOTP enrollment
+      description: Retrieves TOTP enrollment information.
+      operationId: get-totp-enrollment
+      tags:
+      - MFA
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuer:
+                    type: string
+                    format: uri
+                    description: ''
+                  account_name:
+                    type: string
+                    description: Account name for the enrollment.
+                  secret:
+                    type: string
+                    description: The secret seed for the enrollment
+                  qr_code:
+                    type: string
+                    format: byte
+                    description: Data URI of a PNG QR code image for the enrollment.
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Conflict
+      security:
+      - OAuth2: []
+    post:
+      summary: Confirm TOTP enrollment
+      description: Confirms the given TOTP enrollment.
+      operationId: confirm-totp-enrollment
+      tags:
+      - MFA
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  recovery_codes:
+                    type: array
+                    description: A list of recovery codes for the MFA enrollment.
+                    items:
+                      type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                secret:
+                  type: string
+                  description: The secret seed for the enrollment
+                passcode:
+                  type: string
+                  description: TOTP passcode for the enrollment
+              required:
+              - secret
+              - passcode
+        description: ''
+      security:
+      - OAuth2: []
+    delete:
+      summary: Withdraw TOTP enrollment
+      description: Withdraws from the TOTP enrollment.
+      operationId: withdraw-totp-enrollment
+      tags:
+      - MFA
+      responses:
+        '204':
+          description: No Content
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /users/{user_id}/codes:
+    parameters:
+    - $ref: '#/components/parameters/UserID'
+    post:
+      summary: Re-create recovery codes
+      description: Re-creates recovery codes for the MFA enrollment.
+      operationId: recreate-recovery-codes
+      tags:
+      - MFA
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  recovery_codes:
+                    type: array
+                    description: A list of recovery codes for the MFA enrollment.
+                    items:
+                      type: string
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}/mfa-enforcement:
+    get:
+      summary: Get organization MFA settings
+      description: Retrieves MFA settings for the specified organization.
+      operationId: get-org-mfa-enforcement
+      tags:
+      - MFA
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIDName'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationMFAEnforcement'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}/mfa-enforcement/enable:
+    post:
+      summary: Enable organization MFA enforcement
+      description: Enables MFA enforcement for the specified organization.
+      operationId: enable-org-mfa-enforcement
+      tags:
+      - MFA
+      parameters:
+      - $ref: '#/components/parameters/OrganizationID'
+      responses:
+        '204':
+          description: No Content
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}/mfa-enforcement/disable:
+    post:
+      summary: Disable organization MFA enforcement
+      description: Disables MFA enforcement for the specified organization.
+      operationId: disable-org-mfa-enforcement
+      tags:
+      - MFA
+      parameters:
+      - $ref: '#/components/parameters/OrganizationID'
+      responses:
+        '204':
+          description: No Content
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}/mfa/remind:
+    post:
+      summary: Send MFA reminders to organization members
+      description: Sends a reminder about setting up MFA to the specified organization members.
+      operationId: send-org-mfa-reminders
+      tags:
+      - MFA
+      parameters:
+      - $ref: '#/components/parameters/OrganizationID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_ids:
+                  type: array
+                  description: The organization members.
+                  items:
+                    type: string
+                    format: uuid
+                    description: The ID of the user.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    code:
+                      type: integer
+                      description: An HTTP-like status code referring to the result of the operation for the specific user.
+                    message:
+                      type: string
+                      description: A human-readable message describing the result of the operation for the specific user
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    OrganizationMFAEnforcement:
+      description: The MFA enforcement for the organization.
+      type: object
+      properties:
+        enforce_mfa:
+          type: boolean
+          description: Whether the MFA enforcement is enabled.
+      x-examples:
+        example-1:
+          enforce_mfa: true
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    Error_2:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+    Error_3:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+  parameters:
+    UserID:
+      name: user_id
+      in: path
+      required: true
+      description: The ID of the user.
+      schema:
+        type: string
+        example: d81c8ee2-44b3-429f-b944-a33ad7437690
+        format: uuid
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

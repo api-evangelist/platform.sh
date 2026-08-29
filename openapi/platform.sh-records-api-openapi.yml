@@ -1,0 +1,426 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Records API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Records across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Records
+  description: 'These endpoints retrieve information about which plans were assigned to a particular
+
+    project at which time.
+
+    '
+paths:
+  /organizations/{organization_id}/records/plan:
+    get:
+      summary: List plan records
+      description: Retrieves plan records for the specified organization.
+      operationId: list-org-plan-records
+      tags:
+      - Records
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIDName'
+      - $ref: '#/components/parameters/filter_subscription_id'
+      - $ref: '#/components/parameters/filter_subscription_plan'
+      - $ref: '#/components/parameters/record_status'
+      - $ref: '#/components/parameters/record_start'
+      - $ref: '#/components/parameters/record_end'
+      - $ref: '#/components/parameters/record_started_at'
+      - $ref: '#/components/parameters/record_ended_at'
+      - $ref: '#/components/parameters/page'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PlanRecords'
+                  _links:
+                    $ref: '#/components/schemas/ListLinks'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /organizations/{organization_id}/records/usage:
+    get:
+      summary: List usage records
+      description: Retrieves usage records for the specified organization.
+      operationId: list-org-usage-records
+      tags:
+      - Records
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIDName'
+      - $ref: '#/components/parameters/filter_subscription_id'
+      - $ref: '#/components/parameters/record_usage_group'
+      - $ref: '#/components/parameters/record_start'
+      - $ref: '#/components/parameters/record_started_at'
+      - $ref: '#/components/parameters/page'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Usage'
+                  _links:
+                    $ref: '#/components/schemas/ListLinks'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  parameters:
+    record_usage_group:
+      name: filter[usage_group]
+      in: query
+      description: Filter records by the type of usage.
+      schema:
+        type: string
+        enum:
+        - storage
+        - environments
+        - user_licenses
+    page:
+      name: page
+      in: query
+      description: Page to be displayed. Defaults to 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+    record_status:
+      name: filter[status]
+      in: query
+      description: 'The status of the plan record. '
+      schema:
+        type: string
+        enum:
+        - active
+        - suspended
+    record_started_at:
+      name: filter[started_at]
+      in: query
+      description: The record's start timestamp. You can use this filter to list records started after, or before a certain time. E.g. filter[started_at][value]=2020-01-01&filter[started_at][operator]=>
+      schema:
+        type: string
+        format: date-time
+    filter_subscription_plan:
+      name: filter[plan]
+      in: query
+      description: The plan type of the subscription.
+      schema:
+        type: string
+        enum:
+        - development
+        - standard
+        - medium
+        - large
+        - xlarge
+        - 2xlarge
+    record_end:
+      name: filter[end]
+      in: query
+      description: The end of the observation period for the record. E.g. filter[end]=2018-01-01 will display all records that were active on (i.e. they started before) 2018-01-01
+      schema:
+        type: string
+        format: date-time
+    record_ended_at:
+      name: filter[ended_at]
+      in: query
+      description: The record's end timestamp. You can use this filter to list records ended after, or before a certain time. E.g. filter[ended_at][value]=2020-01-01&filter[ended_at][operator]=>
+      schema:
+        type: string
+        format: date-time
+    filter_subscription_id:
+      name: filter[subscription_id]
+      in: query
+      description: The ID of the subscription
+      required: false
+      schema:
+        type: string
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
+      schema:
+        type: string
+    record_start:
+      name: filter[start]
+      in: query
+      description: The start of the observation period for the record. E.g. filter[start]=2018-01-01 will display all records that were active (i.e. did not end) on 2018-01-01
+      schema:
+        type: string
+        format: date-time
+  schemas:
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    Usage:
+      description: The usage object.
+      properties:
+        id:
+          description: The unique ID of the usage record.
+          type: string
+        subscription_id:
+          description: The ID of the subscription.
+          type: string
+        usage_group:
+          description: The type of usage that this record represents.
+          type: string
+        quantity:
+          description: The quantity used.
+          type: number
+        start:
+          description: The start timestamp of this usage record (ISO 8601).
+          type: string
+          format: date-time
+      type: object
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
+    PlanRecords:
+      description: The plan record object.
+      properties:
+        id:
+          description: The unique ID of the plan record.
+          type: string
+        owner:
+          description: The UUID of the owner.
+          type: string
+          format: uuid
+        subscription_id:
+          description: The ID of the subscription this record pertains to.
+          type: string
+        sku:
+          description: The product SKU of the plan that this record represents.
+          type: string
+        plan:
+          description: The machine name of the plan that this record represents.
+          type: string
+        options:
+          type: array
+          items:
+            description: The SKU of an option.
+            type: string
+        start:
+          description: The start timestamp of this plan record (ISO 8601).
+          type: string
+          format: date-time
+        end:
+          description: The end timestamp of this plan record (ISO 8601).
+          type:
+          - string
+          - 'null'
+          format: date-time
+        status:
+          description: 'The status of the subscription during this record: active or suspended.'
+          type: string
+      type: object
+    Error_2:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+    Error_3:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

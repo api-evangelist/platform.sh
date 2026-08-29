@@ -1,0 +1,3448 @@
+openapi: 3.2.0
+info:
+  title: Platform.sh Environment API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+  description: 'Operations tagged Environment across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+tags:
+- name: Environment
+  description: 'On Upsun, an environment encompasses a single instance of your
+
+    entire application stack, the services used by the application,
+
+    the application''s data storage, and the environment''s backups.
+
+
+    In general, an environment represents a single branch or merge request
+
+    in the Git repository backing a project. It is a virtual cluster
+
+    of read-only application and service containers with read-write
+
+    mounts for application and service data.
+
+
+    On Upsun, the default branch is your production environment—thus,
+
+    merging changes to this branch will put those changes to production.
+
+    '
+paths:
+  /projects/{projectId}/environments:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      operationId: list-projects-environments
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentCollection'
+      tags:
+      - Environment
+      summary: Get list of project environments
+      description: 'Retrieve a list of a project''s existing environments and the
+
+        information associated with each environment.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: get-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment'
+      tags:
+      - Environment
+      summary: Get an environment
+      description: Retrieve the details of a single existing environment.
+      security:
+      - OAuth2: []
+    patch:
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentPatch'
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: update-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment
+      summary: Update an environment
+      description: Update the details of a single existing environment.
+      security:
+      - OAuth2: []
+    delete:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: delete-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment
+      summary: Delete an environment
+      description: Delete a specified environment.
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/activate:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: activate-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentActivateInput'
+      tags:
+      - Environment
+      summary: Activate an environment
+      description: Set the specified environment's status to active
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/branch:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: branch-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentBranchInput'
+      tags:
+      - Environment
+      summary: Branch an environment
+      description: 'Create a new environment as a branch of the current environment.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/deactivate:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: deactivate-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment
+      summary: Deactivate an environment
+      description: 'Destroy all services and data running on this environment so that
+
+        only the Git branch remains. The environment can be reactivated
+
+        later at any time; reactivating an environment will sync data
+
+        from the parent environment and redeploy.
+
+
+        **NOTE: ALL DATA IN THIS ENVIRONMENT WILL BE IRREVOCABLY LOST**
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/deploy:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: deploy-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentDeployInput'
+      tags:
+      - Environment
+      summary: Deploy an environment
+      description: 'Trigger a controlled [manual deployment](https://docs.upsun.com/learn/overview/build-deploy.html#manual-deployment)
+
+        to release all the staged changes
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/initialize:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: initialize-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentInitializeInput'
+      tags:
+      - Environment
+      summary: Initialize a new environment
+      description: "Initialize and configure a new environment with an existing repository.\nThe payload is the url of a git repository with a profile name:\n\n```\n{\n    \"repository\": \"git@github.com:platformsh/a-project-template.git@master\",\n    \"profile\": \"Example Project\",\n    \"files\": [\n      {\n        \"mode\": 0600,\n        \"path\": \"config.json\",\n        \"contents\": \"XXXXXXXX\"\n      }\n    ]\n}\n```\nIt can optionally carry additional files that will be committed to the\nrepository, the POSIX file mode to set on each file, and the base64-encoded\ncontents of each file.\n\nThis endpoint can also add a second repository\nURL in the `config` parameter that will be added to the contents of the first.\nThis allows you to put your application in one repository and the Upsun\nYAML configuration files in another.\n"
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/merge:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: merge-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentMergeInput'
+      tags:
+      - Environment
+      summary: Merge an environment
+      description: 'Merge an environment into its parent. This means that code changes
+
+        from the branch environment will be merged into the parent branch, and
+
+        the parent branch will be rebuilt and deployed with the new code changes,
+
+        retaining the existing data in the parent environment.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/pause:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: pause-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment
+      summary: Pause an environment
+      description: 'Pause an environment, stopping all services and applications (except the router).
+
+
+        Development environments are often used for a limited time and then abandoned.
+
+        To prevent unnecessary consumption of resources, development environments that
+
+        haven''t been redeployed in 14 days are automatically paused.
+
+
+        You can pause an environment manually at any time using this endpoint. Further
+
+        information is available in our [public documentation](https://docs.upsun.com/anchors/environments/paused/).
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/redeploy:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: redeploy-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment
+      summary: Redeploy an environment
+      description: Trigger the redeployment sequence of an environment.
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/resume:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: resume-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment
+      summary: Resume a paused environment
+      description: 'Resume a paused environment, restarting all services and applications.
+
+
+        Development environments that haven''t been used for 14 days will be paused
+
+        automatically. They can be resumed via a redeployment or manually using this
+
+        endpoint or the CLI as described in the [public documentation](https://docs.upsun.com/anchors/environments/paused/).
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/synchronize:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: synchronize-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentSynchronizeInput'
+      tags:
+      - Environment
+      summary: Synchronize a child environment with its parent
+      description: 'This synchronizes the code and/or data of an environment with that of
+
+        its parent, then redeploys the environment. Synchronization is only
+
+        possible if a branch has no unmerged commits and it can be fast-forwarded.
+
+
+        If data synchronization is specified, the data in the environment will
+
+        be overwritten with that of its parent.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/versions:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: list-projects-environments-versions
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionCollection'
+      tags:
+      - Environment
+      summary: List versions associated with the environment
+      description: 'List versions associated with the `{environmentId}` environment.
+
+        At least one version always exists.
+
+        When multiple versions exist, it means that multiple versions of an app are deployed.
+
+        The deployment target type denotes whether staged deployment is supported.
+
+        '
+      security:
+      - OAuth2: []
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: create-projects-environments-versions
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VersionCreateInput'
+      tags:
+      - Environment
+      summary: Create versions associated with the environment
+      description: 'Create versions associated with the `{environmentId}` environment.
+
+        At least one version always exists.
+
+        When multiple versions exist, it means that multiple versions of an app are deployed.
+
+        The deployment target type denotes whether staged deployment is supported.
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/versions/{versionId}:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: versionId
+      operationId: get-projects-environments-versions
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Version'
+      tags:
+      - Environment
+      summary: List the version
+      description: 'List the `{versionId}` version.
+
+        A routing percentage for this version may be specified for staged rollouts
+
+        (if the deployment target supports it).
+
+        '
+      security:
+      - OAuth2: []
+    patch:
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VersionPatch'
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: versionId
+      operationId: update-projects-environments-versions
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment
+      summary: Update the version
+      description: 'Update the `{versionId}` version.
+
+        A routing percentage for this version may be specified for staged rollouts
+
+        (if the deployment target supports it).
+
+        '
+      security:
+      - OAuth2: []
+    delete:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: versionId
+      operationId: delete-projects-environments-versions
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment
+      summary: Delete the version
+      description: 'Delete the `{versionId}` version.
+
+        A routing percentage for this version may be specified for staged rollouts
+
+        (if the deployment target supports it).
+
+        '
+      security:
+      - OAuth2: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+  /projects/{projectId}/environments/{environmentId}/maintenance-redeploy:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: maintenance-redeploy-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment
+      security:
+      - BearerAuth: []
+    servers:
+    - url: '{schemes}://api.upsun.com'
+      description: The Upsun.com API gateway
+      variables:
+        schemes:
+          default: https
+components:
+  schemas:
+    VersionPatch:
+      type: object
+      properties:
+        routing:
+          type: object
+          properties:
+            percentage:
+              type: integer
+              title: Traffic percentage
+              description: The percentage of traffic routed to this version
+          additionalProperties: false
+          title: Routing
+          description: Configuration about the traffic routed to this version
+      additionalProperties: false
+    EnvironmentCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Environment'
+    EnvironmentBranchInput:
+      type: object
+      properties:
+        title:
+          type: string
+          title: Title
+          description: ''
+        name:
+          type: string
+          title: Name
+          description: ''
+        clone_parent:
+          type: boolean
+          title: Clone parent
+          description: Clone data from the parent environment
+        type:
+          type: string
+          enum:
+          - development
+          - staging
+          title: Type
+          description: The type of environment (`staging` or `development`)
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - default
+              - minimum
+              - parent
+              title: Init Resources
+              description: The resources used when initializing services of the new environment
+          required:
+          - init
+          additionalProperties: false
+          title: Resources
+          description: ''
+      required:
+      - title
+      - name
+      - clone_parent
+      - type
+      - resources
+      additionalProperties: false
+    Version:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Version Identifier
+          description: The identifier of Version
+        commit:
+          type:
+          - string
+          - 'null'
+          title: Commit SHA
+          description: The SHA of the commit of this version
+        locked:
+          type: boolean
+          title: Is locked
+          description: Whether this version is locked and cannot be modified
+        routing:
+          type: object
+          properties:
+            percentage:
+              type: integer
+              title: Traffic percentage
+              description: The percentage of traffic routed to this version
+          required:
+          - percentage
+          additionalProperties: false
+          title: Routing
+          description: Configuration about the traffic routed to this version
+      required:
+      - id
+      - commit
+      - locked
+      - routing
+      additionalProperties: false
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
+    EnvironmentInitializeInput:
+      type: object
+      properties:
+        profile:
+          type: string
+          title: Profile
+          description: Name of the profile to show in the UI
+        repository:
+          type: string
+          title: Repository
+          description: Repository to clone from
+        config:
+          type:
+          - string
+          - 'null'
+          title: Configuration repository
+          description: Repository to clone the configuration files from
+        files:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+                title: Path
+                description: The path to the file.
+              mode:
+                type: integer
+                title: Mode
+                description: The octal value of the file protection mode.
+              contents:
+                type: string
+                title: Contents
+                description: The contents of the file (base64 encoded).
+            required:
+            - path
+            - mode
+            - contents
+            additionalProperties: false
+          title: Files
+          description: A list of files to add to the repository during initialization
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - default
+              - minimum
+              title: Init Resources
+              description: The resources used when initializing the environment
+          required:
+          - init
+          additionalProperties: false
+          title: Resources
+          description: ''
+      required:
+      - profile
+      - repository
+      - config
+      - files
+      - resources
+      additionalProperties: false
+    EnvironmentDeployInput:
+      type: object
+      properties:
+        strategy:
+          type: string
+          enum:
+          - rolling
+          - stopstart
+          title: Deployment strategy
+          description: The deployment strategy (`rolling` or `stopstart`)
+      required:
+      - strategy
+      additionalProperties: false
+    Environment:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Environment Identifier
+          description: The identifier of Environment
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        name:
+          type: string
+          title: Name
+          description: The name of the environment
+        machine_name:
+          type: string
+          title: Machine name
+          description: The machine name for the environment
+        title:
+          type: string
+          title: Title
+          description: The title of the environment
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        type:
+          type: string
+          enum:
+          - development
+          - production
+          - staging
+          title: Type
+          description: The type of environment (`production`, `staging` or `development`), if not provided, a default will be calculated
+        parent:
+          type:
+          - string
+          - 'null'
+          title: Parent environment
+          description: The name of the parent environment
+        default_domain:
+          type:
+          - string
+          - 'null'
+          title: Default domain
+          description: The default domain
+        has_domains:
+          type: boolean
+          title: Has domains
+          description: Whether the environment has domains
+        clone_parent_on_create:
+          type: boolean
+          title: Clone parent on create
+          description: Clone data when creating that environment
+        deployment_target:
+          type:
+          - string
+          - 'null'
+          title: Deployment target
+          description: Deployment target of the environment
+        is_pr:
+          type: boolean
+          title: Is pull or merge request
+          description: Is this environment a pull request / merge request
+        has_remote:
+          type: boolean
+          title: Has remote
+          description: Does this environment have a remote repository
+        status:
+          type: string
+          enum:
+          - active
+          - deleting
+          - dirty
+          - inactive
+          - paused
+          title: Status
+          description: The status of the environment
+        http_access:
+          type: object
+          properties:
+            is_enabled:
+              type: boolean
+              title: Is enabled
+              description: Whether http_access control is enabled
+            addresses:
+              type: array
+              items:
+                type: object
+                properties:
+                  permission:
+                    type: string
+                    enum:
+                    - allow
+                    - deny
+                    title: Permission
+                    description: ''
+                  address:
+                    type: string
+                    title: Address
+                    description: IP address or CIDR
+                required:
+                - permission
+                - address
+                additionalProperties: false
+              title: Address grants
+              description: ''
+            basic_auth:
+              type: object
+              additionalProperties:
+                type: string
+              title: Basic auth grants
+              description: ''
+          required:
+          - is_enabled
+          - addresses
+          - basic_auth
+          additionalProperties: false
+          title: HTTP access permissions
+          description: The HTTP access permissions for this environment
+        enable_smtp:
+          type: boolean
+          title: Enable SMTP
+          description: Whether to configure SMTP for this environment
+        restrict_robots:
+          type: boolean
+          title: Restrict robots
+          description: Whether to restrict robots for this environment
+        edge_hostname:
+          type: string
+          title: Edge hostname
+          description: The hostname to use as the CNAME
+        deployment_state:
+          type:
+          - object
+          - 'null'
+          properties:
+            last_deployment_successful:
+              type: boolean
+              title: Last deployment successful
+              description: Whether the last deployment was successful
+            last_deployment_at:
+              type:
+              - string
+              - 'null'
+              format: date-time
+              title: Last deployment datetime
+              description: Datetime of the last deployment
+            last_autoscale_up_at:
+              type:
+              - string
+              - 'null'
+              format: date-time
+              title: Last autoscale up datetime
+              description: Datetime of the last autoscale up deployment
+            last_autoscale_down_at:
+              type:
+              - string
+              - 'null'
+              format: date-time
+              title: Last autoscale down datetime
+              description: Datetime of the last autoscale down deployment
+            crons:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+                  title: Is enabled
+                  description: Enabled or disabled
+                status:
+                  type: string
+                  enum:
+                  - paused
+                  - running
+                  - sleeping
+                  title: Status
+                  description: The status of the crons
+              required:
+              - enabled
+              - status
+              additionalProperties: false
+              title: Crons deployment state
+              description: The crons deployment state
+          required:
+          - last_deployment_successful
+          - last_deployment_at
+          - last_autoscale_up_at
+          - last_autoscale_down_at
+          - crons
+          additionalProperties: false
+          title: Deployment state
+          description: The environment deployment state
+        sizing:
+          type:
+          - object
+          - 'null'
+          properties:
+            services:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  resources:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      profile_size:
+                        type:
+                        - string
+                        - 'null'
+                        title: Profile size
+                        description: Profile size of the service.
+                    required:
+                    - profile_size
+                    additionalProperties: false
+                    title: Resources
+                    description: ''
+                  instance_count:
+                    type:
+                    - integer
+                    - 'null'
+                    title: Instance count
+                    description: Instance replication count of this application
+                  disk:
+                    type:
+                    - integer
+                    - 'null'
+                    title: Disk size
+                    description: The size of the disk.
+                required:
+                - resources
+                - instance_count
+                - disk
+                additionalProperties: false
+              title: Services
+              description: ''
+            webapps:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  resources:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      profile_size:
+                        type:
+                        - string
+                        - 'null'
+                        title: Profile size
+                        description: Profile size of the service.
+                    required:
+                    - profile_size
+                    additionalProperties: false
+                    title: Resources
+                    description: ''
+                  instance_count:
+                    type:
+                    - integer
+                    - 'null'
+                    title: Instance count
+                    description: Instance replication count of this application
+                  disk:
+                    type:
+                    - integer
+                    - 'null'
+                    title: Disk size
+                    description: The size of the disk.
+                required:
+                - resources
+                - instance_count
+                - disk
+                additionalProperties: false
+              title: Web applications
+              description: ''
+            workers:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  resources:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      profile_size:
+                        type:
+                        - string
+                        - 'null'
+                        title: Profile size
+                        description: Profile size of the service.
+                    required:
+                    - profile_size
+                    additionalProperties: false
+                    title: Resources
+                    description: ''
+                  instance_count:
+                    type:
+                    - integer
+                    - 'null'
+                    title: Instance count
+                    description: Instance replication count of this application
+                  disk:
+                    type:
+                    - integer
+                    - 'null'
+                    title: Disk size
+                    description: The size of the disk.
+                required:
+                - resources
+                - instance_count
+                - disk
+                additionalProperties: false
+              title: Workers
+              description: ''
+          required:
+          - services
+          - webapps
+          - workers
+          additionalProperties: false
+          title: Sizing
+          description: The environment sizing configuration
+        resources_overrides:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              services:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    cpu:
+                      type:
+                      - number
+                      - 'null'
+                      format: float
+                      title: CPU
+                      description: ''
+                    memory:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Memory
+                      description: ''
+                    disk:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Disk
+                      description: ''
+                  required:
+                  - cpu
+                  - memory
+                  - disk
+                  additionalProperties: false
+                title: Pre-service resources overrides
+                description: Per-service resources overrides.
+              starts_at:
+                type:
+                - string
+                - 'null'
+                format: date-time
+                title: Start date
+                description: Date when the override will apply. When null, don't do an auto redeployment but still be effective to redeploys initiated otherwise.
+              ends_at:
+                type:
+                - string
+                - 'null'
+                format: date-time
+                title: End date
+                description: Date when the override will be reverted. When null, the overrides will never go out of effect.
+              redeployed_start:
+                type: boolean
+                title: Is starting redeploy activity fired
+                description: Whether the starting redeploy activity has been fired for this override.
+              redeployed_end:
+                type: boolean
+                title: Is ending redeploy activity fired
+                description: Whether the ending redeploy activity has been fired for this override.
+            required:
+            - services
+            - starts_at
+            - ends_at
+            - redeployed_start
+            - redeployed_end
+            additionalProperties: false
+          title: Resources overrides
+          description: Resources overrides
+        max_instance_count:
+          type:
+          - integer
+          - 'null'
+          title: Max instances
+          description: Max number of instances for this environment
+        last_active_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Last activity date
+          description: Last activity date
+        last_backup_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Last backup date
+          description: Last backup date
+        project:
+          type: string
+          title: Project
+          description: The project the environment belongs to
+        is_main:
+          type: boolean
+          title: Is main environment
+          description: Is this environment the main environment
+        is_dirty:
+          type: boolean
+          title: Is dirty
+          description: Is there any pending activity on this environment
+        has_staged_activities:
+          type: boolean
+          title: Has staged activities
+          description: Is there any staged activity on this environment
+        can_rolling_deploy:
+          type: boolean
+          title: Can perform rolling deployments
+          description: If the environment has rolling deployments ready for use
+        supports_rolling_deployments:
+          type: boolean
+          title: Supports rolling deployments
+          description: If the environment supports rolling deployments
+        has_code:
+          type: boolean
+          title: Has code
+          description: Does this environment have code
+        head_commit:
+          type:
+          - string
+          - 'null'
+          title: Head commit
+          description: The SHA of the head commit for this environment
+        merge_info:
+          type: object
+          properties:
+            commits_ahead:
+              type:
+              - integer
+              - 'null'
+              title: Commits ahead
+              description: The amount of commits that are in the environment but not in the parent
+            commits_behind:
+              type:
+              - integer
+              - 'null'
+              title: Commits behind
+              description: The amount of commits that are in the parent but not in the environment
+            parent_ref:
+              type:
+              - string
+              - 'null'
+              title: Parent ref
+              description: The reference in Git for the parent environment
+          required:
+          - commits_ahead
+          - commits_behind
+          - parent_ref
+          additionalProperties: false
+          title: Merge info
+          description: The commit distance info between parent and child environments
+        has_deployment:
+          type: boolean
+          title: Has deployment
+          description: Whether this environment had a successful deployment
+        supports_restrict_robots:
+          type: boolean
+          title: Supports restrict_robots
+          description: Does this environment support configuring restrict_robots
+      required:
+      - id
+      - created_at
+      - updated_at
+      - name
+      - machine_name
+      - title
+      - attributes
+      - type
+      - parent
+      - default_domain
+      - has_domains
+      - clone_parent_on_create
+      - deployment_target
+      - is_pr
+      - has_remote
+      - status
+      - http_access
+      - enable_smtp
+      - restrict_robots
+      - edge_hostname
+      - deployment_state
+      - sizing
+      - resources_overrides
+      - max_instance_count
+      - last_active_at
+      - last_backup_at
+      - project
+      - is_main
+      - is_dirty
+      - has_staged_activities
+      - can_rolling_deploy
+      - supports_rolling_deployments
+      - has_code
+      - head_commit
+      - merge_info
+      - has_deployment
+      - supports_restrict_robots
+      additionalProperties: false
+    VersionCreateInput:
+      type: object
+      properties:
+        routing:
+          type: object
+          properties:
+            percentage:
+              type: integer
+              title: Traffic percentage
+              description: The percentage of traffic routed to this version
+          additionalProperties: false
+          title: Routing
+          description: Configuration about the traffic routed to this version
+      additionalProperties: false
+    EnvironmentActivateInput:
+      type: object
+      properties:
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - default
+              - minimum
+              - parent
+              title: Init Resources
+              description: The resources used when activating an environment
+          required:
+          - init
+          additionalProperties: false
+          title: Resources
+          description: ''
+      required:
+      - resources
+      additionalProperties: false
+    EnvironmentPatch:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Name
+          description: The name of the environment
+        title:
+          type: string
+          title: Title
+          description: The title of the environment
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        type:
+          type: string
+          enum:
+          - development
+          - production
+          - staging
+          title: Type
+          description: The type of environment (`production`, `staging` or `development`), if not provided, a default will be calculated
+        parent:
+          type:
+          - string
+          - 'null'
+          title: Parent environment
+          description: The name of the parent environment
+        clone_parent_on_create:
+          type: boolean
+          title: Clone parent on create
+          description: Clone data when creating that environment
+        http_access:
+          type: object
+          properties:
+            is_enabled:
+              type: boolean
+              title: Is enabled
+              description: Whether http_access control is enabled
+            addresses:
+              type: array
+              items:
+                type: object
+                properties:
+                  permission:
+                    type: string
+                    enum:
+                    - allow
+                    - deny
+                    title: Permission
+                    description: ''
+                  address:
+                    type: string
+                    title: Address
+                    description: IP address or CIDR
+                required:
+                - permission
+                - address
+                additionalProperties: false
+              title: Address grants
+              description: ''
+            basic_auth:
+              type: object
+              additionalProperties:
+                type: string
+              title: Basic auth grants
+              description: ''
+          additionalProperties: false
+          title: HTTP access permissions
+          description: The HTTP access permissions for this environment
+        enable_smtp:
+          type: boolean
+          title: Enable SMTP
+          description: Whether to configure SMTP for this environment
+        restrict_robots:
+          type: boolean
+          title: Restrict robots
+          description: Whether to restrict robots for this environment
+      additionalProperties: false
+    EnvironmentMergeInput:
+      type: object
+      properties:
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - child
+              - default
+              - manual
+              - minimum
+              title: Init Resources
+              description: The resources used when merging an environment
+          required:
+          - init
+          additionalProperties: false
+          title: Resources
+          description: ''
+      required:
+      - resources
+      additionalProperties: false
+    EnvironmentSynchronizeInput:
+      type: object
+      properties:
+        synchronize_code:
+          type: boolean
+          title: Is code synchronized
+          description: Synchronize code?
+        rebase:
+          type: boolean
+          title: Is code rebased
+          description: Synchronize code by rebasing instead of merging
+        synchronize_data:
+          type: boolean
+          title: Is data synchronized
+          description: Synchronize data?
+        synchronize_resources:
+          type: boolean
+          title: Are resources synchronized
+          description: Synchronize resources?
+      required:
+      - synchronize_code
+      - rebase
+      - synchronize_data
+      - synchronize_resources
+      additionalProperties: false
+    VersionCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Version'
+    EnvironmentBranchInput_2:
+      type: object
+      properties:
+        title:
+          type: string
+          title: Title
+          description: ''
+        name:
+          type: string
+          title: Name
+          description: ''
+        clone_parent:
+          type: boolean
+          title: Clone parent
+          description: Clone data from the parent environment
+        type:
+          type: string
+          enum:
+          - development
+          - staging
+          title: Type
+          description: The type of environment (`staging` or `development`)
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - default
+              - minimum
+              - parent
+              title: Init Resources
+              description: The resources used when initializing services of the new environment
+          additionalProperties: false
+          title: Resources
+          description: ''
+      required:
+      - title
+      - name
+      additionalProperties: false
+    EnvironmentInitializeInput_2:
+      type: object
+      properties:
+        profile:
+          type: string
+          title: Profile
+          description: Name of the profile to show in the UI
+        repository:
+          type: string
+          title: Repository
+          description: Repository to clone from
+        config:
+          type:
+          - string
+          - 'null'
+          title: Configuration repository
+          description: Repository to clone the configuration files from
+        files:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+                title: Path
+                description: The path to the file.
+              mode:
+                type: integer
+                title: Mode
+                description: The octal value of the file protection mode.
+              contents:
+                type: string
+                title: Contents
+                description: The contents of the file (base64 encoded).
+            required:
+            - path
+            additionalProperties: false
+          title: Files
+          description: A list of files to add to the repository during initialization
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - default
+              - minimum
+              title: Init Resources
+              description: The resources used when initializing the environment
+          additionalProperties: false
+          title: Resources
+          description: ''
+      required:
+      - profile
+      - repository
+      additionalProperties: false
+    EnvironmentDeployInput_2:
+      type: object
+      properties:
+        strategy:
+          type: string
+          enum:
+          - rolling
+          - stopstart
+          title: Deployment strategy
+          description: The deployment strategy (`rolling` or `stopstart`)
+      additionalProperties: false
+    Environment_2:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Environment Identifier
+          description: The identifier of Environment
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        name:
+          type: string
+          title: Name
+          description: The name of the environment
+        machine_name:
+          type: string
+          title: Machine name
+          description: The machine name for the environment
+        title:
+          type: string
+          title: Title
+          description: The title of the environment
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        type:
+          type: string
+          enum:
+          - development
+          - production
+          - staging
+          title: Type
+          description: The type of environment (`production`, `staging` or `development`), if not provided, a default will be calculated
+        parent:
+          type:
+          - string
+          - 'null'
+          title: Parent environment
+          description: The name of the parent environment
+        default_domain:
+          type:
+          - string
+          - 'null'
+          title: Default domain
+          description: The default domain
+        has_domains:
+          type: boolean
+          title: Has domains
+          description: Whether the environment has domains
+        clone_parent_on_create:
+          type: boolean
+          title: Clone parent on create
+          description: Clone data when creating that environment
+        deployment_target:
+          type:
+          - string
+          - 'null'
+          title: Deployment target
+          description: Deployment target of the environment
+        is_pr:
+          type: boolean
+          title: Is pull or merge request
+          description: Is this environment a pull request / merge request
+        has_remote:
+          type: boolean
+          title: Has remote
+          description: Does this environment have a remote repository
+        status:
+          type: string
+          enum:
+          - active
+          - deleting
+          - dirty
+          - inactive
+          - paused
+          title: Status
+          description: The status of the environment
+        http_access:
+          type: object
+          properties:
+            is_enabled:
+              type: boolean
+              title: Is enabled
+              description: Whether http_access control is enabled
+            addresses:
+              type: array
+              items:
+                type: object
+                properties:
+                  permission:
+                    type: string
+                    enum:
+                    - allow
+                    - deny
+                    title: Permission
+                    description: ''
+                  address:
+                    type: string
+                    title: Address
+                    description: IP address or CIDR
+                required:
+                - permission
+                - address
+                additionalProperties: false
+              title: Address grants
+              description: ''
+            basic_auth:
+              type: object
+              additionalProperties:
+                type: string
+              title: Basic auth grants
+              description: ''
+          required:
+          - is_enabled
+          - addresses
+          - basic_auth
+          additionalProperties: false
+          title: HTTP access permissions
+          description: The HTTP access permissions for this environment
+        enable_smtp:
+          type: boolean
+          title: Enable SMTP
+          description: Whether to configure SMTP for this environment
+        restrict_robots:
+          type: boolean
+          title: Restrict robots
+          description: Whether to restrict robots for this environment
+        edge_hostname:
+          type: string
+          title: Edge hostname
+          description: The hostname to use as the CNAME
+        deployment_state:
+          type:
+          - object
+          - 'null'
+          properties:
+            last_state_update_successful:
+              type: boolean
+              title: Last state update successful
+              description: Whether the last deployment has correctly switched state (does not mean it was successful)
+            last_deployment_successful:
+              type: boolean
+              title: Last deployment successful
+              description: Whether the last deployment was successful
+            last_deployment_failure_reason:
+              type:
+              - string
+              - 'null'
+              enum:
+              - error
+              - shell
+              title: Last deployment failure reason
+              description: The reason for failure of the last deployment
+            last_deployment_commands:
+              type: array
+              items:
+                type: object
+                properties:
+                  app:
+                    type: string
+                    title: Application
+                    description: The application name
+                  type:
+                    type: string
+                    title: Type
+                    description: The command type
+                  exit_code:
+                    type: integer
+                    title: Exit status code
+                    description: The exit status code of the command
+                required:
+                - app
+                - type
+                - exit_code
+                additionalProperties: false
+              title: Last deployment commands
+              description: The commands executed during the last deployment
+            last_deployment_at:
+              type:
+              - string
+              - 'null'
+              format: date-time
+              title: Last deployment datetime
+              description: Datetime of the last deployment
+            last_autoscale_up_at:
+              type:
+              - string
+              - 'null'
+              format: date-time
+              title: Last autoscale up datetime
+              description: Datetime of the last autoscale up deployment
+            last_autoscale_down_at:
+              type:
+              - string
+              - 'null'
+              format: date-time
+              title: Last autoscale down datetime
+              description: Datetime of the last autoscale down deployment
+            last_maintenance_at:
+              type:
+              - string
+              - 'null'
+              format: date-time
+              title: Last maintenance datetime
+              description: Datetime of the last maintenance
+            crons:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+                  title: Is enabled
+                  description: Enabled or disabled
+                status:
+                  type: string
+                  enum:
+                  - paused
+                  - running
+                  - sleeping
+                  title: Status
+                  description: The status of the crons
+              required:
+              - enabled
+              - status
+              additionalProperties: false
+              title: Crons deployment state
+              description: The crons deployment state
+          required:
+          - last_state_update_successful
+          - last_deployment_successful
+          - last_deployment_failure_reason
+          - last_deployment_commands
+          - last_deployment_at
+          - last_autoscale_up_at
+          - last_autoscale_down_at
+          - last_maintenance_at
+          - crons
+          additionalProperties: false
+          title: Deployment state
+          description: The environment deployment state
+        sizing:
+          type:
+          - object
+          - 'null'
+          properties:
+            services:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  resources:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      profile_size:
+                        type:
+                        - string
+                        - 'null'
+                        title: Profile size
+                        description: Profile size of the service.
+                    required:
+                    - profile_size
+                    additionalProperties: false
+                    title: Resources
+                    description: ''
+                  instance_count:
+                    type:
+                    - integer
+                    - 'null'
+                    title: Instance count
+                    description: Instance replication count of this application
+                  disk:
+                    type:
+                    - integer
+                    - 'null'
+                    title: Disk size
+                    description: The size of the disk.
+                required:
+                - resources
+                - instance_count
+                - disk
+                additionalProperties: false
+              title: Services
+              description: ''
+            webapps:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  resources:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      profile_size:
+                        type:
+                        - string
+                        - 'null'
+                        title: Profile size
+                        description: Profile size of the application.
+                      disk:
+                        type: object
+                        properties:
+                          object:
+                            type:
+                            - integer
+                            - 'null'
+                            title: Object storage size
+                            description: ''
+                        required:
+                        - object
+                        additionalProperties: false
+                        title: Disk resources
+                        description: ''
+                    required:
+                    - profile_size
+                    - disk
+                    additionalProperties: false
+                    title: Resources
+                    description: ''
+                  instance_count:
+                    type:
+                    - integer
+                    - 'null'
+                    title: Instance count
+                    description: Instance replication count of this application
+                  disk:
+                    type:
+                    - integer
+                    - 'null'
+                    title: Disk size
+                    description: The size of the disk.
+                required:
+                - resources
+                - instance_count
+                - disk
+                additionalProperties: false
+              title: Web applications
+              description: ''
+            workers:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  resources:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      profile_size:
+                        type:
+                        - string
+                        - 'null'
+                        title: Profile size
+                        description: Profile size of the service.
+                    required:
+                    - profile_size
+                    additionalProperties: false
+                    title: Resources
+                    description: ''
+                  instance_count:
+                    type:
+                    - integer
+                    - 'null'
+                    title: Instance count
+                    description: Instance replication count of this application
+                  disk:
+                    type:
+                    - integer
+                    - 'null'
+                    title: Disk size
+                    description: The size of the disk.
+                required:
+                - resources
+                - instance_count
+                - disk
+                additionalProperties: false
+              title: Workers
+              description: ''
+            tasks:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  resources:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      profile_size:
+                        type:
+                        - string
+                        - 'null'
+                        title: Profile size
+                        description: Profile size of the service.
+                    required:
+                    - profile_size
+                    additionalProperties: false
+                    title: Resources
+                    description: ''
+                required:
+                - resources
+                additionalProperties: false
+              title: Tasks
+              description: ''
+          required:
+          - services
+          - webapps
+          - workers
+          - tasks
+          additionalProperties: false
+          title: Sizing
+          description: The environment sizing configuration
+        resources_overrides:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              services:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    cpu:
+                      type:
+                      - number
+                      - 'null'
+                      format: float
+                      title: CPU
+                      description: ''
+                    memory:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Memory
+                      description: ''
+                    disk:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Disk
+                      description: ''
+                  required:
+                  - cpu
+                  - memory
+                  - disk
+                  additionalProperties: false
+                title: Pre-service resources overrides
+                description: Per-service resources overrides.
+              starts_at:
+                type:
+                - string
+                - 'null'
+                format: date-time
+                title: Start date
+                description: Date when the override will apply. When null, don't do an auto redeployment but still be effective to redeploys initiated otherwise.
+              ends_at:
+                type:
+                - string
+                - 'null'
+                format: date-time
+                title: End date
+                description: Date when the override will be reverted. When null, the overrides will never go out of effect.
+              redeployed_start:
+                type: boolean
+                title: Is starting redeploy activity fired
+                description: Whether the starting redeploy activity has been fired for this override.
+              redeployed_end:
+                type: boolean
+                title: Is ending redeploy activity fired
+                description: Whether the ending redeploy activity has been fired for this override.
+            required:
+            - services
+            - starts_at
+            - ends_at
+            - redeployed_start
+            - redeployed_end
+            additionalProperties: false
+          title: Resources overrides
+          description: Resources overrides
+        max_instance_count:
+          type:
+          - integer
+          - 'null'
+          title: Max instances
+          description: Max number of instances for this environment
+        last_active_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Last activity date
+          description: Last activity date
+        last_backup_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Last backup date
+          description: Last backup date
+        project:
+          type: string
+          title: Project
+          description: The project the environment belongs to
+        is_main:
+          type: boolean
+          title: Is main environment
+          description: Is this environment the main environment
+        is_dirty:
+          type: boolean
+          title: Is dirty
+          description: Is there any pending activity on this environment
+        has_staged_activities:
+          type: boolean
+          title: Has staged activities
+          description: Is there any staged activity on this environment
+        can_rolling_deploy:
+          type: boolean
+          title: Can perform rolling deployments
+          description: If the environment has rolling deployments ready for use
+        supports_rolling_deployments:
+          type: boolean
+          title: Supports rolling deployments
+          description: If the environment supports rolling deployments
+        has_code:
+          type: boolean
+          title: Has code
+          description: Does this environment have code
+        head_commit:
+          type:
+          - string
+          - 'null'
+          title: Head commit
+          description: The SHA of the head commit for this environment
+        merge_info:
+          type: object
+          properties:
+            commits_ahead:
+              type:
+              - integer
+              - 'null'
+              title: Commits ahead
+              description: The amount of commits that are in the environment but not in the parent
+            commits_behind:
+              type:
+              - integer
+              - 'null'
+              title: Commits behind
+              description: The amount of commits that are in the parent but not in the environment
+            parent_ref:
+              type:
+              - string
+              - 'null'
+              title: Parent ref
+              description: The reference in Git for the parent environment
+          required:
+          - commits_ahead
+          - commits_behind
+          - parent_ref
+          additionalProperties: false
+          title: Merge info
+          description: The commit distance info between parent and child environments
+        has_deployment:
+          type: boolean
+          title: Has deployment
+          description: Whether this environment had a successful deployment
+        supports_restrict_robots:
+          type: boolean
+          title: Supports restrict_robots
+          description: Does this environment support configuring restrict_robots
+      required:
+      - id
+      - created_at
+      - updated_at
+      - name
+      - machine_name
+      - title
+      - attributes
+      - type
+      - parent
+      - default_domain
+      - has_domains
+      - clone_parent_on_create
+      - deployment_target
+      - is_pr
+      - has_remote
+      - status
+      - http_access
+      - enable_smtp
+      - restrict_robots
+      - edge_hostname
+      - deployment_state
+      - sizing
+      - resources_overrides
+      - max_instance_count
+      - last_active_at
+      - last_backup_at
+      - project
+      - is_main
+      - is_dirty
+      - has_staged_activities
+      - can_rolling_deploy
+      - supports_rolling_deployments
+      - has_code
+      - head_commit
+      - merge_info
+      - has_deployment
+      - supports_restrict_robots
+      additionalProperties: false
+    EnvironmentActivateInput_2:
+      type: object
+      properties:
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - default
+              - minimum
+              - parent
+              title: Init Resources
+              description: The resources used when activating an environment
+          additionalProperties: false
+          title: Resources
+          description: ''
+      additionalProperties: false
+    EnvironmentMergeInput_2:
+      type: object
+      properties:
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - child
+              - default
+              - manual
+              - minimum
+              title: Init Resources
+              description: The resources used when merging an environment
+          additionalProperties: false
+          title: Resources
+          description: ''
+      additionalProperties: false
+    EnvironmentSynchronizeInput_2:
+      type: object
+      properties:
+        synchronize_code:
+          type: boolean
+          title: Is code synchronized
+          description: Synchronize code?
+        rebase:
+          type: boolean
+          title: Is code rebased
+          description: Synchronize code by rebasing instead of merging
+        synchronize_data:
+          type: boolean
+          title: Is data synchronized
+          description: Synchronize data?
+        synchronize_resources:
+          type: boolean
+          title: Are resources synchronized
+          description: Synchronize resources?
+      additionalProperties: false
+    EnvironmentBranchInput_3:
+      type: object
+      properties:
+        title:
+          type: string
+          title: Title
+          description: ''
+        name:
+          type: string
+          title: Name
+          description: ''
+        clone_parent:
+          type: boolean
+          title: Clone parent
+          description: Clone data from the parent environment
+        type:
+          type: string
+          enum:
+          - development
+          - staging
+          title: Type
+          description: The type of environment (`staging` or `development`)
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - default
+              - minimum
+              - parent
+              title: Init Resources
+              description: The resources used when initializing services of the new environment
+          additionalProperties: false
+          title: Resources
+          description: ''
+      required:
+      - title
+      - name
+      additionalProperties: false
+    EnvironmentInitializeInput_3:
+      type: object
+      properties:
+        profile:
+          type: string
+          title: Profile
+          description: Name of the profile to show in the UI
+        repository:
+          type: string
+          title: Repository
+          description: Repository to clone from
+        config:
+          type:
+          - string
+          - 'null'
+          title: Configuration repository
+          description: Repository to clone the configuration files from
+        files:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+                title: Path
+                description: The path to the file.
+              mode:
+                type: integer
+                title: Mode
+                description: The octal value of the file protection mode.
+              contents:
+                type: string
+                title: Contents
+                description: The contents of the file (base64 encoded).
+            required:
+            - path
+            additionalProperties: false
+          title: Files
+          description: A list of files to add to the repository during initialization
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - default
+              - minimum
+              title: Init Resources
+              description: The resources used when initializing the environment
+          additionalProperties: false
+          title: Resources
+          description: ''
+      required:
+      - profile
+      - repository
+      additionalProperties: false
+    EnvironmentDeployInput_3:
+      type: object
+      properties:
+        strategy:
+          type: string
+          enum:
+          - rolling
+          - stopstart
+          title: Deployment strategy
+          description: The deployment strategy (`rolling` or `stopstart`)
+      additionalProperties: false
+    Environment_3:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Environment Identifier
+          description: The identifier of Environment
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        name:
+          type: string
+          title: Name
+          description: The name of the environment
+        machine_name:
+          type: string
+          title: Machine name
+          description: The machine name for the environment
+        title:
+          type: string
+          title: Title
+          description: The title of the environment
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        type:
+          type: string
+          enum:
+          - development
+          - production
+          - staging
+          title: Type
+          description: The type of environment (`production`, `staging` or `development`), if not provided, a default will be calculated
+        parent:
+          type:
+          - string
+          - 'null'
+          title: Parent environment
+          description: The name of the parent environment
+        default_domain:
+          type:
+          - string
+          - 'null'
+          title: Default domain
+          description: The default domain
+        has_domains:
+          type: boolean
+          title: Has domains
+          description: Whether the environment has domains
+        clone_parent_on_create:
+          type: boolean
+          title: Clone parent on create
+          description: Clone data when creating that environment
+        deployment_target:
+          type:
+          - string
+          - 'null'
+          title: Deployment target
+          description: Deployment target of the environment
+        is_pr:
+          type: boolean
+          title: Is pull or merge request
+          description: Is this environment a pull request / merge request
+        has_remote:
+          type: boolean
+          title: Has remote
+          description: Does this environment have a remote repository
+        status:
+          type: string
+          enum:
+          - active
+          - deleting
+          - dirty
+          - inactive
+          - paused
+          title: Status
+          description: The status of the environment
+        http_access:
+          type: object
+          properties:
+            is_enabled:
+              type: boolean
+              title: Is enabled
+              description: Whether http_access control is enabled
+            addresses:
+              type: array
+              items:
+                type: object
+                properties:
+                  permission:
+                    type: string
+                    enum:
+                    - allow
+                    - deny
+                    title: Permission
+                    description: ''
+                  address:
+                    type: string
+                    title: Address
+                    description: IP address or CIDR
+                required:
+                - permission
+                - address
+                additionalProperties: false
+              title: Address grants
+              description: ''
+            basic_auth:
+              type: object
+              additionalProperties:
+                type: string
+              title: Basic auth grants
+              description: ''
+          required:
+          - is_enabled
+          - addresses
+          - basic_auth
+          additionalProperties: false
+          title: HTTP access permissions
+          description: The HTTP access permissions for this environment
+        enable_smtp:
+          type: boolean
+          title: Enable SMTP
+          description: Whether to configure SMTP for this environment
+        restrict_robots:
+          type: boolean
+          title: Restrict robots
+          description: Whether to restrict robots for this environment
+        edge_hostname:
+          type: string
+          title: Edge hostname
+          description: The hostname to use as the CNAME
+        deployment_state:
+          type:
+          - object
+          - 'null'
+          properties:
+            last_state_update_successful:
+              type: boolean
+              title: Last state update successful
+              description: Whether the last deployment has correctly switched state (does not mean it was successful)
+            last_deployment_successful:
+              type: boolean
+              title: Last deployment successful
+              description: Whether the last deployment was successful
+            last_deployment_failure_reason:
+              type:
+              - string
+              - 'null'
+              enum:
+              - error
+              - shell
+              title: Last deployment failure reason
+              description: The reason for failure of the last deployment
+            last_deployment_commands:
+              type: array
+              items:
+                type: object
+                properties:
+                  app:
+                    type: string
+                    title: Application
+                    description: The application name
+                  type:
+                    type: string
+                    title: Type
+                    description: The command type
+                  exit_code:
+                    type: integer
+                    title: Exit status code
+                    description: The exit status code of the command
+                required:
+                - app
+                - type
+                - exit_code
+                additionalProperties: false
+              title: Last deployment commands
+              description: The commands executed during the last deployment
+            last_deployment_at:
+              type:
+              - string
+              - 'null'
+              format: date-time
+              title: Last deployment datetime
+              description: Datetime of the last deployment
+            last_autoscale_up_at:
+              type:
+              - string
+              - 'null'
+              format: date-time
+              title: Last autoscale up datetime
+              description: Datetime of the last autoscale up deployment
+            last_autoscale_down_at:
+              type:
+              - string
+              - 'null'
+              format: date-time
+              title: Last autoscale down datetime
+              description: Datetime of the last autoscale down deployment
+            last_maintenance_at:
+              type:
+              - string
+              - 'null'
+              format: date-time
+              title: Last maintenance datetime
+              description: Datetime of the last maintenance
+            crons:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+                  title: Is enabled
+                  description: Enabled or disabled
+                status:
+                  type: string
+                  enum:
+                  - paused
+                  - running
+                  - sleeping
+                  title: Status
+                  description: The status of the crons
+              required:
+              - enabled
+              - status
+              additionalProperties: false
+              title: Crons deployment state
+              description: The crons deployment state
+          required:
+          - last_state_update_successful
+          - last_deployment_successful
+          - last_deployment_failure_reason
+          - last_deployment_commands
+          - last_deployment_at
+          - last_autoscale_up_at
+          - last_autoscale_down_at
+          - last_maintenance_at
+          - crons
+          additionalProperties: false
+          title: Deployment state
+          description: The environment deployment state
+        sizing:
+          type:
+          - object
+          - 'null'
+          properties:
+            services:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  resources:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      profile_size:
+                        type:
+                        - string
+                        - 'null'
+                        title: Profile size
+                        description: Profile size of the service.
+                    required:
+                    - profile_size
+                    additionalProperties: false
+                    title: Resources
+                    description: ''
+                  instance_count:
+                    type:
+                    - integer
+                    - 'null'
+                    title: Instance count
+                    description: Instance replication count of this application
+                  disk:
+                    type:
+                    - integer
+                    - 'null'
+                    title: Disk size
+                    description: The size of the disk.
+                required:
+                - resources
+                - instance_count
+                - disk
+                additionalProperties: false
+              title: Services
+              description: ''
+            webapps:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  resources:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      profile_size:
+                        type:
+                        - string
+                        - 'null'
+                        title: Profile size
+                        description: Profile size of the application.
+                      disk:
+                        type: object
+                        properties:
+                          object:
+                            type:
+                            - integer
+                            - 'null'
+                            title: Object storage size
+                            description: ''
+                        required:
+                        - object
+                        additionalProperties: false
+                        title: Disk resources
+                        description: ''
+                    required:
+                    - profile_size
+                    - disk
+                    additionalProperties: false
+                    title: Resources
+                    description: ''
+                  instance_count:
+                    type:
+                    - integer
+                    - 'null'
+                    title: Instance count
+                    description: Instance replication count of this application
+                  disk:
+                    type:
+                    - integer
+                    - 'null'
+                    title: Disk size
+                    description: The size of the disk.
+                required:
+                - resources
+                - instance_count
+                - disk
+                additionalProperties: false
+              title: Web applications
+              description: ''
+            workers:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  resources:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      profile_size:
+                        type:
+                        - string
+                        - 'null'
+                        title: Profile size
+                        description: Profile size of the service.
+                    required:
+                    - profile_size
+                    additionalProperties: false
+                    title: Resources
+                    description: ''
+                  instance_count:
+                    type:
+                    - integer
+                    - 'null'
+                    title: Instance count
+                    description: Instance replication count of this application
+                  disk:
+                    type:
+                    - integer
+                    - 'null'
+                    title: Disk size
+                    description: The size of the disk.
+                required:
+                - resources
+                - instance_count
+                - disk
+                additionalProperties: false
+              title: Workers
+              description: ''
+            tasks:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  resources:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      profile_size:
+                        type:
+                        - string
+                        - 'null'
+                        title: Profile size
+                        description: Profile size of the service.
+                    required:
+                    - profile_size
+                    additionalProperties: false
+                    title: Resources
+                    description: ''
+                required:
+                - resources
+                additionalProperties: false
+              title: Tasks
+              description: ''
+          required:
+          - services
+          - webapps
+          - workers
+          - tasks
+          additionalProperties: false
+          title: Sizing
+          description: The environment sizing configuration
+        resources_overrides:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              services:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    cpu:
+                      type:
+                      - number
+                      - 'null'
+                      format: float
+                      title: CPU
+                      description: ''
+                    memory:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Memory
+                      description: ''
+                    disk:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Disk
+                      description: ''
+                  required:
+                  - cpu
+                  - memory
+                  - disk
+                  additionalProperties: false
+                title: Pre-service resources overrides
+                description: Per-service resources overrides.
+              starts_at:
+                type:
+                - string
+                - 'null'
+                format: date-time
+                title: Start date
+                description: Date when the override will apply. When null, don't do an auto redeployment but still be effective to redeploys initiated otherwise.
+              ends_at:
+                type:
+                - string
+                - 'null'
+                format: date-time
+                title: End date
+                description: Date when the override will be reverted. When null, the overrides will never go out of effect.
+              redeployed_start:
+                type: boolean
+                title: Is starting redeploy activity fired
+                description: Whether the starting redeploy activity has been fired for this override.
+              redeployed_end:
+                type: boolean
+                title: Is ending redeploy activity fired
+                description: Whether the ending redeploy activity has been fired for this override.
+            required:
+            - services
+            - starts_at
+            - ends_at
+            - redeployed_start
+            - redeployed_end
+            additionalProperties: false
+          title: Resources overrides
+          description: Resources overrides
+        max_instance_count:
+          type:
+          - integer
+          - 'null'
+          title: Max instances
+          description: Max number of instances for this environment
+        last_active_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Last activity date
+          description: Last activity date
+        last_backup_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Last backup date
+          description: Last backup date
+        project:
+          type: string
+          title: Project
+          description: The project the environment belongs to
+        is_main:
+          type: boolean
+          title: Is main environment
+          description: Is this environment the main environment
+        is_dirty:
+          type: boolean
+          title: Is dirty
+          description: Is there any pending activity on this environment
+        has_staged_activities:
+          type: boolean
+          title: Has staged activities
+          description: Is there any staged activity on this environment
+        can_rolling_deploy:
+          type: boolean
+          title: Can perform rolling deployments
+          description: If the environment has rolling deployments ready for use
+        supports_rolling_deployments:
+          type: boolean
+          title: Supports rolling deployments
+          description: If the environment supports rolling deployments
+        has_code:
+          type: boolean
+          title: Has code
+          description: Does this environment have code
+        head_commit:
+          type:
+          - string
+          - 'null'
+          title: Head commit
+          description: The SHA of the head commit for this environment
+        merge_info:
+          type: object
+          properties:
+            commits_ahead:
+              type:
+              - integer
+              - 'null'
+              title: Commits ahead
+              description: The amount of commits that are in the environment but not in the parent
+            commits_behind:
+              type:
+              - integer
+              - 'null'
+              title: Commits behind
+              description: The amount of commits that are in the parent but not in the environment
+            parent_ref:
+              type:
+              - string
+              - 'null'
+              title: Parent ref
+              description: The reference in Git for the parent environment
+          required:
+          - commits_ahead
+          - commits_behind
+          - parent_ref
+          additionalProperties: false
+          title: Merge info
+          description: The commit distance info between parent and child environments
+        has_deployment:
+          type: boolean
+          title: Has deployment
+          description: Whether this environment had a successful deployment
+        supports_restrict_robots:
+          type: boolean
+          title: Supports restrict_robots
+          description: Does this environment support configuring restrict_robots
+      required:
+      - id
+      - created_at
+      - updated_at
+      - name
+      - machine_name
+      - title
+      - attributes
+      - type
+      - parent
+      - default_domain
+      - has_domains
+      - clone_parent_on_create
+      - deployment_target
+      - is_pr
+      - has_remote
+      - status
+      - http_access
+      - enable_smtp
+      - restrict_robots
+      - edge_hostname
+      - deployment_state
+      - sizing
+      - resources_overrides
+      - max_instance_count
+      - last_active_at
+      - last_backup_at
+      - project
+      - is_main
+      - is_dirty
+      - has_staged_activities
+      - can_rolling_deploy
+      - supports_rolling_deployments
+      - has_code
+      - head_commit
+      - merge_info
+      - has_deployment
+      - supports_restrict_robots
+      additionalProperties: false
+    EnvironmentActivateInput_3:
+      type: object
+      properties:
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - default
+              - minimum
+              - parent
+              title: Init Resources
+              description: The resources used when activating an environment
+          additionalProperties: false
+          title: Resources
+          description: ''
+      additionalProperties: false
+    EnvironmentMergeInput_3:
+      type: object
+      properties:
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - child
+              - default
+              - manual
+              - minimum
+              title: Init Resources
+              description: The resources used when merging an environment
+          additionalProperties: false
+          title: Resources
+          description: ''
+      additionalProperties: false
+    EnvironmentSynchronizeInput_3:
+      type: object
+      properties:
+        synchronize_code:
+          type: boolean
+          title: Is code synchronized
+          description: Synchronize code?
+        rebase:
+          type: boolean
+          title: Is code rebased
+          description: Synchronize code by rebasing instead of merging
+        synchronize_data:
+          type: boolean
+          title: Is data synchronized
+          description: Synchronize data?
+        synchronize_resources:
+          type: boolean
+          title: Are resources synchronized
+          description: Synchronize resources?
+      additionalProperties: false
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- platform.sh-developer-portal-openapi-original.json
+- platform.sh-openapi-original.json
+- platform.sh-rest-api-openapi.json
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile
