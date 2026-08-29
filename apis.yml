@@ -10,6 +10,18 @@ description: 'Platform.sh is the container-based Platform-as-a-Service (PaaS) fo
   API exposes 263 operations across projects, environments, backups, domains, certificates, variables, activities,
   organizations, teams, subscriptions and billing, returns RFC 9457 application/problem+json errors, and is accompanied
   by a first-party CLI, PHP/JavaScript API clients and language config readers published under the platformsh namespace.'
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://upsun.com/default_social.png
 url: https://raw.githubusercontent.com/api-evangelist/platform.sh/refs/heads/main/apis.yml
 x-type: company
@@ -2040,6 +2052,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/platform.sh-capability-edges.yml
+  name: Platform.sh Business Capability Map
 - type: Website
   url: https://upsun.com/
 - type: DeveloperPortal
