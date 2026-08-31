@@ -1,21 +1,21 @@
 ---
 kin_checks:
   slug: platform.sh
-  schema_version: 0.15.1
-  scored_at: '2026-08-28'
-  run_ts: 2026-08-28T221322
+  schema_version: 0.16.0
+  scored_at: '2026-08-29'
+  run_ts: 2026-08-29T230545
   note: Actionable checks only (missed + partial). earned/na are every other check
-    in rubric/scoring-0.15.1.yml; counts below let you verify that.
+    in rubric/scoring-0.16.0.yml; counts below let you verify that.
   counts:
     total: 130
-    earned: 52
-    partial: 13
+    earned: 50
+    partial: 15
     missed: 41
     na: 24
   checks:
   - id: maintainer_present
     status: missed
-  - id: llms_txt_published
+  - id: well_known_published
     status: missed
   - id: apis_json_self_hosted
     status: missed
@@ -51,6 +51,8 @@ kin_checks:
   - id: balanced_severities
     status: missed
   - id: vocabulary_published
+    status: missed
+  - id: overlay_published
     status: missed
   - id: status_page_present
     status: missed
@@ -93,8 +95,6 @@ kin_checks:
     status: missed
   - id: dry_run_mode
     status: missed
-  - id: delegated_identity
-    status: missed
   - id: protected_resource_metadata
     status: missed
   - id: dynamic_client_registration
@@ -103,12 +103,12 @@ kin_checks:
     status: missed
   - id: operations_summary_coverage
     status: partial
-    earned: 5.5
-    detail: 55 of 60 openapi documents pass
+    earned: 5.6
+    detail: 56 of 60 openapi documents pass
   - id: operations_description_coverage
     status: partial
-    earned: 4.6
-    detail: 46 of 60 openapi documents pass
+    earned: 4.7
+    detail: 47 of 60 openapi documents pass
   - id: response_coverage
     status: partial
     earned: 3.08
@@ -122,8 +122,12 @@ kin_checks:
     earned: 0.47
   - id: components_reuse
     status: partial
-    earned: 1.35
-    detail: 27 of 60 openapi documents pass
+    earned: 1.7
+    detail: 34 of 60 openapi documents pass
+  - id: oauth_scopes_enumerated
+    status: partial
+    earned: 0.67
+    detail: 10 of 60 openapi documents pass
   - id: github_org_present
     status: partial
     earned: 1.0
@@ -137,8 +141,8 @@ kin_checks:
     detail: 'grade: documented'
   - id: auth_clarity
     status: partial
-    earned: 3.5
-    detail: 'grade: bearer'
+    earned: 7.5
+    detail: 'grade: negotiable'
   - id: openapi_examples
     status: partial
     earned: 3.5
@@ -151,3 +155,7 @@ kin_checks:
     status: partial
     earned: 1.25
     detail: 'authorship: derived'
+  - id: delegated_identity
+    status: partial
+    earned: 3.0
+    detail: 'grade: documented'

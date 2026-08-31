@@ -35,6 +35,19 @@ specificationVersion: '0.20'
 created: '2026-08-26'
 modified: '2026-08-26'
 tags:
+- Platform-as-a-Service
+- Cloud Hosting
+- Application Hosting
+- Deployment
+- DevOps
+- Continuous Deployment
+- Containers
+- Managed Service
+- Developer Tools
+- Infrastructure
+- Multi-Cloud
+- Web Hosting
+tags_raw:
 - Platform as a Service
 - Cloud Hosting
 - Application Hosting
@@ -54,6 +67,8 @@ apis:
   humanURL: https://developer.upsun.com/api
   baseURL: https://api.upsun.com
   tags:
+  - Addons
+  tags_raw:
   - Add-ons
   properties:
   - type: OpenAPI
@@ -164,6 +179,8 @@ apis:
   humanURL: https://developer.upsun.com/api
   baseURL: https://api.upsun.com
   tags:
+  - Auto-Scaling
+  tags_raw:
   - Autoscaling
   properties:
   - type: OpenAPI
@@ -536,6 +553,8 @@ apis:
   humanURL: https://developer.upsun.com/api
   baseURL: https://api.upsun.com
   tags:
+  - Entry Point
+  tags_raw:
   - Entrypoint
   properties:
   - type: OpenAPI
@@ -813,6 +832,8 @@ apis:
   humanURL: https://developer.upsun.com/api
   baseURL: https://api.upsun.com
   tags:
+  - HTTP Traffic
+  tags_raw:
   - Http Traffic
   properties:
   - type: OpenAPI
@@ -923,6 +944,8 @@ apis:
   humanURL: https://developer.upsun.com/api
   baseURL: https://api.upsun.com
   tags:
+  - Order
+  tags_raw:
   - Orders
   properties:
   - type: OpenAPI
@@ -1066,6 +1089,8 @@ apis:
   humanURL: https://developer.upsun.com/api
   baseURL: https://api.upsun.com
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
@@ -1094,6 +1119,8 @@ apis:
   humanURL: https://developer.upsun.com/api
   baseURL: https://api.upsun.com
   tags:
+  - Phone Number
+  tags_raw:
   - PhoneNumber
   properties:
   - type: OpenAPI
@@ -1359,6 +1386,8 @@ apis:
   humanURL: https://developer.upsun.com/api
   baseURL: https://api.upsun.com
   tags:
+  - Project
+  tags_raw:
   - Projects
   properties:
   - type: OpenAPI
@@ -1671,6 +1700,8 @@ apis:
   humanURL: https://developer.upsun.com/api
   baseURL: https://api.upsun.com
   tags:
+  - Subscription
+  tags_raw:
   - Subscriptions
   properties:
   - type: OpenAPI
@@ -1833,6 +1864,8 @@ apis:
   humanURL: https://developer.upsun.com/api
   baseURL: https://api.upsun.com
   tags:
+  - Team
+  tags_raw:
   - Teams
   properties:
   - type: OpenAPI
@@ -1993,6 +2026,8 @@ apis:
   humanURL: https://developer.upsun.com/api
   baseURL: https://api.upsun.com
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
