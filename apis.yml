@@ -561,36 +561,6 @@ apis:
     url: mcp/platform.sh-tool-crosswalk.yml
   - type: Webhooks
     url: asyncapi/platform.sh-webhooks.yml
-- aid: platform.sh:platform.sh-entrypoint-api
-  name: Platform.sh Entrypoint API
-  description: The Entrypoint API from Platform.sh — 1 operation(s) for entrypoint.
-  humanURL: https://developer.upsun.com/api
-  baseURL: https://api.upsun.com
-  tags:
-  - Entry Point
-  tags_raw:
-  - Entrypoint
-  properties:
-  - type: OpenAPI
-    url: openapi/platform.sh-entrypoint-api-openapi.yml
-  - type: Authentication
-    url: authentication/platform.sh-authentication.yml
-  - type: OAuthScopes
-    url: scopes/platform.sh-scopes.yml
-  - type: ErrorCatalog
-    url: errors/platform.sh-problem-types.yml
-  - type: Conventions
-    url: conventions/platform.sh-conventions.yml
-  - type: DataModel
-    url: data-model/platform.sh-data-model.yml
-  - type: RateLimits
-    url: rate-limits/platform.sh-rate-limits.yml
-  - type: Documentation
-    url: https://developer.upsun.com/api
-  - type: ToolCrosswalk
-    url: mcp/platform.sh-tool-crosswalk.yml
-  - type: Webhooks
-    url: asyncapi/platform.sh-webhooks.yml
 - aid: platform.sh:platform.sh-environment-activity-api
   name: Platform.sh Environment Activity API
   description: The Environment Activity API from Platform.sh — 3 operation(s) for environment activity.
@@ -1109,36 +1079,6 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/platform.sh-organizations-api-openapi.yml
-  - type: Authentication
-    url: authentication/platform.sh-authentication.yml
-  - type: OAuthScopes
-    url: scopes/platform.sh-scopes.yml
-  - type: ErrorCatalog
-    url: errors/platform.sh-problem-types.yml
-  - type: Conventions
-    url: conventions/platform.sh-conventions.yml
-  - type: DataModel
-    url: data-model/platform.sh-data-model.yml
-  - type: RateLimits
-    url: rate-limits/platform.sh-rate-limits.yml
-  - type: Documentation
-    url: https://developer.upsun.com/api
-  - type: ToolCrosswalk
-    url: mcp/platform.sh-tool-crosswalk.yml
-  - type: Webhooks
-    url: asyncapi/platform.sh-webhooks.yml
-- aid: platform.sh:platform.sh-phonenumber-api
-  name: Platform.sh Phone Number API
-  description: The PhoneNumber API from Platform.sh — 2 operation(s) for phonenumber.
-  humanURL: https://developer.upsun.com/api
-  baseURL: https://api.upsun.com
-  tags:
-  - Phone Number
-  tags_raw:
-  - PhoneNumber
-  properties:
-  - type: OpenAPI
-    url: openapi/platform.sh-phonenumber-api-openapi.yml
   - type: Authentication
     url: authentication/platform.sh-authentication.yml
   - type: OAuthScopes
@@ -2077,6 +2017,62 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/platform.sh-vouchers-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-entry-point-api
+  name: Platform.sh Entry Point API
+  description: The Entry Point API from Platform.sh — 1 operation(s) for entry point.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Entry Point
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-entry-point-api-openapi.yml
+  - type: Authentication
+    url: authentication/platform.sh-authentication.yml
+  - type: OAuthScopes
+    url: scopes/platform.sh-scopes.yml
+  - type: ErrorCatalog
+    url: errors/platform.sh-problem-types.yml
+  - type: Conventions
+    url: conventions/platform.sh-conventions.yml
+  - type: DataModel
+    url: data-model/platform.sh-data-model.yml
+  - type: RateLimits
+    url: rate-limits/platform.sh-rate-limits.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api
+  - type: ToolCrosswalk
+    url: mcp/platform.sh-tool-crosswalk.yml
+  - type: Webhooks
+    url: asyncapi/platform.sh-webhooks.yml
+- aid: platform.sh:platform.sh-phone-number-api
+  name: Platform.sh Phone Number API
+  description: The Phone Number API from Platform.sh — 2 operation(s) for phone number.
+  humanURL: https://developer.upsun.com/api
+  baseURL: https://api.upsun.com
+  tags:
+  - Phone Number
+  properties:
+  - type: OpenAPI
+    url: openapi/platform.sh-phone-number-api-openapi.yml
   - type: Authentication
     url: authentication/platform.sh-authentication.yml
   - type: OAuthScopes
