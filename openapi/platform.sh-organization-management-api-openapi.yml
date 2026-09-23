@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Organization Management across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Organization Management across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -278,96 +278,6 @@ paths:
           default: https
 components:
   schemas:
-    OrganizationAlertConfig:
-      type: object
-      description: The alert configuration for an organization.
-      properties:
-        id:
-          type: string
-          description: Type of alert (e.g. "billing")
-        active:
-          type: boolean
-          description: Whether the billing alert should be active or not.
-        alerts_sent:
-          type: number
-          description: Number of alerts sent.
-        last_alert_at:
-          type:
-          - string
-          - 'null'
-          description: The datetime the alert was last sent.
-        updated_at:
-          type:
-          - string
-          - 'null'
-          description: The datetime the alert was last updated.
-        config:
-          type:
-          - object
-          - 'null'
-          description: Configuration for threshold and mode.
-          properties:
-            threshold:
-              type: object
-              description: Data regarding threshold spend.
-              properties:
-                formatted:
-                  type: string
-                  description: Formatted threshold value.
-                amount:
-                  type: number
-                  description: Threshold value.
-                currency_code:
-                  type: string
-                  description: Threshold currency code.
-                currency_symbol:
-                  type: string
-                  description: Threshold currency symbol.
-            mode:
-              type: string
-              description: The mode of alert.
-    PrepaymentTransactionObject:
-      type: object
-      description: Prepayment transaction for an organization.
-      properties:
-        order_id:
-          type: string
-          description: Order ID
-        message:
-          type: string
-          description: The message associated with transaction.
-        status:
-          type: string
-          description: Whether the transactions was successful or a failure.
-        amount:
-          type: object
-          description: The prepayment balance in complex format.
-          properties:
-            formatted:
-              type: string
-              description: Formatted balance.
-            amount:
-              type: number
-              description: The balance amount.
-            currency_code:
-              type: string
-              description: The balance currency code.
-            currency_symbol:
-              type: string
-              description: The balance currency symbol.
-        created:
-          type: string
-          description: Time the transaction was created.
-        updated:
-          type:
-          - string
-          - 'null'
-          description: Time the transaction was last updated.
-        expire_date:
-          type:
-          - string
-          - 'null'
-          description: The expiration date of the transaction (deposits only).
     OrganizationEstimationObject:
       type: object
       description: An estimation of all organization spend.
@@ -534,6 +444,54 @@ components:
               - string
               - 'null'
               description: The fallback payment method, if any, to be used in case prepayment balance is not enough to cover an order.
+    OrganizationAlertConfig:
+      type: object
+      description: The alert configuration for an organization.
+      properties:
+        id:
+          type: string
+          description: Type of alert (e.g. "billing")
+        active:
+          type: boolean
+          description: Whether the billing alert should be active or not.
+        alerts_sent:
+          type: number
+          description: Number of alerts sent.
+        last_alert_at:
+          type:
+          - string
+          - 'null'
+          description: The datetime the alert was last sent.
+        updated_at:
+          type:
+          - string
+          - 'null'
+          description: The datetime the alert was last updated.
+        config:
+          type:
+          - object
+          - 'null'
+          description: Configuration for threshold and mode.
+          properties:
+            threshold:
+              type: object
+              description: Data regarding threshold spend.
+              properties:
+                formatted:
+                  type: string
+                  description: Formatted threshold value.
+                amount:
+                  type: number
+                  description: Threshold value.
+                currency_code:
+                  type: string
+                  description: Threshold currency code.
+                currency_symbol:
+                  type: string
+                  description: Threshold currency symbol.
+            mode:
+              type: string
+              description: The mode of alert.
     Error:
       description: ''
       type: object
@@ -558,15 +516,49 @@ components:
             field:
             - This field is required.
           title: Bad Request
-    Error_2:
+    PrepaymentTransactionObject:
       type: object
+      description: Prepayment transaction for an organization.
       properties:
-        error:
+        order_id:
           type: string
-          description: Error message
-      required:
-      - error
-    Error_3:
+          description: Order ID
+        message:
+          type: string
+          description: The message associated with transaction.
+        status:
+          type: string
+          description: Whether the transactions was successful or a failure.
+        amount:
+          type: object
+          description: The prepayment balance in complex format.
+          properties:
+            formatted:
+              type: string
+              description: Formatted balance.
+            amount:
+              type: number
+              description: The balance amount.
+            currency_code:
+              type: string
+              description: The balance currency code.
+            currency_symbol:
+              type: string
+              description: The balance currency symbol.
+        created:
+          type: string
+          description: Time the transaction was created.
+        updated:
+          type:
+          - string
+          - 'null'
+          description: Time the transaction was last updated.
+        expire_date:
+          type:
+          - string
+          - 'null'
+          description: The expiration date of the transaction (deposits only).
+    Error_2:
       type: object
       properties:
         error:
@@ -619,7 +611,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged User Profiles across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged User Profiles across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -434,6 +434,40 @@ components:
           description: The customer is invoiced.
           type: boolean
       type: object
+    HalLinks:
+      description: Links to _self, and previous or next page, given that they exist.
+      properties:
+        self:
+          description: The cardinal link to the self resource.
+          properties:
+            title:
+              description: Title of the link
+              type: string
+            href:
+              description: URL of the link
+              type: string
+          type: object
+        previous:
+          description: The link to the previous resource page, given that it exists.
+          properties:
+            title:
+              description: Title of the link
+              type: string
+            href:
+              description: URL of the link
+              type: string
+          type: object
+        next:
+          description: The link to the next resource page, given that it exists.
+          properties:
+            title:
+              description: Title of the link
+              type: string
+            href:
+              description: URL of the link
+              type: string
+          type: object
+      type: object
     Address:
       description: The address of the user.
       properties:
@@ -489,127 +523,7 @@ components:
               type: boolean
           type: object
       type: object
-    HalLinks:
-      description: Links to _self, and previous or next page, given that they exist.
-      properties:
-        self:
-          description: The cardinal link to the self resource.
-          properties:
-            title:
-              description: Title of the link
-              type: string
-            href:
-              description: URL of the link
-              type: string
-          type: object
-        previous:
-          description: The link to the previous resource page, given that it exists.
-          properties:
-            title:
-              description: Title of the link
-              type: string
-            href:
-              description: URL of the link
-              type: string
-          type: object
-        next:
-          description: The link to the next resource page, given that it exists.
-          properties:
-            title:
-              description: Title of the link
-              type: string
-            href:
-              description: URL of the link
-              type: string
-          type: object
-      type: object
     Profile_2:
-      description: The user profile.
-      properties:
-        id:
-          description: The user's unique ID.
-          type: string
-          format: uuid
-        display_name:
-          description: The user's display name.
-          type: string
-        email:
-          description: The user's email address.
-          type: string
-          format: email
-        username:
-          description: The user's username.
-          type: string
-        type:
-          description: The user's type (user/organization).
-          type: string
-          enum:
-          - user
-          - organization
-        picture:
-          description: The URL of the user's picture.
-          type: string
-          format: url
-        company_type:
-          description: The company type.
-          type: string
-        company_name:
-          description: The name of the company.
-          type: string
-        currency:
-          description: A 3-letter ISO 4217 currency code (assigned according to the billing address).
-          type: string
-        vat_number:
-          description: The vat number of the user.
-          type: string
-        company_role:
-          description: The role of the user in the company.
-          type: string
-        website_url:
-          description: The user or company website.
-          type: string
-        new_ui:
-          description: Whether the new UI features are enabled for this user.
-          type: boolean
-        ui_colorscheme:
-          description: The user's chosen color scheme for user interfaces.
-          type: string
-        default_catalog:
-          description: The URL of a catalog file which overrides the default.
-          type: string
-        project_options_url:
-          description: The URL of an account-wide project options file.
-          type: string
-        marketing:
-          description: Flag if the user agreed to receive marketing communication.
-          type: boolean
-        created_at:
-          description: The timestamp representing when the user account was created.
-          type: string
-          format: date-time
-        updated_at:
-          description: The timestamp representing when the user account was last modified.
-          type: string
-          format: date-time
-        billing_contact:
-          description: The e-mail address of a contact to whom billing notices will be sent.
-          type: string
-          format: email
-        invoiced:
-          description: The customer is invoiced.
-          type: boolean
-        customer_type:
-          description: The customer type.
-          type: string
-          enum:
-          - individual
-          - corporation
-          - government
-        legal_entity_name:
-          description: The legal entity name of the customer.
-          type: string
-      type: object
-    Profile_3:
       description: The user profile.
       properties:
         id:
@@ -728,7 +642,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

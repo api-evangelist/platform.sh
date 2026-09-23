@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Repository across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Repository across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -25,9 +25,7 @@ tags:
 
     family of endpoints. With these endpoints, you can retrieve objects from
 
-    the Git repository in the same way that you would in a local environment.
-
-    '
+    the Git repository in the same way that you would in a local environment.'
 paths:
   /projects/{projectId}/git/blobs/{repositoryBlobId}:
     get:
@@ -61,9 +59,7 @@ paths:
 
         `content` field of the response object, encoded according to the
 
-        format in the `encoding` field, e.g. `base64`.
-
-        '
+        format in the `encoding` field, e.g. `base64`.'
       security:
       - OAuth2: []
     servers:
@@ -98,7 +94,7 @@ paths:
       summary: Get a commit object
       description: 'Retrieve, by hash, an object representing a commit in the repository backing
 
-        a project. This endpoint functions similarly to `git cat-file -p <commit-id>`.
+        a project. This endpoint functions similarly to `git cat-file -p `.
 
         The returned object contains the hash of the Git tree that it
 
@@ -111,11 +107,9 @@ paths:
 
         be retrieved using the
 
-        [Get a tree object](#tag/Git-Repo%2Fpaths%2F~1projects~1%7BprojectId%7D~1git~1trees~1%7BrepositoryTreeId%7D%2Fget)
+        Get a tree object
 
-        endpoint.
-
-        '
+        endpoint.'
       security:
       - OAuth2: []
     servers:
@@ -154,11 +148,9 @@ paths:
 
         The returned commit ID can be used with the
 
-        [Get a commit object](#tag/Git-Repo%2Fpaths%2F~1projects~1%7BprojectId%7D~1git~1commits~1%7BrepositoryCommitId%7D%2Fget)
+        Get a commit object
 
-        endpoint to retrieve information about that specific commit.
-
-        '
+        endpoint to retrieve information about that specific commit.'
       security:
       - OAuth2: []
     servers:
@@ -195,7 +187,7 @@ paths:
 
         backing a project. This endpoint functions similarly to
 
-        `git show-ref <pattern>`, although the pattern must be a full ref `id`,
+        `git show-ref `, although the pattern must be a full ref `id`,
 
         rather than a matching pattern.
 
@@ -204,9 +196,7 @@ paths:
 
         That is, the ref `refs/heads/master` is accessible via
 
-        `/projects/{projectId}/git/refs/heads%2Fmaster`.
-
-        '
+        `/projects/{projectId}/git/refs/heads%2Fmaster`.'
       security:
       - OAuth2: []
     servers:
@@ -250,11 +240,9 @@ paths:
 
         through their hashes. Files in the tree can be retrieved by the
 
-        [Get a blob object](#tag/Git-Repo%2Fpaths%2F~1projects~1%7BprojectId%7D~1git~1blobs~1%7BrepositoryBlobId%7D%2Fget)
+        Get a blob object
 
-        endpoint.
-
-        '
+        endpoint.'
       security:
       - OAuth2: []
     servers:
@@ -265,6 +253,48 @@ paths:
           default: https
 components:
   schemas:
+    Ref:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Ref Identifier
+          description: The identifier of Ref
+        ref:
+          type: string
+          title: Name
+          description: The name of the reference
+        object:
+          type: object
+          properties:
+            type:
+              type: string
+              title: Type
+              description: The type of object pointed to
+            sha:
+              type: string
+              title: The SHA of the object pointed to
+              description: ''
+          required:
+          - type
+          - sha
+          additionalProperties: false
+          title: Object
+          description: The object the reference points to
+        sha:
+          type: string
+          title: SHA
+          description: The commit sha of the ref
+      required:
+      - id
+      - ref
+      - object
+      - sha
+      additionalProperties: false
+    RefCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Ref'
     Tree:
       type: object
       properties:
@@ -317,44 +347,6 @@ components:
       - id
       - sha
       - tree
-      additionalProperties: false
-    Ref:
-      type: object
-      properties:
-        id:
-          type: string
-          title: Ref Identifier
-          description: The identifier of Ref
-        ref:
-          type: string
-          title: Name
-          description: The name of the reference
-        object:
-          type: object
-          properties:
-            type:
-              type: string
-              title: Type
-              description: The type of object pointed to
-            sha:
-              type: string
-              title: The SHA of the object pointed to
-              description: ''
-          required:
-          - type
-          - sha
-          additionalProperties: false
-          title: Object
-          description: The object the reference points to
-        sha:
-          type: string
-          title: SHA
-          description: The commit sha of the ref
-      required:
-      - id
-      - ref
-      - object
-      - sha
       additionalProperties: false
     Commit:
       type: object
@@ -469,10 +461,6 @@ components:
       - encoding
       - content
       additionalProperties: false
-    RefCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Ref'
   securitySchemes:
     OAuth2:
       type: oauth2
@@ -498,7 +486,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

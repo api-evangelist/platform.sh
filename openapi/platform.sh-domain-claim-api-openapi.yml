@@ -1,16 +1,19 @@
 openapi: 3.2.0
 info:
-  title: Platform.sh Domain Claim API
+  title: Upsun.com Rest Domain Claim API
   version: '1.0'
   contact:
     name: Support
     url: https://upsun.com/contact-us/
   termsOfService: https://upsun.com/trust-center/legal/tos/
+  description: '# Introduction
+
+
+    Upsun, formerly Platform.sh, is a container-based Platform-as-a-Service.'
   x-logo:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Domain Claim across 2 of this provider''s published API definitions: platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -25,11 +28,9 @@ tags:
 
     a project. For more information on how domains function on
 
-    Upsun, see the [Domains](https://docs.upsun.com/anchors/domains/custom/)
+    Upsun, see the Domains
 
-    section of our documentation.
-
-    '
+    section of our documentation.'
 paths:
   /projects/{projectId}/domain-claims:
     get:
@@ -49,6 +50,8 @@ paths:
                 $ref: '#/components/schemas/DomainClaimCollection'
       tags:
       - Domain Claim
+      summary: List projects domain claims
+      x-summary-source: derived
     post:
       parameters:
       - in: path
@@ -73,12 +76,8 @@ paths:
               $ref: '#/components/schemas/DomainClaimCreateInput'
       tags:
       - Domain Claim
-    servers:
-    - url: '{schemes}://api.upsun.com'
-      description: The Upsun.com API gateway
-      variables:
-        schemes:
-          default: https
+      summary: Create projects domain claims
+      x-summary-source: derived
   /projects/{projectId}/domain-claims/{domainClaimId}:
     get:
       parameters:
@@ -102,6 +101,8 @@ paths:
                 $ref: '#/components/schemas/DomainClaim'
       tags:
       - Domain Claim
+      summary: Get projects domain claims
+      x-summary-source: derived
     patch:
       requestBody:
         description: ''
@@ -131,6 +132,8 @@ paths:
                 $ref: '#/components/schemas/AcceptedResponse'
       tags:
       - Domain Claim
+      summary: Update projects domain claims
+      x-summary-source: derived
     delete:
       parameters:
       - in: path
@@ -153,15 +156,14 @@ paths:
                 $ref: '#/components/schemas/AcceptedResponse'
       tags:
       - Domain Claim
-    servers:
-    - url: '{schemes}://api.upsun.com'
-      description: The Upsun.com API gateway
-      variables:
-        schemes:
-          default: https
+      summary: Delete projects domain claims
+      x-summary-source: derived
 components:
   schemas:
     DomainClaimPatch:
+      type: object
+      additionalProperties: false
+    DomainClaimCreateInput:
       type: object
       additionalProperties: false
     DomainClaim:
@@ -200,9 +202,6 @@ components:
       - name
       - count
       additionalProperties: false
-    DomainClaimCreateInput:
-      type: object
-      additionalProperties: false
     DomainClaimCollection:
       type: array
       items:
@@ -226,9 +225,6 @@ components:
     BearerAuth:
       type: http
       scheme: bearer
-x-refined-from:
-- platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:
@@ -240,6 +236,7 @@ x-tagGroups:
 - name: Project Administration
   tags:
   - Project
+  - Domain Claim
   - Domain Management
   - Cert Management
   - Certificate Provisioner
@@ -258,6 +255,7 @@ x-tagGroups:
   - Runtime Operations
   - Deployment
   - Autoscaling
+  - Task
 - name: User Activity
   tags:
   - Project Activity
@@ -287,11 +285,19 @@ x-tagGroups:
   - Vouchers
   - Records
   - Profiles
+  - Billing Profile Projects
 - name: Global Info
   tags:
   - Project Discovery
   - References
   - Regions
+- name: Observability
+  tags:
+  - Blackfire Profiling
+  - Blackfire Monitoring
+  - Resources
+  - Http Traffic
+  - Continuous Profiling
 - name: Internal APIs
   tags:
   - Project Settings

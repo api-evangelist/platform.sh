@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Environment Variables across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Environment Variables across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -27,11 +27,9 @@ tags:
 
     and runtime. For more information on environment variables,
 
-    see the [Variables](https://docs.upsun.com/anchors/variables/set/environment/create/)
+    see the Variables
 
-    section of the documentation.
-
-    '
+    section of the documentation.'
 paths:
   /projects/{projectId}/environments/{environmentId}/variables:
     get:
@@ -59,9 +57,7 @@ paths:
       summary: Get list of environment variables
       description: 'Retrieve a list of objects representing the user-defined variables
 
-        within an environment.
-
-        '
+        within an environment.'
       security:
       - OAuth2: []
     post:
@@ -102,11 +98,9 @@ paths:
 
         determined through the `is_inheritable` flag (default: true).
 
-        See the [Environment Variables](https://docs.upsun.com/anchors/variables/set/environment/create/)
+        See the Environment Variables
 
-        section in our documentation for more information.
-
-        '
+        section in our documentation for more information.'
       security:
       - OAuth2: []
     servers:
@@ -192,11 +186,9 @@ paths:
 
         determined through the `is_inheritable` flag (default: true).
 
-        See the [Variables](https://docs.upsun.com/anchors/variables/)
+        See the Variables
 
-        section in our documentation for more information.
-
-        '
+        section in our documentation for more information.'
       security:
       - OAuth2: []
     delete:
@@ -238,6 +230,58 @@ paths:
           default: https
 components:
   schemas:
+    EnvironmentVariableCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/EnvironmentVariable'
+    EnvironmentVariablePatch:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Name of the variable
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        value:
+          type: string
+          title: Value
+          description: Value of the variable
+        is_json:
+          type: boolean
+          title: Is JSON
+          description: The variable is a JSON string
+        is_sensitive:
+          type: boolean
+          title: Is Sensitive
+          description: The variable is sensitive
+        visible_build:
+          type: boolean
+          title: Is visible during build
+          description: The variable is visible during build
+        visible_runtime:
+          type: boolean
+          title: Visible at runtime
+          description: The variable is visible at runtime
+        application_scope:
+          type: array
+          items:
+            type: string
+          title: Application Scope
+          description: Applications that have access to this variable
+        is_enabled:
+          type: boolean
+          title: Is enabled
+          description: The variable is enabled on this environment
+        is_inheritable:
+          type: boolean
+          title: Is inheritable
+          description: The variable is inheritable to child environments
+      additionalProperties: false
     EnvironmentVariableCreateInput:
       type: object
       properties:
@@ -383,58 +427,6 @@ components:
       - is_enabled
       - is_inheritable
       additionalProperties: false
-    EnvironmentVariableCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/EnvironmentVariable'
-    EnvironmentVariablePatch:
-      type: object
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Name of the variable
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        value:
-          type: string
-          title: Value
-          description: Value of the variable
-        is_json:
-          type: boolean
-          title: Is JSON
-          description: The variable is a JSON string
-        is_sensitive:
-          type: boolean
-          title: Is Sensitive
-          description: The variable is sensitive
-        visible_build:
-          type: boolean
-          title: Is visible during build
-          description: The variable is visible during build
-        visible_runtime:
-          type: boolean
-          title: Visible at runtime
-          description: The variable is visible at runtime
-        application_scope:
-          type: array
-          items:
-            type: string
-          title: Application Scope
-          description: Applications that have access to this variable
-        is_enabled:
-          type: boolean
-          title: Is enabled
-          description: The variable is enabled on this environment
-        is_inheritable:
-          type: boolean
-          title: Is inheritable
-          description: The variable is inheritable to child environments
-      additionalProperties: false
     AcceptedResponse:
       type: object
       properties:
@@ -475,7 +467,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

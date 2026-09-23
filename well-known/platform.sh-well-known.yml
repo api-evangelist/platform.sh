@@ -1,15 +1,21 @@
-generated: '2026-08-26'
+generated: '2026-09-19'
 method: probed
 source: direct HTTPS probes of /.well-known/* on every platform.sh and Upsun host, 2026-08-26
-note: platform.sh serves its own RFC 9116 security.txt even though / 301s to upsun.com. The OAuth 2.0 / OIDC discovery
-  documents for the REST API are still published on auth.api.platform.sh after the Upsun rebrand. console.platform.sh
-  answered 502 on every /.well-known/ path at probe time.
+note: 'platform.sh serves its own RFC 9116 security.txt even though / 301s to upsun.com. The OAuth 2.0
+  / OIDC discovery documents for the REST API are still published on auth.api.platform.sh after the Upsun
+  rebrand. console.platform.sh answered 502 on every /.well-known/ path at probe time.
+
+
+  MCP-host OAuth discovery added 2026-09-19 (roadmap#321/#337): the harvest visits a provider''s primary
+  hosts, and RFC 9728 protected-resource metadata lives on the MCP host, so these documents existed and
+  were invisible to the scorer. Fetched live and validated on `resource`/`issuer`; one negative control
+  per host.'
 hosts:
 - host: platform.sh
   documents:
   - path: /.well-known/security.txt
     status: 200
-    file: well-known/platform.sh-security.txt
+    file: platform.sh-security.txt
   - path: /.well-known/openid-configuration
     status: 301
   - path: /.well-known/oauth-authorization-server
@@ -28,13 +34,13 @@ hosts:
   documents:
   - path: /.well-known/openid-configuration
     status: 200
-    file: well-known/platform.sh-openid-configuration.json
+    file: platform.sh-openid-configuration.json
   - path: /.well-known/oauth-authorization-server
     status: 200
-    file: well-known/platform.sh-oauth-authorization-server.json
+    file: platform.sh-oauth-authorization-server.json
   - path: /.well-known/oauth-protected-resource
     status: 200
-    file: well-known/platform.sh-oauth-protected-resource.json
+    file: platform.sh-oauth-protected-resource.json
   - path: /.well-known/security.txt
     status: 404
   - path: /.well-known/api-catalog
@@ -49,7 +55,8 @@ hosts:
   documents:
   - path: /.well-known/oauth-protected-resource
     status: 200
-    file: well-known/platform.sh-mcp-oauth-protected-resource.json
+    file: platform.sh-mcp-oauth-protected-resource.json
+  path_echo_control: passed
 - host: api.platform.sh
   documents:
   - path: /.well-known/security.txt
@@ -84,3 +91,22 @@ hosts:
     status: 301
   - path: /.well-known/agent.json
     status: 301
+- host: https://auth.upsun.com
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: platform.sh-auth-oauth-authorization-server.json
+    bytes: 751
+  path_echo_control: passed
+x-mcp-probe:
+  probed: '2026-09-19'
+  issue: roadmap#321, roadmap#337
+  documents:
+  - host: https://mcp.upsun.com
+    path: /.well-known/oauth-protected-resource
+    file: platform.sh-mcp-oauth-protected-resource.json
+  - host: https://auth.upsun.com
+    path: /.well-known/oauth-authorization-server
+    file: platform.sh-auth-oauth-authorization-server.json
+  validated_on: resource (RFC 9728) / issuer (RFC 8414, OIDC)
+  negative_control: one per host; a 2xx JSON object at an impossible path discards the host

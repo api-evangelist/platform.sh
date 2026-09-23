@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged System Information across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged System Information across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -24,9 +24,7 @@ tags:
     core component of Upsun infrastructure.
 
 
-    This is an internal API that can only be used by privileged users.
-
-    '
+    This is an internal API that can only be used by privileged users.'
 paths:
   /projects/{projectId}/system:
     get:
@@ -46,7 +44,7 @@ paths:
                 $ref: '#/components/schemas/SystemInformation'
       tags:
       - System Information
-      summary: Get information about the Git server.
+      summary: Get information about the Git server
       description: Output information for the project.
       security:
       - OAuth2: []
@@ -147,7 +145,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

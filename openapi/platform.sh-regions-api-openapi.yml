@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Regions across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Regions across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -157,6 +157,74 @@ paths:
           default: https
 components:
   schemas:
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    StringFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
+        between:
+          type: string
+          description: Between (comma-separated list)
+        contains:
+          type: string
+          description: Contains
+        starts:
+          type: string
+          description: Starts with
+        ends:
+          type: string
+          description: Ends with
     Region:
       description: The hosting region.
       properties:
@@ -216,83 +284,7 @@ components:
               type: boolean
           type: object
       type: object
-    ListLinks:
-      type: object
-      properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
-    StringFilter:
-      type: object
-      properties:
-        eq:
-          type: string
-          description: Equal
-        ne:
-          type: string
-          description: Not equal
-        in:
-          type: string
-          description: In (comma-separated list)
-        nin:
-          type: string
-          description: Not in (comma-separated list)
-        between:
-          type: string
-          description: Between (comma-separated list)
-        contains:
-          type: string
-          description: Contains
-        starts:
-          type: string
-          description: Starts with
-        ends:
-          type: string
-          description: Ends with
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
     Error_2:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-      required:
-      - error
-    Error_3:
       type: object
       properties:
         error:
@@ -306,12 +298,6 @@ components:
       name: region_id
       description: The ID of the region.
       required: true
-      schema:
-        type: string
-    PageAfter:
-      in: query
-      name: page[after]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
       schema:
         type: string
     PageBefore:
@@ -329,9 +315,15 @@ components:
         minimum: 1
         maximum: 100
         default: null
+    PageAfter:
+      in: query
+      name: page[after]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
   responses:
-    Forbidden:
-      description: Forbidden
+    NotFound:
+      description: Not Found
       content:
         application/problem+json:
           schema:
@@ -342,30 +334,12 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error_2'
-    Forbidden_2:
+    Forbidden:
       description: Forbidden
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/Error_3'
-    BadRequest_2:
-      description: Bad Request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error_3'
-    NotFound_2:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error_3'
+            $ref: '#/components/schemas/Error_2'
   securitySchemes:
     OAuth2:
       type: oauth2
@@ -391,7 +365,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

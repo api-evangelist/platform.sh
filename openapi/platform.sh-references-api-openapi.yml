@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged References across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged References across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -23,7 +23,7 @@ paths:
   /ref/users:
     get:
       summary: List referenced users
-      description: Retrieves a list of users referenced by a trusted service. Clients cannot construct the URL themselves. The correct URL will be provided in the HAL links of another API response, in the <code>_links</code> object with a key like <code>ref:users:0</code>.
+      description: Retrieves a list of users referenced by a trusted service. Clients cannot construct the URL themselves. The correct URL will be provided in the HAL links of another API response, in the _links object with a key like ref:users:0.
       operationId: list-referenced-users
       tags:
       - References
@@ -79,7 +79,7 @@ paths:
   /ref/teams:
     get:
       summary: List referenced teams
-      description: Retrieves a list of teams referenced by a trusted service. Clients cannot construct the URL themselves. The correct URL will be provided in the HAL links of another API response, in the <code>_links</code> object with a key like <code>ref:teams:0</code>.
+      description: Retrieves a list of teams referenced by a trusted service. Clients cannot construct the URL themselves. The correct URL will be provided in the HAL links of another API response, in the _links object with a key like ref:teams:0.
       operationId: list-referenced-teams
       tags:
       - References
@@ -129,7 +129,7 @@ paths:
   /ref/organizations:
     get:
       summary: List referenced organizations
-      description: Retrieves a list of organizations referenced by a trusted service. Clients cannot construct the URL themselves. The correct URL will be provided in the HAL links of another API response, in the <code>_links</code> object with a key like <code>ref:organizations:0</code>.
+      description: Retrieves a list of organizations referenced by a trusted service. Clients cannot construct the URL themselves. The correct URL will be provided in the HAL links of another API response, in the _links object with a key like ref:organizations:0.
       operationId: list-referenced-orgs
       tags:
       - References
@@ -179,7 +179,7 @@ paths:
   /ref/projects:
     get:
       summary: List referenced projects
-      description: Retrieves a list of projects referenced by a trusted service. Clients cannot construct the URL themselves. The correct URL will be provided in the HAL links of another API response, in the <code>_links</code> object with a key like <code>ref:projects:0</code>.
+      description: Retrieves a list of projects referenced by a trusted service. Clients cannot construct the URL themselves. The correct URL will be provided in the HAL links of another API response, in the _links object with a key like ref:projects:0.
       operationId: list-referenced-projects
       tags:
       - References
@@ -235,7 +235,7 @@ paths:
   /ref/regions:
     get:
       summary: List referenced regions
-      description: Retrieves a list of regions referenced by a trusted service. Clients cannot construct the URL themselves. The correct URL will be provided in the HAL links of another API response, in the <code>_links</code> object with a key like <code>ref:regions:0</code>.
+      description: Retrieves a list of regions referenced by a trusted service. Clients cannot construct the URL themselves. The correct URL will be provided in the HAL links of another API response, in the _links object with a key like ref:regions:0.
       operationId: list-referenced-regions
       tags:
       - References
@@ -290,159 +290,30 @@ paths:
           default: https
 components:
   schemas:
-    RegionDataCenter:
-      type: object
-      description: Information about the region provider data center.
-    RegionEndpoint:
-      type: string
-      description: Link to the region API endpoint.
-    RegionPrivate:
-      type: boolean
-      description: Indicator whether or not this platform is for private use only.
-    RegionSelectionLabel:
-      type: string
-      description: The label to display when choosing between regions for new projects.
-    RegionCode:
-      type: string
-      description: The code of the region
-    CreatedAt:
-      type: string
-      format: date-time
-      description: The date and time when the resource was created.
-    ProjectID:
-      type: string
-      description: The ID of the project.
-    UserReference:
-      description: The referenced user, or null if it no longer exists.
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The ID of the user.
-        username:
-          type: string
-          description: The user's username.
-        email:
-          type: string
-          format: email
-          description: The user's email address.
-        first_name:
-          type: string
-          description: The user's first name.
-        last_name:
-          type: string
-          description: The user's last name.
-        picture:
-          type: string
-          format: uri
-          description: The user's picture.
-        mfa_enabled:
-          type: boolean
-          description: 'Whether the user has enabled MFA. Note: the built-in MFA feature may not be necessary if the user is linked to a mandatory SSO provider that itself supports MFA (see "sso_enabled\").'
-        sso_enabled:
-          type: boolean
-          description: Whether the user is linked to a mandatory SSO provider.
-      x-examples:
-        example-1:
-          email: hello@platform.sh
-          first_name: Hello
-          id: d81c8ee2-44b3-429f-b944-a33ad7437690
-          last_name: World
-          picture: https://accounts.platform.sh/profiles/blimp_profile/themes/platformsh_theme/images/mail/logo.png
-          username: platform-sh
-          mfa_enabled: true
-          sso_enabled: true
-    RegionProvider:
-      type: object
-      description: Information about the region provider.
-    RegionAvailable:
-      type: boolean
-      description: Indicator whether or not this region is selectable during the checkout. Not available regions will never show up during checkout.
-    ProjectType:
-      type: string
-      description: The type of projects.
-      enum:
-      - grid
-      - dedicated
     RegionZone:
       type: string
       description: The geographical zone of the region.
     RegionTimezone:
       type: string
       description: Default timezone of the region.
-    Error:
-      description: ''
+    RegionProvider:
       type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
-    RegionID:
+      description: Information about the region provider.
+    ProjectID:
       type: string
-      description: The machine name of the region where the project is located.
+      description: The ID of the project.
+    RegionEnvImpact:
+      type: object
+      description: Information about the region provider's environmental impact.
     RegionProjectLabel:
       type: string
       description: The label to display on existing projects.
-    ProjectReference:
-      description: The referenced project, or null if it no longer exists.
-      type:
-      - object
-      - 'null'
-      required:
-      - id
-      - organization_id
-      - subscription_id
-      - region
-      - title
-      - type
-      - plan
-      - status
-      - created_at
-      - updated_at
-      properties:
-        id:
-          $ref: '#/components/schemas/ProjectID'
-        organization_id:
-          $ref: '#/components/schemas/OrganizationID'
-        subscription_id:
-          $ref: '#/components/schemas/SubscriptionID'
-        region:
-          $ref: '#/components/schemas/RegionID'
-        title:
-          $ref: '#/components/schemas/ProjectTitle'
-        type:
-          $ref: '#/components/schemas/ProjectType'
-        plan:
-          $ref: '#/components/schemas/ProjectPlan'
-        status:
-          $ref: '#/components/schemas/ProjectStatus'
-        created_at:
-          $ref: '#/components/schemas/CreatedAt'
-        updated_at:
-          $ref: '#/components/schemas/UpdatedAt'
-    ProjectPlan:
+    ProjectTitle:
       type: string
-      description: The project plan.
+      description: The title of the project.
+    RegionEndpoint:
+      type: string
+      description: Link to the region API endpoint.
     ProjectStatus:
       type: string
       description: The status of the project.
@@ -452,9 +323,6 @@ components:
       - failed
       - suspended
       - deleted
-    RegionCompliance:
-      type: object
-      description: Information about the region's compliance.
     TeamReference:
       description: The referenced team, or null if it no longer exists.
       type: object
@@ -521,43 +389,6 @@ components:
     RegionLabel:
       type: string
       description: The human-readable name of the region.
-    OrganizationReference:
-      description: The referenced organization, or null if it no longer exists.
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
-          type: string
-          format: ulid
-          description: The ID of the organization.
-        type:
-          type: string
-          description: The type of the organization.
-        owner_id:
-          type: string
-          format: uuid
-          description: The ID of the owner.
-        name:
-          type: string
-          description: A unique machine name representing the organization.
-        label:
-          type: string
-          description: The human-readable label of the organization.
-        vendor:
-          type: string
-          description: The vendor.
-        created_at:
-          type: string
-          format: date-time
-          description: The date and time when the organization was created.
-        updated_at:
-          type: string
-          format: date-time
-          description: The date and time when the organization was last updated.
-    SubscriptionID:
-      type: string
-      description: The ID of the subscription.
     OrganizationID:
       type: string
       description: The ID of the organization.
@@ -613,50 +444,127 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
-    UpdatedAt:
+    RegionCode:
       type: string
-      format: date-time
-      description: The date and time when the resource was last updated.
-    ProjectTitle:
+      description: The code of the region
+    SubscriptionID:
       type: string
-      description: The title of the project.
-    RegionEnvImpact:
-      type: object
-      description: Information about the region provider's environmental impact.
-    RegionDatacenter:
-      type: object
-      description: Information about the region provider data center.
+      description: The ID of the subscription.
+    OrganizationReference:
+      description: The referenced organization, or null if it no longer exists.
+      type:
+      - object
+      - 'null'
       properties:
+        id:
+          type: string
+          format: ulid
+          description: The ID of the organization.
+        type:
+          type: string
+          description: The type of the organization.
+        owner_id:
+          type: string
+          format: uuid
+          description: The ID of the owner.
         name:
           type: string
-          description: The name/identifier of the data center.
+          description: A unique machine name representing the organization.
         label:
           type: string
-          description: The human-readable label of the data center.
-        location:
+          description: The human-readable label of the organization.
+        vendor:
           type: string
-          description: The physical location of the data center.
-      additionalProperties: false
-    RegionProvider_2:
+          description: The vendor.
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the organization was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the organization was last updated.
+    RegionID:
+      type: string
+      description: The machine name of the region where the project is located.
+    RegionCompliance:
       type: object
-      description: Information about the region provider.
-      properties:
-        name:
-          type: string
-          description: The name of the cloud provider.
-        logo:
-          type: string
-          description: The logo of the cloud provider (base64 encoded SVG).
-      additionalProperties: false
-    Error_2:
+      description: Information about the region's compliance.
+    Error:
+      description: ''
       type: object
       properties:
-        error:
+        status:
           type: string
-          description: Error message
-      required:
-      - error
-    ProjectReference_2:
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    UserReference:
+      description: The referenced user, or null if it no longer exists.
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of the user.
+        username:
+          type: string
+          description: The user's username.
+        email:
+          type: string
+          format: email
+          description: The user's email address.
+        first_name:
+          type: string
+          description: The user's first name.
+        last_name:
+          type: string
+          description: The user's last name.
+        picture:
+          type: string
+          format: uri
+          description: The user's picture.
+        mfa_enabled:
+          type: boolean
+          description: 'Whether the user has enabled MFA. Note: the built-in MFA feature may not be necessary if the user is linked to a mandatory SSO provider that itself supports MFA (see "sso_enabled\").'
+        sso_enabled:
+          type: boolean
+          description: Whether the user is linked to a mandatory SSO provider.
+      x-examples:
+        example-1:
+          email: hello@platform.sh
+          first_name: Hello
+          id: d81c8ee2-44b3-429f-b944-a33ad7437690
+          last_name: World
+          picture: https://accounts.platform.sh/profiles/blimp_profile/themes/platformsh_theme/images/mail/logo.png
+          username: platform-sh
+          mfa_enabled: true
+          sso_enabled: true
+    RegionDataCenter:
+      type: object
+      description: Information about the region provider data center.
+    CreatedAt:
+      type: string
+      format: date-time
+      description: The date and time when the resource was created.
+    ProjectReference:
       description: The referenced project, or null if it no longer exists.
       type:
       - object
@@ -693,17 +601,55 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
-        invoiced:
-          type: boolean
-          description: Whether the project is invoiced.
-      additionalProperties: false
-    RegionCompliance_2:
+    RegionSelectionLabel:
+      type: string
+      description: The label to display when choosing between regions for new projects.
+    ProjectType:
+      type: string
+      description: The type of projects.
+      enum:
+      - grid
+      - dedicated
+    RegionAvailable:
+      type: boolean
+      description: Indicator whether or not this region is selectable during the checkout. Not available regions will never show up during checkout.
+    RegionPrivate:
+      type: boolean
+      description: Indicator whether or not this platform is for private use only.
+    ProjectPlan:
+      type: string
+      description: The project plan.
+    UpdatedAt:
+      type: string
+      format: date-time
+      description: The date and time when the resource was last updated.
+    RegionProvider_2:
       type: object
-      description: Information about the region's compliance.
+      description: Information about the region provider.
       properties:
-        hipaa:
+        name:
+          type: string
+          description: The name of the cloud provider.
+        logo:
+          type: string
+          description: The logo of the cloud provider (base64 encoded SVG).
+      additionalProperties: false
+    RegionEnvImpact_2:
+      type: object
+      description: Information about the region provider's environmental impact.
+      properties:
+        zone:
+          type: string
+          description: The geographical zone code for carbon intensity.
+        carbon_intensity:
+          type: number
+          description: The carbon intensity value.
+        carbon_intensity_source:
+          type: string
+          description: The source of the carbon intensity data.
+        green:
           type: boolean
-          description: Indicator whether or not this region is HIPAA compliant.
+          description: Indicator whether the data center uses green energy.
       additionalProperties: false
     RegionReference_2:
       description: The referenced region, or null if it no longer exists.
@@ -759,35 +705,15 @@ components:
           type: object
           description: Environmental impact information for the region.
       additionalProperties: false
-    RegionEnvImpact_2:
+    RegionCompliance_2:
       type: object
-      description: Information about the region provider's environmental impact.
+      description: Information about the region's compliance.
       properties:
-        zone:
-          type: string
-          description: The geographical zone code for carbon intensity.
-        carbon_intensity:
-          type: number
-          description: The carbon intensity value.
-        carbon_intensity_source:
-          type: string
-          description: The source of the carbon intensity data.
-        green:
+        hipaa:
           type: boolean
-          description: Indicator whether the data center uses green energy.
+          description: Indicator whether or not this region is HIPAA compliant.
       additionalProperties: false
-    RegionProvider_3:
-      type: object
-      description: Information about the region provider.
-      properties:
-        name:
-          type: string
-          description: The name of the cloud provider.
-        logo:
-          type: string
-          description: The logo of the cloud provider (base64 encoded SVG).
-      additionalProperties: false
-    Error_3:
+    Error_2:
       type: object
       properties:
         error:
@@ -795,7 +721,7 @@ components:
           description: Error message
       required:
       - error
-    ProjectReference_3:
+    ProjectReference_2:
       description: The referenced project, or null if it no longer exists.
       type:
       - object
@@ -836,94 +762,23 @@ components:
           type: boolean
           description: Whether the project is invoiced.
       additionalProperties: false
-    RegionCompliance_3:
+    RegionDatacenter:
       type: object
-      description: Information about the region's compliance.
+      description: Information about the region provider data center.
       properties:
-        hipaa:
-          type: boolean
-          description: Indicator whether or not this region is HIPAA compliant.
-      additionalProperties: false
-    RegionReference_3:
-      description: The referenced region, or null if it no longer exists.
-      type:
-      - object
-      - 'null'
-      required:
-      - id
-      - label
-      - zone
-      - selection_label
-      - project_label
-      - timezone
-      - available
-      - endpoint
-      - provider
-      - datacenter
-      - compliance
-      - created_at
-      - updated_at
-      properties:
-        id:
-          $ref: '#/components/schemas/RegionID'
+        name:
+          type: string
+          description: The name/identifier of the data center.
         label:
-          $ref: '#/components/schemas/RegionLabel'
-        zone:
-          $ref: '#/components/schemas/RegionZone'
-        selection_label:
-          $ref: '#/components/schemas/RegionSelectionLabel'
-        project_label:
-          $ref: '#/components/schemas/RegionProjectLabel'
-        timezone:
-          $ref: '#/components/schemas/RegionTimezone'
-        available:
-          $ref: '#/components/schemas/RegionAvailable'
-        private:
-          $ref: '#/components/schemas/RegionPrivate'
-        endpoint:
-          $ref: '#/components/schemas/RegionEndpoint'
-        provider:
-          $ref: '#/components/schemas/RegionProvider_3'
-        datacenter:
-          $ref: '#/components/schemas/RegionDatacenter'
-        envimpact:
-          $ref: '#/components/schemas/RegionEnvImpact_3'
-        compliance:
-          $ref: '#/components/schemas/RegionCompliance_3'
-        created_at:
-          $ref: '#/components/schemas/CreatedAt'
-        updated_at:
-          $ref: '#/components/schemas/UpdatedAt'
-        environmental_impact:
-          type: object
-          description: Environmental impact information for the region.
-      additionalProperties: false
-    RegionEnvImpact_3:
-      type: object
-      description: Information about the region provider's environmental impact.
-      properties:
-        zone:
           type: string
-          description: The geographical zone code for carbon intensity.
-        carbon_intensity:
-          type: number
-          description: The carbon intensity value.
-        carbon_intensity_source:
+          description: The human-readable label of the data center.
+        location:
           type: string
-          description: The source of the carbon intensity data.
-        green:
-          type: boolean
-          description: Indicator whether the data center uses green energy.
+          description: The physical location of the data center.
       additionalProperties: false
   responses:
     Forbidden:
       description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error_2'
-    BadRequest:
-      description: Bad Request
       content:
         application/problem+json:
           schema:
@@ -934,24 +789,12 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
-    Forbidden_2:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error_3'
-    BadRequest_2:
+    BadRequest:
       description: Bad Request
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/Error_3'
-    NotFound_2:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error_3'
+            $ref: '#/components/schemas/Error_2'
   securitySchemes:
     OAuth2:
       type: oauth2
@@ -977,7 +820,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

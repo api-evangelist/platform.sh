@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Domain Management across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Domain Management across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -23,11 +23,9 @@ tags:
 
     a project. For more information on how domains function on
 
-    Upsun, see the [Domains](https://docs.upsun.com/anchors/domains/custom/)
+    Upsun, see the Domains
 
-    section of our documentation.
-
-    '
+    section of our documentation.'
 paths:
   /projects/{projectId}/domains:
     get:
@@ -54,9 +52,7 @@ paths:
 
         domains automatically assigned to a project that appear under
 
-        "Access site" on the user interface.
-
-        '
+        "Access site" on the user interface.'
       security:
       - OAuth2: []
     post:
@@ -90,9 +86,7 @@ paths:
 
         a PEM-encoded SSL certificate, a certificate will
 
-        [be provisioned for you via Let''s Encrypt.](https://docs.upsun.com/anchors/routes/https/certificates/)
-
-        '
+        be provisioned for you via Let''s Encrypt.'
       security:
       - OAuth2: []
     servers:
@@ -127,9 +121,7 @@ paths:
       summary: Get a project domain
       description: 'Retrieve information about a single user-specified domain
 
-        associated with a project.
-
-        '
+        associated with a project.'
       security:
       - OAuth2: []
     patch:
@@ -164,9 +156,7 @@ paths:
       summary: Update a project domain
       description: 'Update the information associated with a single user-specified
 
-        domain associated with a project.
-
-        '
+        domain associated with a project.'
       security:
       - OAuth2: []
     delete:
@@ -192,9 +182,7 @@ paths:
       tags:
       - Domain Management
       summary: Delete a project domain
-      description: 'Delete a single user-specified domain associated with a project.
-
-        '
+      description: Delete a single user-specified domain associated with a project.
       security:
       - OAuth2: []
     servers:
@@ -233,9 +221,7 @@ paths:
 
         `.platformsh.site` subdomains, which are automatically assigned to
 
-        the environment.
-
-        '
+        the environment.'
       security:
       - OAuth2: []
     post:
@@ -280,9 +266,7 @@ paths:
 
         a PEM-encoded SSL certificate, a certificate will
 
-        [be provisioned for you via Let''s Encrypt](https://docs.upsun.com/anchors/routes/https/certificates/).
-
-        '
+        be provisioned for you via Let''s Encrypt.'
       security:
       - OAuth2: []
     servers:
@@ -322,9 +306,7 @@ paths:
       summary: Get an environment domain
       description: 'Retrieve information about a single user-specified domain
 
-        associated with an environment.
-
-        '
+        associated with an environment.'
       security:
       - OAuth2: []
     patch:
@@ -364,9 +346,7 @@ paths:
       summary: Update an environment domain
       description: 'Update the information associated with a single user-specified
 
-        domain associated with an environment.
-
-        '
+        domain associated with an environment.'
       security:
       - OAuth2: []
     delete:
@@ -397,9 +377,7 @@ paths:
       tags:
       - Domain Management
       summary: Delete an environment domain
-      description: 'Delete a single user-specified domain associated with an environment.
-
-        '
+      description: Delete a single user-specified domain associated with an environment.
       security:
       - OAuth2: []
     servers:
@@ -410,6 +388,10 @@ paths:
           default: https
 components:
   schemas:
+    Domain:
+      oneOf:
+      - $ref: '#/components/schemas/ProdDomainStorage'
+      - $ref: '#/components/schemas/ReplacementDomainStorage'
     ProdDomainStorage:
       type: object
       properties:
@@ -464,44 +446,6 @@ components:
       - name
       - attributes
       additionalProperties: false
-    ReplacementDomainStoragePatch:
-      type: object
-      properties:
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-      additionalProperties: false
-    Domain:
-      oneOf:
-      - $ref: '#/components/schemas/ProdDomainStorage'
-      - $ref: '#/components/schemas/ReplacementDomainStorage'
-    ProdDomainStorageCreateInput:
-      type: object
-      properties:
-        name:
-          type: string
-          title: Domain name
-          description: ''
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        is_default:
-          type: boolean
-          title: Is Default
-          description: Is this domain default
-      required:
-      - name
-      additionalProperties: false
-    DomainCreateInput:
-      oneOf:
-      - $ref: '#/components/schemas/ProdDomainStorageCreateInput'
-      - $ref: '#/components/schemas/ReplacementDomainStorageCreateInput'
     ReplacementDomainStorageCreateInput:
       type: object
       properties:
@@ -522,6 +466,34 @@ components:
       required:
       - name
       additionalProperties: false
+    DomainCreateInput:
+      oneOf:
+      - $ref: '#/components/schemas/ProdDomainStorageCreateInput'
+      - $ref: '#/components/schemas/ReplacementDomainStorageCreateInput'
+    ProdDomainStorageCreateInput:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Domain name
+          description: ''
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        is_default:
+          type: boolean
+          title: Is Default
+          description: Is this domain default
+      required:
+      - name
+      additionalProperties: false
+    DomainPatch:
+      oneOf:
+      - $ref: '#/components/schemas/ProdDomainStoragePatch'
+      - $ref: '#/components/schemas/ReplacementDomainStoragePatch'
     DomainCollection:
       type: array
       items:
@@ -555,10 +527,16 @@ components:
           title: Is Default
           description: Is this domain default
       additionalProperties: false
-    DomainPatch:
-      oneOf:
-      - $ref: '#/components/schemas/ProdDomainStoragePatch'
-      - $ref: '#/components/schemas/ReplacementDomainStoragePatch'
+    ReplacementDomainStoragePatch:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+      additionalProperties: false
     ReplacementDomainStorage:
       type: object
       properties:
@@ -667,26 +645,6 @@ components:
       - name
       - attributes
       additionalProperties: false
-    ProdDomainStorageCreateInput_2:
-      type: object
-      properties:
-        name:
-          type: string
-          title: Domain name
-          description: The domain name
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        is_default:
-          type: boolean
-          title: Is Default
-          description: Is this domain default
-      required:
-      - name
-      additionalProperties: false
     ReplacementDomainStorageCreateInput_2:
       type: object
       properties:
@@ -707,155 +665,27 @@ components:
       required:
       - name
       additionalProperties: false
+    ProdDomainStorageCreateInput_2:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Domain name
+          description: The domain name
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        is_default:
+          type: boolean
+          title: Is Default
+          description: Is this domain default
+      required:
+      - name
+      additionalProperties: false
     ReplacementDomainStorage_2:
-      type: object
-      properties:
-        id:
-          type: string
-          title: ReplacementDomainStorage Identifier
-          description: The identifier of ReplacementDomainStorage
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Creation date
-          description: The creation date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Update date
-          description: The update date
-        type:
-          type: string
-          title: Type
-          description: Domain type
-        project:
-          type: string
-          title: Project name
-          description: The name of the project
-        name:
-          type: string
-          title: Domain name
-          description: The domain name
-        registered_name:
-          type: string
-          title: Claimed domain name
-          description: The claimed domain name
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        replacement_for:
-          type: string
-          title: Replacement For
-          description: Prod domain which will be replaced by this domain
-      required:
-      - created_at
-      - updated_at
-      - type
-      - name
-      - attributes
-      additionalProperties: false
-    ProdDomainStorage_3:
-      type: object
-      properties:
-        id:
-          type: string
-          title: ProdDomainStorage Identifier
-          description: The identifier of ProdDomainStorage
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Creation date
-          description: The creation date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Update date
-          description: The update date
-        type:
-          type: string
-          title: Domain type
-          description: The type of domain
-        project:
-          type: string
-          title: Project name
-          description: The name of the project
-        name:
-          type: string
-          title: Domain name
-          description: The domain name
-        registered_name:
-          type: string
-          title: Claimed domain name
-          description: The claimed domain name
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        is_default:
-          type: boolean
-          title: Is Default
-          description: Is this domain default
-      required:
-      - created_at
-      - updated_at
-      - type
-      - name
-      - attributes
-      additionalProperties: false
-    ProdDomainStorageCreateInput_3:
-      type: object
-      properties:
-        name:
-          type: string
-          title: Domain name
-          description: The domain name
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        is_default:
-          type: boolean
-          title: Is Default
-          description: Is this domain default
-      required:
-      - name
-      additionalProperties: false
-    ReplacementDomainStorageCreateInput_3:
-      type: object
-      properties:
-        name:
-          type: string
-          title: Domain name
-          description: The domain name
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        replacement_for:
-          type: string
-          title: Replacement For
-          description: Prod domain which will be replaced by this domain
-      required:
-      - name
-      additionalProperties: false
-    ReplacementDomainStorage_3:
       type: object
       properties:
         id:
@@ -934,7 +764,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Source Operations across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Source Operations across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -25,9 +25,7 @@ tags:
 
     on source code operations is
 
-    [available in our user documentation](https://docs.upsun.com/anchors/app/source-operations/).
-
-    '
+    available in our user documentation.'
 paths:
   /projects/{projectId}/environments/{environmentId}/source-operation:
     post:
@@ -66,9 +64,7 @@ paths:
 
         on source code operations is
 
-        [available in our user documentation](https://docs.upsun.com/anchors/app/reference/source/operations/).
-
-        '
+        available in our user documentation.'
       security:
       - OAuth2: []
     servers:
@@ -105,9 +101,7 @@ paths:
 
         More information on source code operations is
 
-        [available in our user documentation](https://docs.upsun.com/anchors/app/reference/source/operations/).
-
-        '
+        available in our user documentation.'
       security:
       - OAuth2: []
     servers:
@@ -118,6 +112,10 @@ paths:
           default: https
 components:
   schemas:
+    EnvironmentSourceOperationCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/EnvironmentSourceOperation'
     AcceptedResponse:
       type: object
       properties:
@@ -176,28 +174,7 @@ components:
       - operation
       - variables
       additionalProperties: false
-    EnvironmentSourceOperationCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/EnvironmentSourceOperation'
     EnvironmentSourceOperationInput_2:
-      type: object
-      properties:
-        operation:
-          type: string
-          title: Operation name
-          description: The name of the operation to execute
-        variables:
-          type: object
-          additionalProperties:
-            type: object
-            additionalProperties: {}
-          title: Variables
-          description: The variables of the application.
-      required:
-      - operation
-      additionalProperties: false
-    EnvironmentSourceOperationInput_3:
       type: object
       properties:
         operation:
@@ -239,7 +216,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

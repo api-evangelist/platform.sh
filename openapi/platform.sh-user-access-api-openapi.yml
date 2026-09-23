@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged User Access across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged User Access across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -467,45 +467,15 @@ paths:
         schemes:
           default: https
 components:
-  parameters:
-    UserID:
-      name: user_id
-      in: path
-      required: true
-      description: The ID of the user.
-      schema:
-        type: string
-        example: d81c8ee2-44b3-429f-b944-a33ad7437690
-        format: uuid
-    ProjectID:
-      name: project_id
-      in: path
-      required: true
-      description: The ID of the project.
-      schema:
-        type: string
-    PageAfter:
-      in: query
-      name: page[after]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
-    PageBefore:
-      in: query
-      name: page[before]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
-    PageSizeAccess:
-      in: query
-      name: page[size]
-      description: Determines the number of items to show.
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 200
-        default: null
   schemas:
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
     ListLinks:
       type: object
       properties:
@@ -572,31 +542,6 @@ components:
                 method:
                   type: string
                   description: The HTTP method to use.
-    ProjectPermissions:
-      type: array
-      description: An array of project permissions.
-      items:
-        type: string
-        enum:
-        - admin
-        - viewer
-        - development:admin
-        - development:contributor
-        - development:viewer
-        - staging:admin
-        - staging:contributor
-        - staging:viewer
-        - production:admin
-        - production:contributor
-        - production:viewer
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
     Error:
       description: ''
       type: object
@@ -621,10 +566,23 @@ components:
             field:
             - This field is required.
           title: Bad Request
-    GrantedAt:
-      type: string
-      format: date-time
-      description: The date and time when the access was granted.
+    ProjectPermissions:
+      type: array
+      description: An array of project permissions.
+      items:
+        type: string
+        enum:
+        - admin
+        - viewer
+        - development:admin
+        - development:contributor
+        - development:viewer
+        - staging:admin
+        - staging:contributor
+        - staging:viewer
+        - production:admin
+        - production:contributor
+        - production:viewer
     UserProjectAccess_2:
       type: object
       properties:
@@ -683,10 +641,10 @@ components:
                   type: string
                   description: The HTTP method to use.
       additionalProperties: false
-    UpdatedAt:
+    GrantedAt:
       type: string
       format: date-time
-      description: The date and time when the resource was last updated.
+      description: The date and time when the access was granted.
     Error_2:
       type: object
       properties:
@@ -695,81 +653,51 @@ components:
           description: Error message
       required:
       - error
-    UserProjectAccess_3:
-      type: object
-      properties:
-        user_id:
-          type: string
-          format: uuid
-          description: The ID of the user.
-        organization_id:
-          type: string
-          format: ulid
-          description: The ID of the organization.
-        project_id:
-          type: string
-          description: The ID of the project.
-        project_title:
-          type: string
-          description: The title of the project.
-        permissions:
-          $ref: '#/components/schemas/ProjectPermissions'
-        granted_at:
-          $ref: '#/components/schemas/GrantedAt'
-        updated_at:
-          $ref: '#/components/schemas/UpdatedAt'
-        _links:
-          type: object
-          properties:
-            self:
-              type: object
-              description: Link to the current access item.
-              properties:
-                href:
-                  type: string
-                  description: URL of the link.
-            update:
-              type:
-              - object
-              - 'null'
-              description: Link for updating the current access item. Only present if user has update permission.
-              properties:
-                href:
-                  type: string
-                  description: URL of the link.
-                method:
-                  type: string
-                  description: The HTTP method to use.
-            delete:
-              type:
-              - object
-              - 'null'
-              description: Link for deleting the current access item. Only present if user has delete permission.
-              properties:
-                href:
-                  type: string
-                  description: URL of the link.
-                method:
-                  type: string
-                  description: The HTTP method to use.
-      additionalProperties: false
-    Error_3:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-      required:
-      - error
+    UpdatedAt:
+      type: string
+      format: date-time
+      description: The date and time when the resource was last updated.
+  parameters:
+    ProjectID:
+      name: project_id
+      in: path
+      required: true
+      description: The ID of the project.
+      schema:
+        type: string
+    UserID:
+      name: user_id
+      in: path
+      required: true
+      description: The ID of the user.
+      schema:
+        type: string
+        example: d81c8ee2-44b3-429f-b944-a33ad7437690
+        format: uuid
+    PageSizeAccess:
+      in: query
+      name: page[size]
+      description: Determines the number of items to show.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+        default: null
+    PageBefore:
+      in: query
+      name: page[before]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
+    PageAfter:
+      in: query
+      name: page[after]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
   responses:
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error_2'
-    Conflict:
-      description: Conflict
+    NotFound:
+      description: Not Found
       content:
         application/problem+json:
           schema:
@@ -780,38 +708,20 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
-    NotFound:
-      description: Not Found
+    Conflict:
+      description: Conflict
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
     NoContent:
       description: No Content
-    Forbidden_2:
+    Forbidden:
       description: Forbidden
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/Error_3'
-    Conflict_2:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error_3'
-    BadRequest_2:
-      description: Bad Request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error_3'
-    NotFound_2:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error_3'
+            $ref: '#/components/schemas/Error_2'
   securitySchemes:
     OAuth2:
       type: oauth2
@@ -837,7 +747,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

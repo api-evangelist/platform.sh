@@ -1,16 +1,19 @@
 openapi: 3.2.0
 info:
-  title: Platform.sh Projects API
+  title: Upsun.com Rest Projects API
   version: '1.0'
   contact:
     name: Support
     url: https://upsun.com/contact-us/
   termsOfService: https://upsun.com/trust-center/legal/tos/
+  description: '# Introduction
+
+
+    Upsun, formerly Platform.sh, is a container-based Platform-as-a-Service.'
   x-logo:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Projects across 2 of this provider''s published API definitions: platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -58,35 +61,16 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
-    servers:
-    - url: '{schemes}://api.upsun.com'
-      description: The Upsun.com API gateway
-      variables:
-        schemes:
-          default: https
 components:
-  responses:
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    Error:
+    Link:
       type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
       properties:
-        error:
+        href:
           type: string
-          description: Error message
-      required:
-      - error
+          description: URL of the link
     ListLinks:
       type: object
       properties:
@@ -96,14 +80,6 @@ components:
           $ref: '#/components/schemas/Link'
         next:
           $ref: '#/components/schemas/Link'
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
     History:
       type: object
       properties:
@@ -136,6 +112,27 @@ components:
           type: string
           description: The ID of the user who triggered the event.
       additionalProperties: false
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error'
   parameters:
     ProjectID:
       name: project_id
@@ -156,9 +153,6 @@ components:
     BearerAuth:
       type: http
       scheme: bearer
-x-refined-from:
-- platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:
@@ -170,6 +164,7 @@ x-tagGroups:
 - name: Project Administration
   tags:
   - Project
+  - Domain Claim
   - Domain Management
   - Cert Management
   - Certificate Provisioner
@@ -188,6 +183,7 @@ x-tagGroups:
   - Runtime Operations
   - Deployment
   - Autoscaling
+  - Task
 - name: User Activity
   tags:
   - Project Activity
@@ -217,11 +213,19 @@ x-tagGroups:
   - Vouchers
   - Records
   - Profiles
+  - Billing Profile Projects
 - name: Global Info
   tags:
   - Project Discovery
   - References
   - Regions
+- name: Observability
+  tags:
+  - Blackfire Profiling
+  - Blackfire Monitoring
+  - Resources
+  - Http Traffic
+  - Continuous Profiling
 - name: Internal APIs
   tags:
   - Project Settings

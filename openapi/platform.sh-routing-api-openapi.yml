@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Routing across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Routing across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -26,11 +26,9 @@ tags:
     must be synchronized with their parent.
 
 
-    More information about routing can be found in the [Routes](https://docs.upsun.com/anchors/routes/)
+    More information about routing can be found in the Routes
 
-    section of the documentation.
-
-    '
+    section of the documentation.'
 paths:
   /projects/{projectId}/environments/{environmentId}/routes:
     get:
@@ -60,9 +58,7 @@ paths:
 
         a specific environment. The definitions returned by this endpoint
 
-        are those present in an environment''s `.upsun/config.yaml` file.
-
-        '
+        are those present in an environment''s `.upsun/config.yaml` file.'
       security:
       - OAuth2: []
     servers:
@@ -102,11 +98,9 @@ paths:
       summary: Get a route's info
       description: 'Get details of a route from an environment using the `id` of the entry
 
-        retrieved by the [Get environment routes list](#tag/Environment-Routes%2Fpaths%2F~1projects~1%7BprojectId%7D~1environments~1%7BenvironmentId%7D~1routes%2Fget)
+        retrieved by the Get environment routes list
 
-        endpoint.
-
-        '
+        endpoint.'
       security:
       - OAuth2: []
     servers:
@@ -117,11 +111,6 @@ paths:
           default: https
 components:
   schemas:
-    Route:
-      oneOf:
-      - $ref: '#/components/schemas/ProxyRoute'
-      - $ref: '#/components/schemas/RedirectRoute'
-      - $ref: '#/components/schemas/UpstreamRoute'
     ProxyRoute:
       type: object
       properties:
@@ -232,6 +221,186 @@ components:
       - type
       - tls
       - to
+      additionalProperties: false
+    Route:
+      oneOf:
+      - $ref: '#/components/schemas/ProxyRoute'
+      - $ref: '#/components/schemas/RedirectRoute'
+      - $ref: '#/components/schemas/UpstreamRoute'
+    RedirectRoute:
+      type: object
+      properties:
+        id:
+          type: string
+          title: RedirectRoute Identifier
+          description: The identifier of RedirectRoute
+        primary:
+          type:
+          - boolean
+          - 'null'
+          title: Is primary
+          description: This route is the primary route of the environment
+        production_url:
+          type:
+          - string
+          - 'null'
+          title: Production URL
+          description: How this URL route would look on production environment
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        type:
+          type: string
+          enum:
+          - proxy
+          - redirect
+          - upstream
+          title: Route type
+          description: Route type.
+        tls:
+          type: object
+          properties:
+            strict_transport_security:
+              type: object
+              properties:
+                enabled:
+                  type:
+                  - boolean
+                  - 'null'
+                  title: Is enabled
+                  description: Whether strict transport security is enabled or not.
+                include_subdomains:
+                  type:
+                  - boolean
+                  - 'null'
+                  title: Is subdomains included
+                  description: Whether the strict transport security policy should include all subdomains.
+                preload:
+                  type:
+                  - boolean
+                  - 'null'
+                  title: Is strict transport security preloaded
+                  description: Whether the strict transport security policy should be preloaded in browsers.
+              required:
+              - enabled
+              - include_subdomains
+              - preload
+              additionalProperties: false
+              title: Strict-Transport-Security options.
+              description: ''
+            min_version:
+              type:
+              - string
+              - 'null'
+              enum:
+              - TLSv1.0
+              - TLSv1.1
+              - TLSv1.2
+              - TLSv1.3
+              title: Minimum TLS version
+              description: The minimum TLS version to support.
+            client_authentication:
+              type:
+              - string
+              - 'null'
+              enum:
+              - request
+              - require
+              title: Client authentication
+              description: The type of client authentication to request.
+            client_certificate_authorities:
+              type: array
+              items:
+                type: string
+              title: Client certificate authorities
+              description: Certificate authorities to validate the client certificate against. If not specified, a default set of trusted CAs will be used.
+          required:
+          - strict_transport_security
+          - min_version
+          - client_authentication
+          - client_certificate_authorities
+          additionalProperties: false
+          title: TLS settings
+          description: TLS settings for the route.
+        to:
+          type: string
+          title: Redirect destination
+          description: ''
+        redirects:
+          type: object
+          properties:
+            expires:
+              type: string
+              title: Expires
+              description: The amount of time, in seconds, to cache the redirects.
+            paths:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  regexp:
+                    type: boolean
+                    title: Is regexp
+                    description: Whether the path is a regular expression.
+                  to:
+                    type: string
+                    title: Redirect URL
+                    description: The URL to redirect to.
+                  prefix:
+                    type:
+                    - boolean
+                    - 'null'
+                    title: Is prefix
+                    description: Whether to redirect all the paths that start with the path.
+                  append_suffix:
+                    type:
+                    - boolean
+                    - 'null'
+                    title: Append suffix
+                    description: Whether to append the incoming suffix to the redirected URL.
+                  code:
+                    type: integer
+                    enum:
+                    - 301
+                    - 302
+                    - 307
+                    - 308
+                    title: Redirect code
+                    description: The redirect code to use.
+                  expires:
+                    type:
+                    - string
+                    - 'null'
+                    title: Expires
+                    description: The amount of time, in seconds, to cache the redirects.
+                required:
+                - regexp
+                - to
+                - prefix
+                - append_suffix
+                - code
+                - expires
+                additionalProperties: false
+              title: Path
+              description: The paths to redirect
+          required:
+          - expires
+          - paths
+          additionalProperties: false
+          title: Redirect configuration
+          description: The configuration of the redirects.
+      required:
+      - primary
+      - id
+      - production_url
+      - attributes
+      - type
+      - tls
+      - to
+      - redirects
       additionalProperties: false
     UpstreamRoute:
       type: object
@@ -466,181 +635,6 @@ components:
       - redirects
       - sticky
       additionalProperties: false
-    RedirectRoute:
-      type: object
-      properties:
-        id:
-          type: string
-          title: RedirectRoute Identifier
-          description: The identifier of RedirectRoute
-        primary:
-          type:
-          - boolean
-          - 'null'
-          title: Is primary
-          description: This route is the primary route of the environment
-        production_url:
-          type:
-          - string
-          - 'null'
-          title: Production URL
-          description: How this URL route would look on production environment
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        type:
-          type: string
-          enum:
-          - proxy
-          - redirect
-          - upstream
-          title: Route type
-          description: Route type.
-        tls:
-          type: object
-          properties:
-            strict_transport_security:
-              type: object
-              properties:
-                enabled:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is enabled
-                  description: Whether strict transport security is enabled or not.
-                include_subdomains:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is subdomains included
-                  description: Whether the strict transport security policy should include all subdomains.
-                preload:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is strict transport security preloaded
-                  description: Whether the strict transport security policy should be preloaded in browsers.
-              required:
-              - enabled
-              - include_subdomains
-              - preload
-              additionalProperties: false
-              title: Strict-Transport-Security options.
-              description: ''
-            min_version:
-              type:
-              - string
-              - 'null'
-              enum:
-              - TLSv1.0
-              - TLSv1.1
-              - TLSv1.2
-              - TLSv1.3
-              title: Minimum TLS version
-              description: The minimum TLS version to support.
-            client_authentication:
-              type:
-              - string
-              - 'null'
-              enum:
-              - request
-              - require
-              title: Client authentication
-              description: The type of client authentication to request.
-            client_certificate_authorities:
-              type: array
-              items:
-                type: string
-              title: Client certificate authorities
-              description: Certificate authorities to validate the client certificate against. If not specified, a default set of trusted CAs will be used.
-          required:
-          - strict_transport_security
-          - min_version
-          - client_authentication
-          - client_certificate_authorities
-          additionalProperties: false
-          title: TLS settings
-          description: TLS settings for the route.
-        to:
-          type: string
-          title: Redirect destination
-          description: ''
-        redirects:
-          type: object
-          properties:
-            expires:
-              type: string
-              title: Expires
-              description: The amount of time, in seconds, to cache the redirects.
-            paths:
-              type: object
-              additionalProperties:
-                type: object
-                properties:
-                  regexp:
-                    type: boolean
-                    title: Is regexp
-                    description: Whether the path is a regular expression.
-                  to:
-                    type: string
-                    title: Redirect URL
-                    description: The URL to redirect to.
-                  prefix:
-                    type:
-                    - boolean
-                    - 'null'
-                    title: Is prefix
-                    description: Whether to redirect all the paths that start with the path.
-                  append_suffix:
-                    type:
-                    - boolean
-                    - 'null'
-                    title: Append suffix
-                    description: Whether to append the incoming suffix to the redirected URL.
-                  code:
-                    type: integer
-                    enum:
-                    - 301
-                    - 302
-                    - 307
-                    - 308
-                    title: Redirect code
-                    description: The redirect code to use.
-                  expires:
-                    type:
-                    - string
-                    - 'null'
-                    title: Expires
-                    description: The amount of time, in seconds, to cache the redirects.
-                required:
-                - regexp
-                - to
-                - prefix
-                - append_suffix
-                - code
-                - expires
-                additionalProperties: false
-              title: Path
-              description: The paths to redirect
-          required:
-          - expires
-          - paths
-          additionalProperties: false
-          title: Redirect configuration
-          description: The configuration of the redirects.
-      required:
-      - primary
-      - id
-      - production_url
-      - attributes
-      - type
-      - tls
-      - to
-      - redirects
-      additionalProperties: false
     RouteCollection:
       type: array
       items:
@@ -755,6 +749,181 @@ components:
       - type
       - tls
       - to
+      additionalProperties: false
+    RedirectRoute_2:
+      type: object
+      properties:
+        id:
+          type: string
+          title: RedirectRoute Identifier
+          description: The identifier of RedirectRoute
+        primary:
+          type:
+          - boolean
+          - 'null'
+          title: Is primary
+          description: This route is the primary route of the environment
+        production_url:
+          type:
+          - string
+          - 'null'
+          title: Production URL
+          description: How this URL route would look on production environment
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        type:
+          type: string
+          enum:
+          - proxy
+          - redirect
+          - upstream
+          title: Route type
+          description: Route type
+        tls:
+          type: object
+          properties:
+            strict_transport_security:
+              type: object
+              properties:
+                enabled:
+                  type:
+                  - boolean
+                  - 'null'
+                  title: Is enabled
+                  description: Whether strict transport security is enabled or not
+                include_subdomains:
+                  type:
+                  - boolean
+                  - 'null'
+                  title: Is subdomains included
+                  description: Whether the strict transport security policy should include all subdomains
+                preload:
+                  type:
+                  - boolean
+                  - 'null'
+                  title: Is strict transport security preloaded
+                  description: Whether the strict transport security policy should be preloaded in browsers
+              required:
+              - enabled
+              - include_subdomains
+              - preload
+              additionalProperties: false
+              title: Strict-Transport-Security options.
+              description: ''
+            min_version:
+              type:
+              - string
+              - 'null'
+              enum:
+              - TLSv1.0
+              - TLSv1.1
+              - TLSv1.2
+              - TLSv1.3
+              title: Minimum TLS version
+              description: The minimum TLS version to support.
+            client_authentication:
+              type:
+              - string
+              - 'null'
+              enum:
+              - request
+              - require
+              title: Client authentication
+              description: The type of client authentication to request.
+            client_certificate_authorities:
+              type: array
+              items:
+                type: string
+              title: Client certificate authorities
+              description: Certificate authorities to validate the client certificate against. If not specified, a default set of trusted CAs will be used.
+          required:
+          - strict_transport_security
+          - min_version
+          - client_authentication
+          - client_certificate_authorities
+          additionalProperties: false
+          title: TLS settings
+          description: TLS settings for the route
+        to:
+          type: string
+          title: Redirect destination
+          description: The destination of the proxy
+        redirects:
+          type: object
+          properties:
+            expires:
+              type: string
+              title: Expires
+              description: The amount of time, in seconds, to cache the redirects
+            paths:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  regexp:
+                    type: boolean
+                    title: Is regexp
+                    description: Whether the path is a regular expression.
+                  to:
+                    type: string
+                    title: Redirect URL
+                    description: The URL to redirect to.
+                  prefix:
+                    type:
+                    - boolean
+                    - 'null'
+                    title: Is prefix
+                    description: Whether to redirect all the paths that start with the path.
+                  append_suffix:
+                    type:
+                    - boolean
+                    - 'null'
+                    title: Append suffix
+                    description: Whether to append the incoming suffix to the redirected URL.
+                  code:
+                    type: integer
+                    enum:
+                    - 301
+                    - 302
+                    - 307
+                    - 308
+                    title: Redirect code
+                    description: The redirect code to use.
+                  expires:
+                    type:
+                    - string
+                    - 'null'
+                    title: Expires
+                    description: The amount of time, in seconds, to cache the redirects.
+                required:
+                - regexp
+                - to
+                - prefix
+                - append_suffix
+                - code
+                - expires
+                additionalProperties: false
+              title: Path
+              description: The paths to redirect
+          required:
+          - expires
+          - paths
+          additionalProperties: false
+          title: Redirect configuration
+          description: The configuration of the redirects
+      required:
+      - primary
+      - id
+      - production_url
+      - attributes
+      - type
+      - tls
+      - to
+      - redirects
       additionalProperties: false
     UpstreamRoute_2:
       type: object
@@ -989,700 +1158,6 @@ components:
       - redirects
       - sticky
       additionalProperties: false
-    RedirectRoute_2:
-      type: object
-      properties:
-        id:
-          type: string
-          title: RedirectRoute Identifier
-          description: The identifier of RedirectRoute
-        primary:
-          type:
-          - boolean
-          - 'null'
-          title: Is primary
-          description: This route is the primary route of the environment
-        production_url:
-          type:
-          - string
-          - 'null'
-          title: Production URL
-          description: How this URL route would look on production environment
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        type:
-          type: string
-          enum:
-          - proxy
-          - redirect
-          - upstream
-          title: Route type
-          description: Route type
-        tls:
-          type: object
-          properties:
-            strict_transport_security:
-              type: object
-              properties:
-                enabled:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is enabled
-                  description: Whether strict transport security is enabled or not
-                include_subdomains:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is subdomains included
-                  description: Whether the strict transport security policy should include all subdomains
-                preload:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is strict transport security preloaded
-                  description: Whether the strict transport security policy should be preloaded in browsers
-              required:
-              - enabled
-              - include_subdomains
-              - preload
-              additionalProperties: false
-              title: Strict-Transport-Security options.
-              description: ''
-            min_version:
-              type:
-              - string
-              - 'null'
-              enum:
-              - TLSv1.0
-              - TLSv1.1
-              - TLSv1.2
-              - TLSv1.3
-              title: Minimum TLS version
-              description: The minimum TLS version to support.
-            client_authentication:
-              type:
-              - string
-              - 'null'
-              enum:
-              - request
-              - require
-              title: Client authentication
-              description: The type of client authentication to request.
-            client_certificate_authorities:
-              type: array
-              items:
-                type: string
-              title: Client certificate authorities
-              description: Certificate authorities to validate the client certificate against. If not specified, a default set of trusted CAs will be used.
-          required:
-          - strict_transport_security
-          - min_version
-          - client_authentication
-          - client_certificate_authorities
-          additionalProperties: false
-          title: TLS settings
-          description: TLS settings for the route
-        to:
-          type: string
-          title: Redirect destination
-          description: The destination of the proxy
-        redirects:
-          type: object
-          properties:
-            expires:
-              type: string
-              title: Expires
-              description: The amount of time, in seconds, to cache the redirects
-            paths:
-              type: object
-              additionalProperties:
-                type: object
-                properties:
-                  regexp:
-                    type: boolean
-                    title: Is regexp
-                    description: Whether the path is a regular expression.
-                  to:
-                    type: string
-                    title: Redirect URL
-                    description: The URL to redirect to.
-                  prefix:
-                    type:
-                    - boolean
-                    - 'null'
-                    title: Is prefix
-                    description: Whether to redirect all the paths that start with the path.
-                  append_suffix:
-                    type:
-                    - boolean
-                    - 'null'
-                    title: Append suffix
-                    description: Whether to append the incoming suffix to the redirected URL.
-                  code:
-                    type: integer
-                    enum:
-                    - 301
-                    - 302
-                    - 307
-                    - 308
-                    title: Redirect code
-                    description: The redirect code to use.
-                  expires:
-                    type:
-                    - string
-                    - 'null'
-                    title: Expires
-                    description: The amount of time, in seconds, to cache the redirects.
-                required:
-                - regexp
-                - to
-                - prefix
-                - append_suffix
-                - code
-                - expires
-                additionalProperties: false
-              title: Path
-              description: The paths to redirect
-          required:
-          - expires
-          - paths
-          additionalProperties: false
-          title: Redirect configuration
-          description: The configuration of the redirects
-      required:
-      - primary
-      - id
-      - production_url
-      - attributes
-      - type
-      - tls
-      - to
-      - redirects
-      additionalProperties: false
-    ProxyRoute_3:
-      type: object
-      properties:
-        id:
-          type: string
-          title: ProxyRoute Identifier
-          description: The identifier of ProxyRoute
-        primary:
-          type:
-          - boolean
-          - 'null'
-          title: Is primary
-          description: This route is the primary route of the environment
-        production_url:
-          type:
-          - string
-          - 'null'
-          title: Production URL
-          description: How this URL route would look on production environment
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        type:
-          type: string
-          enum:
-          - proxy
-          - redirect
-          - upstream
-          title: Route type
-          description: Route type
-        tls:
-          type: object
-          properties:
-            strict_transport_security:
-              type: object
-              properties:
-                enabled:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is enabled
-                  description: Whether strict transport security is enabled or not
-                include_subdomains:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is subdomains included
-                  description: Whether the strict transport security policy should include all subdomains
-                preload:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is strict transport security preloaded
-                  description: Whether the strict transport security policy should be preloaded in browsers
-              required:
-              - enabled
-              - include_subdomains
-              - preload
-              additionalProperties: false
-              title: Strict-Transport-Security options.
-              description: ''
-            min_version:
-              type:
-              - string
-              - 'null'
-              enum:
-              - TLSv1.0
-              - TLSv1.1
-              - TLSv1.2
-              - TLSv1.3
-              title: Minimum TLS version
-              description: The minimum TLS version to support.
-            client_authentication:
-              type:
-              - string
-              - 'null'
-              enum:
-              - request
-              - require
-              title: Client authentication
-              description: The type of client authentication to request.
-            client_certificate_authorities:
-              type: array
-              items:
-                type: string
-              title: Client certificate authorities
-              description: Certificate authorities to validate the client certificate against. If not specified, a default set of trusted CAs will be used.
-          required:
-          - strict_transport_security
-          - min_version
-          - client_authentication
-          - client_certificate_authorities
-          additionalProperties: false
-          title: TLS settings
-          description: TLS settings for the route
-        to:
-          type: string
-          title: Proxy destination
-          description: The destination of the proxy
-      required:
-      - primary
-      - id
-      - production_url
-      - attributes
-      - type
-      - tls
-      - to
-      additionalProperties: false
-    UpstreamRoute_3:
-      type: object
-      properties:
-        id:
-          type: string
-          title: UpstreamRoute Identifier
-          description: The identifier of UpstreamRoute
-        primary:
-          type:
-          - boolean
-          - 'null'
-          title: Is primary
-          description: This route is the primary route of the environment
-        production_url:
-          type:
-          - string
-          - 'null'
-          title: Production URL
-          description: How this URL route would look on production environment
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        type:
-          type: string
-          enum:
-          - proxy
-          - redirect
-          - upstream
-          title: Route type
-          description: Route type
-        tls:
-          type: object
-          properties:
-            strict_transport_security:
-              type: object
-              properties:
-                enabled:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is enabled
-                  description: Whether strict transport security is enabled or not
-                include_subdomains:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is subdomains included
-                  description: Whether the strict transport security policy should include all subdomains
-                preload:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is strict transport security preloaded
-                  description: Whether the strict transport security policy should be preloaded in browsers
-              required:
-              - enabled
-              - include_subdomains
-              - preload
-              additionalProperties: false
-              title: Strict-Transport-Security options.
-              description: ''
-            min_version:
-              type:
-              - string
-              - 'null'
-              enum:
-              - TLSv1.0
-              - TLSv1.1
-              - TLSv1.2
-              - TLSv1.3
-              title: Minimum TLS version
-              description: The minimum TLS version to support.
-            client_authentication:
-              type:
-              - string
-              - 'null'
-              enum:
-              - request
-              - require
-              title: Client authentication
-              description: The type of client authentication to request.
-            client_certificate_authorities:
-              type: array
-              items:
-                type: string
-              title: Client certificate authorities
-              description: Certificate authorities to validate the client certificate against. If not specified, a default set of trusted CAs will be used.
-          required:
-          - strict_transport_security
-          - min_version
-          - client_authentication
-          - client_certificate_authorities
-          additionalProperties: false
-          title: TLS settings
-          description: TLS settings for the route
-        cache:
-          type: object
-          properties:
-            enabled:
-              type: boolean
-              title: Is enabled
-              description: Whether the cache is enabled.
-            default_ttl:
-              type: integer
-              title: Default TTL
-              description: The TTL to apply when the response doesn't specify one. Only applies to static files.
-            cookies:
-              type: array
-              items:
-                type: string
-              title: Cookies
-              description: The cookies to take into account for the cache key.
-            headers:
-              type: array
-              items:
-                type: string
-              title: Headers
-              description: The headers to take into account for the cache key.
-          required:
-          - enabled
-          - default_ttl
-          - cookies
-          - headers
-          additionalProperties: false
-          title: Cache configuration
-          description: Cache configuration
-        ssi:
-          type: object
-          properties:
-            enabled:
-              type: boolean
-              title: Is enabled
-              description: Whether SSI include is enabled.
-          required:
-          - enabled
-          additionalProperties: false
-          title: SSI configuration
-          description: Server-Side Include configuration
-        upstream:
-          type: string
-          title: Upstream
-          description: The upstream to use for this route
-        redirects:
-          type: object
-          properties:
-            expires:
-              type: string
-              title: Expires
-              description: The amount of time, in seconds, to cache the redirects
-            paths:
-              type: object
-              additionalProperties:
-                type: object
-                properties:
-                  regexp:
-                    type: boolean
-                    title: Is regexp
-                    description: Whether the path is a regular expression.
-                  to:
-                    type: string
-                    title: Redirect URL
-                    description: The URL to redirect to.
-                  prefix:
-                    type:
-                    - boolean
-                    - 'null'
-                    title: Is prefix
-                    description: Whether to redirect all the paths that start with the path.
-                  append_suffix:
-                    type:
-                    - boolean
-                    - 'null'
-                    title: Append suffix
-                    description: Whether to append the incoming suffix to the redirected URL.
-                  code:
-                    type: integer
-                    enum:
-                    - 301
-                    - 302
-                    - 307
-                    - 308
-                    title: Redirect code
-                    description: The redirect code to use.
-                  expires:
-                    type:
-                    - string
-                    - 'null'
-                    title: Expires
-                    description: The amount of time, in seconds, to cache the redirects.
-                required:
-                - regexp
-                - to
-                - prefix
-                - append_suffix
-                - code
-                - expires
-                additionalProperties: false
-              title: Path
-              description: The paths to redirect
-          required:
-          - expires
-          - paths
-          additionalProperties: false
-          title: Redirect configuration
-          description: The configuration of the redirects
-        sticky:
-          type: object
-          properties:
-            enabled:
-              type: boolean
-              title: Is enabled
-              description: Whether sticky routing is enabled.
-          required:
-          - enabled
-          additionalProperties: false
-          title: Sticky configuration
-          description: Sticky routing configuration
-      required:
-      - primary
-      - id
-      - production_url
-      - attributes
-      - type
-      - tls
-      - cache
-      - ssi
-      - upstream
-      - redirects
-      - sticky
-      additionalProperties: false
-    RedirectRoute_3:
-      type: object
-      properties:
-        id:
-          type: string
-          title: RedirectRoute Identifier
-          description: The identifier of RedirectRoute
-        primary:
-          type:
-          - boolean
-          - 'null'
-          title: Is primary
-          description: This route is the primary route of the environment
-        production_url:
-          type:
-          - string
-          - 'null'
-          title: Production URL
-          description: How this URL route would look on production environment
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        type:
-          type: string
-          enum:
-          - proxy
-          - redirect
-          - upstream
-          title: Route type
-          description: Route type
-        tls:
-          type: object
-          properties:
-            strict_transport_security:
-              type: object
-              properties:
-                enabled:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is enabled
-                  description: Whether strict transport security is enabled or not
-                include_subdomains:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is subdomains included
-                  description: Whether the strict transport security policy should include all subdomains
-                preload:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is strict transport security preloaded
-                  description: Whether the strict transport security policy should be preloaded in browsers
-              required:
-              - enabled
-              - include_subdomains
-              - preload
-              additionalProperties: false
-              title: Strict-Transport-Security options.
-              description: ''
-            min_version:
-              type:
-              - string
-              - 'null'
-              enum:
-              - TLSv1.0
-              - TLSv1.1
-              - TLSv1.2
-              - TLSv1.3
-              title: Minimum TLS version
-              description: The minimum TLS version to support.
-            client_authentication:
-              type:
-              - string
-              - 'null'
-              enum:
-              - request
-              - require
-              title: Client authentication
-              description: The type of client authentication to request.
-            client_certificate_authorities:
-              type: array
-              items:
-                type: string
-              title: Client certificate authorities
-              description: Certificate authorities to validate the client certificate against. If not specified, a default set of trusted CAs will be used.
-          required:
-          - strict_transport_security
-          - min_version
-          - client_authentication
-          - client_certificate_authorities
-          additionalProperties: false
-          title: TLS settings
-          description: TLS settings for the route
-        to:
-          type: string
-          title: Redirect destination
-          description: The destination of the proxy
-        redirects:
-          type: object
-          properties:
-            expires:
-              type: string
-              title: Expires
-              description: The amount of time, in seconds, to cache the redirects
-            paths:
-              type: object
-              additionalProperties:
-                type: object
-                properties:
-                  regexp:
-                    type: boolean
-                    title: Is regexp
-                    description: Whether the path is a regular expression.
-                  to:
-                    type: string
-                    title: Redirect URL
-                    description: The URL to redirect to.
-                  prefix:
-                    type:
-                    - boolean
-                    - 'null'
-                    title: Is prefix
-                    description: Whether to redirect all the paths that start with the path.
-                  append_suffix:
-                    type:
-                    - boolean
-                    - 'null'
-                    title: Append suffix
-                    description: Whether to append the incoming suffix to the redirected URL.
-                  code:
-                    type: integer
-                    enum:
-                    - 301
-                    - 302
-                    - 307
-                    - 308
-                    title: Redirect code
-                    description: The redirect code to use.
-                  expires:
-                    type:
-                    - string
-                    - 'null'
-                    title: Expires
-                    description: The amount of time, in seconds, to cache the redirects.
-                required:
-                - regexp
-                - to
-                - prefix
-                - append_suffix
-                - code
-                - expires
-                additionalProperties: false
-              title: Path
-              description: The paths to redirect
-          required:
-          - expires
-          - paths
-          additionalProperties: false
-          title: Redirect configuration
-          description: The configuration of the redirects
-      required:
-      - primary
-      - id
-      - production_url
-      - attributes
-      - type
-      - tls
-      - to
-      - redirects
-      additionalProperties: false
   securitySchemes:
     OAuth2:
       type: oauth2
@@ -1708,7 +1183,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

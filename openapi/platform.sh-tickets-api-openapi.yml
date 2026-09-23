@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Tickets across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Tickets across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -71,140 +71,7 @@ paths:
         schemes:
           default: https
 components:
-  parameters:
-    filter_due:
-      name: filter[due]
-      in: query
-      description: ISO dateformat expected. A time that the ticket is due at.
-      schema:
-        type: string
-        format: date-time
-    filter_requester_id:
-      name: filter[requester_id]
-      in: query
-      description: UUID of the ticket requester. Converted from the ZID value.
-      schema:
-        type: string
-        format: uuid
-    filter_type:
-      name: filter[type]
-      in: query
-      description: The type of the support ticket.
-      schema:
-        type: string
-        enum:
-        - problem
-        - task
-        - incident
-        - question
-    filter_submitter_id:
-      name: filter[submitter_id]
-      in: query
-      description: UUID of the ticket submitter. Converted from the ZID value.
-      schema:
-        type: string
-        format: uuid
-    filter_ticket_id:
-      name: filter[ticket_id]
-      in: query
-      description: The ID of the ticket.
-      schema:
-        type: integer
-    page:
-      name: page
-      in: query
-      description: Page to be displayed. Defaults to 1.
-      required: false
-      schema:
-        type: integer
-        format: int32
-    filter_created:
-      name: filter[created]
-      in: query
-      description: ISO dateformat expected. The time when the support ticket was created.
-      schema:
-        type: string
-        format: date-time
-    filter_assignee_id:
-      name: filter[assignee_id]
-      in: query
-      description: UUID of the ticket assignee. Converted from the ZID value.
-      schema:
-        type: string
-        format: uuid
-    filter_has_incidents:
-      name: filter[has_incidents]
-      in: query
-      description: Whether or not this ticket has incidents.
-      schema:
-        type: boolean
-    filter_updated:
-      name: filter[updated]
-      in: query
-      description: ISO dateformat expected. The time when the support ticket was updated.
-      schema:
-        type: string
-        format: date-time
-    filter_ticket_status:
-      name: filter[status]
-      in: query
-      description: The status of the support ticket.
-      schema:
-        type: string
-        enum:
-        - closed
-        - deleted
-        - hold
-        - new
-        - open
-        - pending
-        - solved
-    filter_priority:
-      name: filter[priority]
-      in: query
-      description: The priority of the support ticket.
-      schema:
-        type: string
-        enum:
-        - low
-        - normal
-        - high
-        - urgent
   schemas:
-    HalLinks:
-      description: Links to _self, and previous or next page, given that they exist.
-      properties:
-        self:
-          description: The cardinal link to the self resource.
-          properties:
-            title:
-              description: Title of the link
-              type: string
-            href:
-              description: URL of the link
-              type: string
-          type: object
-        previous:
-          description: The link to the previous resource page, given that it exists.
-          properties:
-            title:
-              description: Title of the link
-              type: string
-            href:
-              description: URL of the link
-              type: string
-          type: object
-        next:
-          description: The link to the next resource page, given that it exists.
-          properties:
-            title:
-              description: Title of the link
-              type: string
-            href:
-              description: URL of the link
-              type: string
-          type: object
-      type: object
     Ticket:
       description: The support ticket object.
       properties:
@@ -394,6 +261,139 @@ components:
           type: string
           format: url
       type: object
+    HalLinks:
+      description: Links to _self, and previous or next page, given that they exist.
+      properties:
+        self:
+          description: The cardinal link to the self resource.
+          properties:
+            title:
+              description: Title of the link
+              type: string
+            href:
+              description: URL of the link
+              type: string
+          type: object
+        previous:
+          description: The link to the previous resource page, given that it exists.
+          properties:
+            title:
+              description: Title of the link
+              type: string
+            href:
+              description: URL of the link
+              type: string
+          type: object
+        next:
+          description: The link to the next resource page, given that it exists.
+          properties:
+            title:
+              description: Title of the link
+              type: string
+            href:
+              description: URL of the link
+              type: string
+          type: object
+      type: object
+  parameters:
+    filter_assignee_id:
+      name: filter[assignee_id]
+      in: query
+      description: UUID of the ticket assignee. Converted from the ZID value.
+      schema:
+        type: string
+        format: uuid
+    filter_requester_id:
+      name: filter[requester_id]
+      in: query
+      description: UUID of the ticket requester. Converted from the ZID value.
+      schema:
+        type: string
+        format: uuid
+    filter_due:
+      name: filter[due]
+      in: query
+      description: ISO dateformat expected. A time that the ticket is due at.
+      schema:
+        type: string
+        format: date-time
+    filter_updated:
+      name: filter[updated]
+      in: query
+      description: ISO dateformat expected. The time when the support ticket was updated.
+      schema:
+        type: string
+        format: date-time
+    page:
+      name: page
+      in: query
+      description: Page to be displayed. Defaults to 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+    filter_submitter_id:
+      name: filter[submitter_id]
+      in: query
+      description: UUID of the ticket submitter. Converted from the ZID value.
+      schema:
+        type: string
+        format: uuid
+    filter_type:
+      name: filter[type]
+      in: query
+      description: The type of the support ticket.
+      schema:
+        type: string
+        enum:
+        - problem
+        - task
+        - incident
+        - question
+    filter_ticket_id:
+      name: filter[ticket_id]
+      in: query
+      description: The ID of the ticket.
+      schema:
+        type: integer
+    filter_has_incidents:
+      name: filter[has_incidents]
+      in: query
+      description: Whether or not this ticket has incidents.
+      schema:
+        type: boolean
+    filter_ticket_status:
+      name: filter[status]
+      in: query
+      description: The status of the support ticket.
+      schema:
+        type: string
+        enum:
+        - closed
+        - deleted
+        - hold
+        - new
+        - open
+        - pending
+        - solved
+    filter_priority:
+      name: filter[priority]
+      in: query
+      description: The priority of the support ticket.
+      schema:
+        type: string
+        enum:
+        - low
+        - normal
+        - high
+        - urgent
+    filter_created:
+      name: filter[created]
+      in: query
+      description: ISO dateformat expected. The time when the support ticket was created.
+      schema:
+        type: string
+        format: date-time
   securitySchemes:
     OAuth2:
       type: oauth2
@@ -419,7 +419,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

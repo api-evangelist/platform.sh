@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Runtime Operations across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Runtime Operations across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -56,7 +56,7 @@ paths:
       tags:
       - Runtime Operations
       summary: Execute a runtime operation
-      description: Execute a runtime operation on a currently deployed environment. This allows you to run one-off commands, such as rebuilding static assets on demand, by defining an `operations` key in a project's `.upsun/config.yaml` configuration. More information on runtime operations is [available in our user documentation](https://docs.upsun.com/anchors/app/runtime-operations/).
+      description: Execute a runtime operation on a currently deployed environment. This allows you to run one-off commands, such as rebuilding static assets on demand, by defining an `operations` key in a project's `.upsun/config.yaml` configuration. More information on runtime operations is available in our user documentation.
       security:
       - OAuth2: []
     servers:
@@ -125,27 +125,6 @@ components:
       - service
       - operation
       additionalProperties: false
-    EnvironmentOperationInput_3:
-      type: object
-      properties:
-        service:
-          type: string
-          title: Application or worker name
-          description: The name of the application or worker to run the operation on
-        operation:
-          type: string
-          title: Operation name
-          description: The name of the operation
-        parameters:
-          type: array
-          items:
-            type: string
-          title: Operation parameters
-          description: The parameters to run the operation with
-      required:
-      - service
-      - operation
-      additionalProperties: false
   securitySchemes:
     OAuth2:
       type: oauth2
@@ -171,7 +150,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

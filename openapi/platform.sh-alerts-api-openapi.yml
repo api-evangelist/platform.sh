@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Alerts across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Alerts across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -51,7 +51,7 @@ paths:
     patch:
       tags:
       - Alerts
-      summary: Update usage alerts.
+      summary: Update usage alerts
       operationId: update-usage-alerts
       parameters:
       - $ref: '#/components/parameters/subscription_id'
@@ -93,14 +93,6 @@ paths:
         schemes:
           default: https
 components:
-  parameters:
-    subscription_id:
-      name: subscriptionId
-      in: path
-      description: The ID of the subscription
-      required: true
-      schema:
-        type: string
   schemas:
     Alert:
       description: The alert object.
@@ -126,6 +118,14 @@ components:
           description: The alert type specific configuration.
           type: object
       type: object
+  parameters:
+    subscription_id:
+      name: subscriptionId
+      in: path
+      description: The ID of the subscription
+      required: true
+      schema:
+        type: string
   securitySchemes:
     OAuth2:
       type: oauth2
@@ -151,7 +151,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

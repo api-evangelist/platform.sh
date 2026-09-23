@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Cert Management across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Cert Management across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -29,13 +29,11 @@ tags:
 
     endpoints. For more information, see our
 
-    [Third-party TLS certificate](https://docs.upsun.com/anchors/domains/custom/custom-certificates/)
+    Third-party TLS certificate
 
     documentation. These endpoints are not for managing certificates
 
-    that are automatically supplied by Upsun via Let''s Encrypt.
-
-    '
+    that are automatically supplied by Upsun via Let''s Encrypt.'
 paths:
   /projects/{projectId}/certificates:
     get:
@@ -58,9 +56,7 @@ paths:
       summary: Get list of SSL certificates
       description: 'Retrieve a list of objects representing the SSL certificates
 
-        associated with a project.
-
-        '
+        associated with a project.'
       security:
       - OAuth2: []
     post:
@@ -88,9 +84,7 @@ paths:
       tags:
       - Cert Management
       summary: Add an SSL certificate
-      description: 'Add a single SSL certificate to a project.
-
-        '
+      description: Add a single SSL certificate to a project.
       security:
       - OAuth2: []
     servers:
@@ -125,9 +119,7 @@ paths:
       summary: Get an SSL certificate
       description: 'Retrieve information about a single SSL certificate
 
-        associated with a project.
-
-        '
+        associated with a project.'
       security:
       - OAuth2: []
     patch:
@@ -160,9 +152,7 @@ paths:
       tags:
       - Cert Management
       summary: Update an SSL certificate
-      description: 'Update a single SSL certificate associated with a project.
-
-        '
+      description: Update a single SSL certificate associated with a project.
       security:
       - OAuth2: []
     delete:
@@ -188,9 +178,7 @@ paths:
       tags:
       - Cert Management
       summary: Delete an SSL certificate
-      description: 'Delete a single SSL certificate associated with a project.
-
-        '
+      description: Delete a single SSL certificate associated with a project.
       security:
       - OAuth2: []
     servers:
@@ -219,6 +207,8 @@ paths:
       - Cert Management
       security:
       - OAuth2: []
+      summary: List projects provisioners
+      x-summary-source: derived
     servers:
     - url: '{schemes}://api.upsun.com'
       description: The Upsun.com API gateway
@@ -250,6 +240,8 @@ paths:
       - Cert Management
       security:
       - OAuth2: []
+      summary: Get projects provisioners
+      x-summary-source: derived
     patch:
       requestBody:
         description: ''
@@ -281,6 +273,8 @@ paths:
       - Cert Management
       security:
       - OAuth2: []
+      summary: Update projects provisioners
+      x-summary-source: derived
     servers:
     - url: '{schemes}://api.upsun.com'
       description: The Upsun.com API gateway
@@ -289,126 +283,6 @@ paths:
           default: https
 components:
   schemas:
-    CertificateProvisionerCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/CertificateProvisioner'
-    CertificateCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Certificate'
-    CertificateCreateInput:
-      type: object
-      properties:
-        certificate:
-          type: string
-          title: Certificate
-          description: The PEM-encoded certificate
-        key:
-          type: string
-          title: Private Key
-          description: The PEM-encoded private key
-        chain:
-          type: array
-          items:
-            type: string
-          title: Certificate chain
-          description: The certificate chain
-        is_invalid:
-          type: boolean
-          title: Is Invalid
-          description: Whether this certificate should be skipped during provisioning
-      required:
-      - certificate
-      - key
-      additionalProperties: false
-    CertificatePatch:
-      type: object
-      properties:
-        chain:
-          type: array
-          items:
-            type: string
-          title: Certificate chain
-          description: The certificate chain
-        is_invalid:
-          type: boolean
-          title: Is Invalid
-          description: Whether this certificate should be skipped during provisioning
-      additionalProperties: false
-    CertificateProvisionerPatch:
-      type: object
-      properties:
-        directory_url:
-          type: string
-          title: ACME directory url
-          description: The URL to the ACME directory
-        email:
-          type: string
-          title: Contacted email address
-          description: The email address for contact information
-        eab_kid:
-          type:
-          - string
-          - 'null'
-          title: EAB Key identifier
-          description: The key identifier for Entity Attestation Binding
-        eab_hmac_key:
-          type:
-          - string
-          - 'null'
-          title: EAB HMAC Key
-          description: The Keyed-'Hashing Message Authentication Code' for Entity Attestation Binding
-      additionalProperties: false
-    CertificateProvisioner:
-      type: object
-      properties:
-        id:
-          type: string
-          title: CertificateProvisioner Identifier
-          description: The identifier of CertificateProvisioner
-        directory_url:
-          type: string
-          title: ACME directory url
-          description: The URL to the ACME directory
-        email:
-          type: string
-          title: Contacted email address
-          description: The email address for contact information
-        eab_kid:
-          type:
-          - string
-          - 'null'
-          title: EAB Key identifier
-          description: The key identifier for Entity Attestation Binding
-        eab_hmac_key:
-          type:
-          - string
-          - 'null'
-          title: EAB HMAC Key
-          description: The Keyed-'Hashing Message Authentication Code' for Entity Attestation Binding
-      required:
-      - id
-      - directory_url
-      - email
-      - eab_kid
-      - eab_hmac_key
-      additionalProperties: false
-    AcceptedResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
-      additionalProperties: false
     Certificate:
       type: object
       properties:
@@ -509,6 +383,126 @@ components:
       - issuer
       - expires_at
       additionalProperties: false
+    CertificateProvisioner:
+      type: object
+      properties:
+        id:
+          type: string
+          title: CertificateProvisioner Identifier
+          description: The identifier of CertificateProvisioner
+        directory_url:
+          type: string
+          title: ACME directory url
+          description: The URL to the ACME directory
+        email:
+          type: string
+          title: Contacted email address
+          description: The email address for contact information
+        eab_kid:
+          type:
+          - string
+          - 'null'
+          title: EAB Key identifier
+          description: The key identifier for Entity Attestation Binding
+        eab_hmac_key:
+          type:
+          - string
+          - 'null'
+          title: EAB HMAC Key
+          description: The Keyed-'Hashing Message Authentication Code' for Entity Attestation Binding
+      required:
+      - id
+      - directory_url
+      - email
+      - eab_kid
+      - eab_hmac_key
+      additionalProperties: false
+    CertificateProvisionerCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/CertificateProvisioner'
+    CertificateCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Certificate'
+    CertificateProvisionerPatch:
+      type: object
+      properties:
+        directory_url:
+          type: string
+          title: ACME directory url
+          description: The URL to the ACME directory
+        email:
+          type: string
+          title: Contacted email address
+          description: The email address for contact information
+        eab_kid:
+          type:
+          - string
+          - 'null'
+          title: EAB Key identifier
+          description: The key identifier for Entity Attestation Binding
+        eab_hmac_key:
+          type:
+          - string
+          - 'null'
+          title: EAB HMAC Key
+          description: The Keyed-'Hashing Message Authentication Code' for Entity Attestation Binding
+      additionalProperties: false
+    CertificateCreateInput:
+      type: object
+      properties:
+        certificate:
+          type: string
+          title: Certificate
+          description: The PEM-encoded certificate
+        key:
+          type: string
+          title: Private Key
+          description: The PEM-encoded private key
+        chain:
+          type: array
+          items:
+            type: string
+          title: Certificate chain
+          description: The certificate chain
+        is_invalid:
+          type: boolean
+          title: Is Invalid
+          description: Whether this certificate should be skipped during provisioning
+      required:
+      - certificate
+      - key
+      additionalProperties: false
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
+    CertificatePatch:
+      type: object
+      properties:
+        chain:
+          type: array
+          items:
+            type: string
+          title: Certificate chain
+          description: The certificate chain
+        is_invalid:
+          type: boolean
+          title: Is Invalid
+          description: Whether this certificate should be skipped during provisioning
+      additionalProperties: false
   securitySchemes:
     OAuth2:
       type: oauth2
@@ -534,7 +528,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

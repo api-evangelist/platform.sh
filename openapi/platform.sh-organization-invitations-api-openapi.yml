@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Organization Invitations across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Organization Invitations across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -308,15 +308,14 @@ components:
           description: Error message
       required:
       - error
-    Error_3:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-      required:
-      - error
   parameters:
+    InvitationID:
+      name: invitation_id
+      in: path
+      required: true
+      description: The ID of the invitation.
+      schema:
+        type: string
     OrganizationID:
       name: organization_id
       in: path
@@ -325,13 +324,6 @@ components:
       schema:
         type: string
         format: ulid
-    InvitationID:
-      name: invitation_id
-      in: path
-      required: true
-      description: The ID of the invitation.
-      schema:
-        type: string
   securitySchemes:
     OAuth2:
       type: oauth2
@@ -357,7 +349,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Environment Activity across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Environment Activity across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -83,9 +83,7 @@ paths:
 
         representing the `environment`, the specific `commits` included in
 
-        the push, and the `user` who pushed.
-
-        '
+        the push, and the `user` who pushed.'
       security:
       - OAuth2: []
     servers:
@@ -127,13 +125,11 @@ paths:
 
         `id` returned by the
 
-        [Get environment activities list](#tag/Environment-Activity%2Fpaths%2F~1projects~1%7BprojectId%7D~1environments~1%7BenvironmentId%7D~1activities%2Fget)
+        Get environment activities list
 
         endpoint. See the documentation on that endpoint for details about
 
-        the information this endpoint can return.
-
-        '
+        the information this endpoint can return.'
       security:
       - OAuth2: []
     servers:
@@ -173,14 +169,12 @@ paths:
       summary: Cancel an environment activity
       description: 'Cancel a single activity as specified by an `id` returned by the
 
-        [Get environment activities list](#tag/Environment-Activity%2Fpaths%2F~1projects~1%7BprojectId%7D~1environments~1%7BenvironmentId%7D~1activities%2Fget)
+        Get environment activities list
 
         endpoint.
 
 
-        Please note that not all activities are cancelable.
-
-        '
+        Please note that not all activities are cancelable.'
       security:
       - OAuth2: []
     servers:
@@ -206,6 +200,10 @@ components:
       - status
       - code
       additionalProperties: false
+    ActivityCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Activity'
     Activity:
       type: object
       properties:
@@ -375,190 +373,7 @@ components:
       - expires_at
       - commands
       additionalProperties: false
-    ActivityCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Activity'
     Activity_2:
-      type: object
-      properties:
-        id:
-          type: string
-          title: Activity Identifier
-          description: The identifier of Activity
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Creation date
-          description: The creation date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Update date
-          description: The update date
-        type:
-          type: string
-          title: Type
-          description: The type of the activity
-        parameters:
-          type: object
-          title: Parameters
-          description: The parameters of the activity
-        project:
-          type: string
-          title: Project
-          description: The project the activity belongs to
-        integration:
-          type: string
-          title: Integration
-          description: The integration the activity belongs to
-        environments:
-          type: array
-          items:
-            type: string
-          title: Environments
-          description: The environments related to the activity
-        state:
-          type: string
-          enum:
-          - cancelled
-          - complete
-          - in_progress
-          - pending
-          - scheduled
-          - staged
-          title: State
-          description: The state of the activity
-        result:
-          type:
-          - string
-          - 'null'
-          enum:
-          - failure
-          - success
-          title: Result
-          description: The result of the activity
-        failure_reason:
-          type:
-          - string
-          - 'null'
-          enum:
-          - error
-          - shell
-          title: Failure Reason
-          description: The reason for activity failure
-        started_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Start date
-          description: The start date of the activity
-        completed_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Completion date
-          description: The completion date of the activity
-        completion_percent:
-          type: integer
-          title: Completion percentage
-          description: The completion percentage of the activity
-        cancelled_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Cancellation date
-          description: The Cancellation date of the activity
-        timings:
-          type: object
-          additionalProperties:
-            type: number
-            format: float
-          title: Timings
-          description: Timings related to different phases of the activity
-        log:
-          type: string
-          title: Log
-          description: The log of the activity
-          deprecated: true
-          x-stability: DEPRECATED
-        payload:
-          type: object
-          title: Payload
-          description: The payload of the activity
-        description:
-          type:
-          - string
-          - 'null'
-          title: Activity HTML description
-          description: The description of the activity, formatted with HTML
-        text:
-          type:
-          - string
-          - 'null'
-          title: Activity text description
-          description: The description of the activity, formatted as plain text
-        expires_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Expiration date
-          description: The date at which the activity will expire
-        commands:
-          type: array
-          items:
-            type: object
-            properties:
-              app:
-                type: string
-                title: Application
-                description: ''
-              type:
-                type: string
-                title: Type
-                description: ''
-              exit_code:
-                type: integer
-                title: Exit status code
-                description: ''
-            required:
-            - app
-            - type
-            - exit_code
-            additionalProperties: false
-          title: Commands
-          description: The commands of the activity
-      required:
-      - id
-      - created_at
-      - updated_at
-      - type
-      - parameters
-      - project
-      - state
-      - result
-      - failure_reason
-      - started_at
-      - completed_at
-      - completion_percent
-      - cancelled_at
-      - timings
-      - log
-      - payload
-      - description
-      - text
-      - expires_at
-      - commands
-      additionalProperties: false
-    Activity_3:
       type: object
       properties:
         id:
@@ -762,7 +577,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

@@ -1,16 +1,19 @@
 openapi: 3.2.0
 info:
-  title: Platform.sh Continuous Profiling API
+  title: Upsun.com Rest Continuous Profiling API
   version: '1.0'
   contact:
     name: Support
     url: https://upsun.com/contact-us/
   termsOfService: https://upsun.com/trust-center/legal/tos/
+  description: '# Introduction
+
+
+    Upsun, formerly Platform.sh, is a container-based Platform-as-a-Service.'
   x-logo:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Continuous Profiling across 2 of this provider''s published API definitions: platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -207,12 +210,6 @@ paths:
                   message:
                     type: string
                     example: Timeout while querying data
-    servers:
-    - url: '{schemes}://api.upsun.com'
-      description: The Upsun.com API gateway
-      variables:
-        schemes:
-          default: https
   /projects/{projectId}/environments/{envId}/continuous-profiling/app/{app}:
     get:
       operationId: get_application_timeline
@@ -384,12 +381,6 @@ paths:
                   message:
                     type: string
                     example: Timeout while querying data
-    servers:
-    - url: '{schemes}://api.upsun.com'
-      description: The Upsun.com API gateway
-      variables:
-        schemes:
-          default: https
   /projects/{projectId}/environments/{envId}/continuous-profiling/app/{app}/merge:
     get:
       operationId: get_application_merge
@@ -800,12 +791,6 @@ paths:
                   message:
                     type: string
                     example: Timeout while querying data
-    servers:
-    - url: '{schemes}://api.upsun.com'
-      description: The Upsun.com API gateway
-      variables:
-        schemes:
-          default: https
   /projects/{projectId}/environments/{envId}/continuous-profiling/app/{app}/filter:
     get:
       operationId: get_application_filter
@@ -977,66 +962,8 @@ paths:
                   message:
                     type: string
                     example: Timeout while querying data
-    servers:
-    - url: '{schemes}://api.upsun.com'
-      description: The Upsun.com API gateway
-      variables:
-        schemes:
-          default: https
 components:
   parameters:
-    ProbeVersionValues:
-      name: probe_version[]
-      in: query
-      description: Filter by probe version. Can be specified multiple times for multiple values (e.g., ?probe_version[]=2.28.2&probe_version[]=2.28.1). Use probe_version_mode to control inclusion/exclusion behavior.
-      style: form
-      explode: true
-      schema:
-        type: array
-        items:
-          type: string
-          example: 2.28.2
-    RuntimeArchMode:
-      name: runtime_arch_mode
-      in: query
-      description: Filter mode for runtime_arch parameter. "1" (additive) includes only specified architectures. "-1" (subtractive) excludes specified architectures and includes all others. When omitted while runtime_arch[] is supplied, defaults to "1" (additive).
-      schema:
-        type: integer
-        enum:
-        - 1
-        - -1
-        example: 1
-    RuntimeMode:
-      name: runtime_mode
-      in: query
-      description: Filter mode for runtime parameter. "1" (additive) includes only specified runtimes. "-1" (subtractive) excludes specified runtimes and includes all others. When omitted while runtime[] is supplied, defaults to "1" (additive).
-      schema:
-        type: integer
-        enum:
-        - 1
-        - -1
-        example: 1
-    RuntimeVersionMode:
-      name: runtime_version_mode
-      in: query
-      description: Filter mode for runtime_version parameter. "1" (additive) includes only specified versions. "-1" (subtractive) excludes specified versions and includes all others. When omitted while runtime_version[] is supplied, defaults to "1" (additive).
-      schema:
-        type: integer
-        enum:
-        - 1
-        - -1
-        example: 1
-    RuntimeArchValues:
-      name: runtime_arch[]
-      in: query
-      description: Filter by runtime architecture. Can be specified multiple times for multiple values (e.g., ?runtime_arch[]=amd64&runtime_arch[]=arm64). Use runtime_arch_mode to control inclusion/exclusion behavior.
-      style: form
-      explode: true
-      schema:
-        type: array
-        items:
-          type: string
-          example: amd64
     RuntimeVersionValues:
       name: runtime_version[]
       in: query
@@ -1048,20 +975,20 @@ components:
         items:
           type: string
           example: '1.21'
-    ProbeVersionMode:
-      name: probe_version_mode
+    RuntimeOsMode:
+      name: runtime_os_mode
       in: query
-      description: Filter mode for probe_version parameter. "1" (additive) includes only specified probe versions. "-1" (subtractive) excludes specified probe versions and includes all others. When omitted while probe_version[] is supplied, defaults to "1" (additive).
+      description: Filter mode for runtime_os parameter. "1" (additive) includes only specified operating systems. "-1" (subtractive) excludes specified operating systems and includes all others. When omitted while runtime_os[] is supplied, defaults to "1" (additive).
       schema:
         type: integer
         enum:
         - 1
         - -1
         example: 1
-    RuntimeOsMode:
-      name: runtime_os_mode
+    RuntimeArchMode:
+      name: runtime_arch_mode
       in: query
-      description: Filter mode for runtime_os parameter. "1" (additive) includes only specified operating systems. "-1" (subtractive) excludes specified operating systems and includes all others. When omitted while runtime_os[] is supplied, defaults to "1" (additive).
+      description: Filter mode for runtime_arch parameter. "1" (additive) includes only specified architectures. "-1" (subtractive) excludes specified architectures and includes all others. When omitted while runtime_arch[] is supplied, defaults to "1" (additive).
       schema:
         type: integer
         enum:
@@ -1079,6 +1006,37 @@ components:
         items:
           type: string
           example: linux
+    RuntimeArchValues:
+      name: runtime_arch[]
+      in: query
+      description: Filter by runtime architecture. Can be specified multiple times for multiple values (e.g., ?runtime_arch[]=amd64&runtime_arch[]=arm64). Use runtime_arch_mode to control inclusion/exclusion behavior.
+      style: form
+      explode: true
+      schema:
+        type: array
+        items:
+          type: string
+          example: amd64
+    ProbeVersionMode:
+      name: probe_version_mode
+      in: query
+      description: Filter mode for probe_version parameter. "1" (additive) includes only specified probe versions. "-1" (subtractive) excludes specified probe versions and includes all others. When omitted while probe_version[] is supplied, defaults to "1" (additive).
+      schema:
+        type: integer
+        enum:
+        - 1
+        - -1
+        example: 1
+    RuntimeVersionMode:
+      name: runtime_version_mode
+      in: query
+      description: Filter mode for runtime_version parameter. "1" (additive) includes only specified versions. "-1" (subtractive) excludes specified versions and includes all others. When omitted while runtime_version[] is supplied, defaults to "1" (additive).
+      schema:
+        type: integer
+        enum:
+        - 1
+        - -1
+        example: 1
     RuntimeValues:
       name: runtime[]
       in: query
@@ -1090,13 +1048,31 @@ components:
         items:
           type: string
           example: go
+    RuntimeMode:
+      name: runtime_mode
+      in: query
+      description: Filter mode for runtime parameter. "1" (additive) includes only specified runtimes. "-1" (subtractive) excludes specified runtimes and includes all others. When omitted while runtime[] is supplied, defaults to "1" (additive).
+      schema:
+        type: integer
+        enum:
+        - 1
+        - -1
+        example: 1
+    ProbeVersionValues:
+      name: probe_version[]
+      in: query
+      description: Filter by probe version. Can be specified multiple times for multiple values (e.g., ?probe_version[]=2.28.2&probe_version[]=2.28.1). Use probe_version_mode to control inclusion/exclusion behavior.
+      style: form
+      explode: true
+      schema:
+        type: array
+        items:
+          type: string
+          example: 2.28.2
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
-x-refined-from:
-- platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:
@@ -1108,6 +1084,7 @@ x-tagGroups:
 - name: Project Administration
   tags:
   - Project
+  - Domain Claim
   - Domain Management
   - Cert Management
   - Certificate Provisioner
@@ -1126,6 +1103,7 @@ x-tagGroups:
   - Runtime Operations
   - Deployment
   - Autoscaling
+  - Task
 - name: User Activity
   tags:
   - Project Activity
@@ -1155,11 +1133,19 @@ x-tagGroups:
   - Vouchers
   - Records
   - Profiles
+  - Billing Profile Projects
 - name: Global Info
   tags:
   - Project Discovery
   - References
   - Regions
+- name: Observability
+  tags:
+  - Blackfire Profiling
+  - Blackfire Monitoring
+  - Resources
+  - Http Traffic
+  - Continuous Profiling
 - name: Internal APIs
   tags:
   - Project Settings

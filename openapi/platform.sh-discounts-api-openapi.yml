@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Discounts across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Discounts across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -202,23 +202,14 @@ paths:
           default: https
 components:
   schemas:
-    CurrencyAmount:
-      description: Currency amount with detailed components.
-      properties:
-        formatted:
-          description: Formatted currency value.
-          type: string
-        amount:
-          description: Plain amount.
-          type: number
-          format: float
-        currency_code:
-          description: Currency code.
-          type: string
-        currency_symbol:
-          description: Currency symbol.
-          type: string
+    Link:
       type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
     Discount:
       description: The discount object.
       properties:
@@ -304,6 +295,15 @@ components:
           - 'null'
           format: date-time
       type: object
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
     CurrencyAmountNullable:
       description: Currency amount with detailed components.
       properties:
@@ -323,23 +323,6 @@ components:
       type:
       - object
       - 'null'
-    ListLinks:
-      type: object
-      properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
     Error:
       description: ''
       type: object
@@ -364,15 +347,24 @@ components:
             field:
             - This field is required.
           title: Bad Request
-    Error_2:
-      type: object
+    CurrencyAmount:
+      description: Currency amount with detailed components.
       properties:
-        error:
+        formatted:
+          description: Formatted currency value.
           type: string
-          description: Error message
-      required:
-      - error
-    Error_3:
+        amount:
+          description: Plain amount.
+          type: number
+          format: float
+        currency_code:
+          description: Currency code.
+          type: string
+        currency_symbol:
+          description: Currency symbol.
+          type: string
+      type: object
+    Error_2:
       type: object
       properties:
         error:
@@ -424,7 +416,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

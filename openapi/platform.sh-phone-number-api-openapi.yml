@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged PhoneNumber across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged PhoneNumber across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -18,7 +18,7 @@ servers:
     schemes:
       default: https
 tags:
-- name: PhoneNumber
+- name: Phone Number
 paths:
   /users/{user_id}/phonenumber:
     parameters:
@@ -28,7 +28,7 @@ paths:
       description: Starts a phone number verification session.
       operationId: verify-phone-number
       tags:
-      - PhoneNumber
+      - Phone Number
       responses:
         '200':
           description: OK
@@ -99,7 +99,7 @@ paths:
       description: Confirms phone number using a verification code.
       operationId: confirm-phone-number
       tags:
-      - PhoneNumber
+      - Phone Number
       responses:
         '200':
           description: OK
@@ -184,14 +184,6 @@ components:
           description: Error message
       required:
       - error
-    Error_3:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-      required:
-      - error
   securitySchemes:
     OAuth2:
       type: oauth2
@@ -217,7 +209,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

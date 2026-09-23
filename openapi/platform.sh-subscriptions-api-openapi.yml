@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Subscriptions across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Subscriptions across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -23,15 +23,13 @@ tags:
 
     These endpoints can be used to go to a larger plan, add more storage, or subscribe to
 
-    optional features.
-
-    '
+    optional features.'
 paths:
   /subscriptions/{subscriptionId}/can-update:
     get:
       tags:
       - Subscriptions
-      summary: Checks if the user is able to update a project.
+      summary: Checks if the user is able to update a project
       operationId: can-update-subscription
       parameters:
       - $ref: '#/components/parameters/subscription_id'
@@ -134,7 +132,7 @@ paths:
           default: https
   /organizations/{organization_id}/subscriptions/can-create:
     get:
-      summary: Checks if the user is able to create a new project.
+      summary: Checks if the user is able to create a new project
       operationId: can-create-new-org-subscription
       tags:
       - Subscriptions
@@ -359,7 +357,7 @@ paths:
       security:
       - OAuth2: []
     patch:
-      summary: Update usage alerts.
+      summary: Update usage alerts
       description: Updates usage alerts for a subscription.
       operationId: update-subscription-usage-alerts
       tags:
@@ -690,7 +688,7 @@ paths:
     post:
       tags:
       - Subscriptions
-      summary: Checks if the user can afford the requested resources.
+      summary: Checks if the user can afford the requested resources
       operationId: can-afford-subscription
       parameters:
       - $ref: '#/components/parameters/subscription_id'
@@ -718,10 +716,502 @@ paths:
         schemes:
           default: https
 components:
+  parameters:
+    id:
+      name: filter[id]
+      in: query
+      description: Machine name of the region.
+      schema:
+        type: string
+    region:
+      in: query
+      name: filter[region]
+      description: Allows filtering by `region` using one or more operators.
+      style: deepObject
+      explode: true
+      schema:
+        $ref: '#/components/schemas/StringFilter'
+    project_title:
+      in: query
+      name: filter[project_title]
+      description: Allows filtering by `project_title` using one or more operators.
+      style: deepObject
+      explode: true
+      schema:
+        $ref: '#/components/schemas/StringFilter'
+    project_id:
+      name: filter[project_id]
+      in: query
+      description: Allows filtering by `project_id` using one or more operators.
+      style: deepObject
+      explode: true
+      schema:
+        $ref: '#/components/schemas/StringFilter'
+    subscription_status:
+      name: filter[status]
+      in: query
+      description: 'The status of the subscription. '
+      schema:
+        type: string
+        enum:
+        - active
+        - provisioning
+        - provisioning failure
+        - suspended
+        - deleted
+    page_before:
+      in: query
+      name: page[before]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
+    subscription_sort:
+      in: query
+      name: sort
+      description: 'Allows sorting by a single field.<br>
+
+        Use a dash ("-") to sort descending.<br>
+
+        Supported fields: `region`, `project_title`, `type`, `plan`, `status`, `created_at`, `updated_at`.
+
+        '
+      schema:
+        type: string
+        example: -updated_at
+    updated_at:
+      in: query
+      name: filter[updated_at]
+      description: Allows filtering by `updated_at` using one or more operators.
+      style: deepObject
+      explode: true
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    subscription_id:
+      name: subscriptionId
+      in: path
+      description: The ID of the subscription
+      required: true
+      schema:
+        type: string
+    page_after:
+      in: query
+      name: page[after]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
+      schema:
+        type: string
+    page_size:
+      in: query
+      name: page[size]
+      description: Determines the number of items to show.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: null
+    subscription_plan:
+      name: plan
+      in: query
+      description: The plan type of the subscription.
+      schema:
+        type: string
+        enum:
+        - development
+        - standard
+        - medium
+        - large
+        - xlarge
+        - 2xlarge
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
+    SubscriptionID:
+      in: path
+      name: subscription_id
+      description: The ID of the subscription.
+      required: true
+      schema:
+        type: string
+    subscription_storage:
+      name: storage
+      in: query
+      description: The total storage available to each environment, in MiB. Only multiples of 1024 are accepted as legal values.
+      schema:
+        type: integer
+        default: null
+    subscription_environments:
+      name: environments
+      in: query
+      description: The number of environments which can be provisioned on the project.
+      schema:
+        type: integer
+        default: null
+    subscription_user_licenses:
+      name: user_licenses
+      in: query
+      description: The number of user licenses.
+      schema:
+        type: integer
+    PageBefore:
+      in: query
+      name: page[before]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
+    PageAfter:
+      in: query
+      name: page[after]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
+    FilterRegion:
+      in: query
+      name: filter[region]
+      description: Allows filtering by `region` using one or more operators.
+      style: deepObject
+      explode: true
+      schema:
+        $ref: '#/components/schemas/StringFilter'
+    FilterProjectID:
+      in: query
+      name: filter[project_id]
+      description: Allows filtering by `project_id` using one or more operators.
+      style: deepObject
+      explode: true
+      schema:
+        $ref: '#/components/schemas/StringFilter'
+    FilterUpdatedAt:
+      in: query
+      name: filter[updated_at]
+      description: Allows filtering by `updated_at` using one or more operators.
+      style: deepObject
+      explode: true
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    PageSize:
+      in: query
+      name: page[size]
+      description: Determines the number of items to show.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: null
   schemas:
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
+    UsageGroupCurrentUsageProperties:
+      description: Current usage info for a usage group.
+      properties:
+        title:
+          description: The title of the usage group.
+          type: string
+        type:
+          description: The usage group type.
+          type: boolean
+        current_usage:
+          description: The value of current usage for the group.
+          type: number
+        current_usage_formatted:
+          description: The formatted value of current usage for the group.
+          type: string
+        not_charged:
+          description: Whether the group is not charged for the subscription.
+          type: boolean
+        free_quantity:
+          description: The amount of free usage for the group.
+          type: number
+        free_quantity_formatted:
+          description: The formatted amount of free usage for the group.
+          type: string
+        daily_average:
+          description: The daily average usage calculated for the group.
+          type: number
+        daily_average_formatted:
+          description: The formatted daily average usage calculated for the group.
+          type: string
+      type: object
     ProjectTimeZone:
       type: string
       description: Timezone of the project.
+    UsageAlert:
+      type: object
+      description: The usage alert for a subscription.
+      properties:
+        id:
+          type: string
+          description: Tidentifier of the alert.
+        active:
+          type: boolean
+          description: Whether the usage alert is activated.
+        alerts_sent:
+          type: number
+          description: Number of alerts sent.
+        last_alert_at:
+          type:
+          - string
+          - 'null'
+          description: The datetime the alert was last sent.
+        updated_at:
+          type:
+          - string
+          - 'null'
+          description: The datetime the alert was last updated.
+        config:
+          type:
+          - object
+          - 'null'
+          description: Configuration for the usage alert.
+          properties:
+            threshold:
+              type: object
+              description: Data regarding threshold spend.
+              properties:
+                formatted:
+                  type: string
+                  description: Formatted threshold value.
+                amount:
+                  type: number
+                  description: Threshold value.
+                unit:
+                  type: string
+                  description: Threshold unit.
+    EstimationObject:
+      type: object
+      description: A price estimate object.
+      properties:
+        plan:
+          type: string
+          description: The monthly price of the plan.
+        user_licenses:
+          type: string
+          description: The monthly price of the user licenses.
+        environments:
+          type: string
+          description: The monthly price of the environments.
+        storage:
+          type: string
+          description: The monthly price of the storage.
+        total:
+          type: string
+          description: The total monthly price.
+        options:
+          type: object
+          description: The unit prices of the options.
+    ProjectOptions:
+      description: The project options object.
+      properties:
+        defaults:
+          description: The initial values applied to the project.
+          properties:
+            settings:
+              description: The project settings.
+              type: object
+            variables:
+              description: The project variables.
+              type: object
+            access:
+              description: The project access list.
+              type: object
+            capabilities:
+              description: The project capabilities.
+              type: object
+          type: object
+        enforced:
+          description: The enforced values applied to the project.
+          properties:
+            settings:
+              description: The project settings.
+              type: object
+            capabilities:
+              description: The project capabilities.
+              type: object
+          type: object
+        regions:
+          description: The available regions.
+          type: array
+          items:
+            type: string
+        plans:
+          description: The available plans.
+          type: array
+          items:
+            type: string
+        billing:
+          description: The billing settings.
+          type: object
+      type: object
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
+    ProjectTitle:
+      type: string
+      description: The title of the project.
+    StringFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
+        between:
+          type: string
+          description: Between (comma-separated list)
+        contains:
+          type: string
+          description: Contains
+        starts:
+          type: string
+          description: Starts with
+        ends:
+          type: string
+          description: Ends with
+    DateTimeFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        between:
+          type: string
+          description: Between (comma-separated list)
+        gt:
+          type: string
+          description: Greater than
+        gte:
+          type: string
+          description: Greater than or equal
+        lt:
+          type: string
+          description: Less than
+        lte:
+          type: string
+          description: Less than or equal
+    SubscriptionAddonsObject:
+      type: object
+      description: The list of available and current addons for the license.
+      properties:
+        available:
+          type: object
+          description: The list of available addons.
+          properties:
+            continuous_profiling:
+              type: object
+              description: Information about the continuous profiling options available.
+              additionalProperties:
+                type: number
+                description: The number of commitment days for the addon.
+            project_support_level:
+              type: object
+              description: Information about the project uptime options available.
+              additionalProperties:
+                type: number
+                description: The number of commitment days for the addon.
+        current:
+          type: object
+          description: The list of existing addons and their current values.
+          properties:
+            continuous_profiling:
+              type: object
+              description: The current continuous profiling level of the license.
+              additionalProperties:
+                type: number
+                description: The number of remaining commitment days for the addon.
+            project_support_level:
+              type: object
+              description: The current project uptime level of the license.
+              additionalProperties:
+                type: number
+                description: The number of remaining commitment days for the addon.
+        upgrades_available:
+          type: object
+          description: The upgrades available for current addons.
+          properties:
+            continuous_profiling:
+              type: array
+              description: Available upgrade options for continuous profiling.
+              items:
+                type: string
+            project_support_level:
+              type: array
+              description: Available upgrade options for project uptime.
+              items:
+                type: string
+    OwnerInfo:
+      description: Project owner information that can be exposed to collaborators.
+      properties:
+        type:
+          description: Type of the owner, usually 'user'.
+          type: string
+        username:
+          description: The username of the owner.
+          type: string
+        display_name:
+          description: The full name of the owner.
+          type: string
+      type: object
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
     Subscription:
       description: The subscription object.
       properties:
@@ -809,96 +1299,9 @@ components:
           description: Whether the subscription is considered green (on a green region, belonging to a green vendor) for billing purposes.
           type: boolean
       type: object
-    SubscriptionAddonsObject:
-      type: object
-      description: The list of available and current addons for the license.
-      properties:
-        available:
-          type: object
-          description: The list of available addons.
-          properties:
-            continuous_profiling:
-              type: object
-              description: Information about the continuous profiling options available.
-              additionalProperties:
-                type: number
-                description: The number of commitment days for the addon.
-            project_support_level:
-              type: object
-              description: Information about the project uptime options available.
-              additionalProperties:
-                type: number
-                description: The number of commitment days for the addon.
-        current:
-          type: object
-          description: The list of existing addons and their current values.
-          properties:
-            continuous_profiling:
-              type: object
-              description: The current continuous profiling level of the license.
-              additionalProperties:
-                type: number
-                description: The number of remaining commitment days for the addon.
-            project_support_level:
-              type: object
-              description: The current project uptime level of the license.
-              additionalProperties:
-                type: number
-                description: The number of remaining commitment days for the addon.
-        upgrades_available:
-          type: object
-          description: The upgrades available for current addons.
-          properties:
-            continuous_profiling:
-              type: array
-              description: Available upgrade options for continuous profiling.
-              items:
-                type: string
-            project_support_level:
-              type: array
-              description: Available upgrade options for project uptime.
-              items:
-                type: string
-    UsageGroupCurrentUsageProperties:
-      description: Current usage info for a usage group.
-      properties:
-        title:
-          description: The title of the usage group.
-          type: string
-        type:
-          description: The usage group type.
-          type: boolean
-        current_usage:
-          description: The value of current usage for the group.
-          type: number
-        current_usage_formatted:
-          description: The formatted value of current usage for the group.
-          type: string
-        not_charged:
-          description: Whether the group is not charged for the subscription.
-          type: boolean
-        free_quantity:
-          description: The amount of free usage for the group.
-          type: number
-        free_quantity_formatted:
-          description: The formatted amount of free usage for the group.
-          type: string
-        daily_average:
-          description: The daily average usage calculated for the group.
-          type: number
-        daily_average_formatted:
-          description: The formatted daily average usage calculated for the group.
-          type: string
-      type: object
-    ListLinks:
-      type: object
-      properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
+    ProjectPlan:
+      type: string
+      description: The project plan.
     SubscriptionCurrentUsageObject:
       description: A subscription's usage group current usage object.
       properties:
@@ -929,215 +1332,6 @@ components:
         fastly_requests:
           $ref: '#/components/schemas/UsageGroupCurrentUsageProperties'
       type: object
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
-    ProjectPlan:
-      type: string
-      description: The project plan.
-    DateTimeFilter:
-      type: object
-      properties:
-        eq:
-          type: string
-          description: Equal
-        ne:
-          type: string
-          description: Not equal
-        between:
-          type: string
-          description: Between (comma-separated list)
-        gt:
-          type: string
-          description: Greater than
-        gte:
-          type: string
-          description: Greater than or equal
-        lt:
-          type: string
-          description: Less than
-        lte:
-          type: string
-          description: Less than or equal
-    EstimationObject:
-      type: object
-      description: A price estimate object.
-      properties:
-        plan:
-          type: string
-          description: The monthly price of the plan.
-        user_licenses:
-          type: string
-          description: The monthly price of the user licenses.
-        environments:
-          type: string
-          description: The monthly price of the environments.
-        storage:
-          type: string
-          description: The monthly price of the storage.
-        total:
-          type: string
-          description: The total monthly price.
-        options:
-          type: object
-          description: The unit prices of the options.
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
-    OwnerInfo:
-      description: Project owner information that can be exposed to collaborators.
-      properties:
-        type:
-          description: Type of the owner, usually 'user'.
-          type: string
-        username:
-          description: The username of the owner.
-          type: string
-        display_name:
-          description: The full name of the owner.
-          type: string
-      type: object
-    UsageAlert:
-      type: object
-      description: The usage alert for a subscription.
-      properties:
-        id:
-          type: string
-          description: Tidentifier of the alert.
-        active:
-          type: boolean
-          description: Whether the usage alert is activated.
-        alerts_sent:
-          type: number
-          description: Number of alerts sent.
-        last_alert_at:
-          type:
-          - string
-          - 'null'
-          description: The datetime the alert was last sent.
-        updated_at:
-          type:
-          - string
-          - 'null'
-          description: The datetime the alert was last updated.
-        config:
-          type:
-          - object
-          - 'null'
-          description: Configuration for the usage alert.
-          properties:
-            threshold:
-              type: object
-              description: Data regarding threshold spend.
-              properties:
-                formatted:
-                  type: string
-                  description: Formatted threshold value.
-                amount:
-                  type: number
-                  description: Threshold value.
-                unit:
-                  type: string
-                  description: Threshold unit.
-    StringFilter:
-      type: object
-      properties:
-        eq:
-          type: string
-          description: Equal
-        ne:
-          type: string
-          description: Not equal
-        in:
-          type: string
-          description: In (comma-separated list)
-        nin:
-          type: string
-          description: Not in (comma-separated list)
-        between:
-          type: string
-          description: Between (comma-separated list)
-        contains:
-          type: string
-          description: Contains
-        starts:
-          type: string
-          description: Starts with
-        ends:
-          type: string
-          description: Ends with
-    ProjectTitle:
-      type: string
-      description: The title of the project.
-    ProjectOptions:
-      description: The project options object.
-      properties:
-        defaults:
-          description: The initial values applied to the project.
-          properties:
-            settings:
-              description: The project settings.
-              type: object
-            variables:
-              description: The project variables.
-              type: object
-            access:
-              description: The project access list.
-              type: object
-            capabilities:
-              description: The project capabilities.
-              type: object
-          type: object
-        enforced:
-          description: The enforced values applied to the project.
-          properties:
-            settings:
-              description: The project settings.
-              type: object
-            capabilities:
-              description: The project capabilities.
-              type: object
-          type: object
-        regions:
-          description: The available regions.
-          type: array
-          items:
-            type: string
-        plans:
-          description: The available plans.
-          type: array
-          items:
-            type: string
-        billing:
-          description: The billing settings.
-          type: object
-      type: object
     Error_2:
       type: object
       properties:
@@ -1146,227 +1340,9 @@ components:
           description: Error message
       required:
       - error
-    Error_3:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-      required:
-      - error
-  parameters:
-    page_size:
-      in: query
-      name: page[size]
-      description: Determines the number of items to show.
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: null
-    project_title:
-      in: query
-      name: filter[project_title]
-      description: Allows filtering by `project_title` using one or more operators.
-      style: deepObject
-      explode: true
-      schema:
-        $ref: '#/components/schemas/StringFilter'
-    subscription_environments:
-      name: environments
-      in: query
-      description: The number of environments which can be provisioned on the project.
-      schema:
-        type: integer
-        default: null
-    updated_at:
-      in: query
-      name: filter[updated_at]
-      description: Allows filtering by `updated_at` using one or more operators.
-      style: deepObject
-      explode: true
-      schema:
-        $ref: '#/components/schemas/DateTimeFilter'
-    id:
-      name: filter[id]
-      in: query
-      description: Machine name of the region.
-      schema:
-        type: string
-    page_after:
-      in: query
-      name: page[after]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
-    region:
-      in: query
-      name: filter[region]
-      description: Allows filtering by `region` using one or more operators.
-      style: deepObject
-      explode: true
-      schema:
-        $ref: '#/components/schemas/StringFilter'
-    subscription_plan:
-      name: plan
-      in: query
-      description: The plan type of the subscription.
-      schema:
-        type: string
-        enum:
-        - development
-        - standard
-        - medium
-        - large
-        - xlarge
-        - 2xlarge
-    subscription_sort:
-      in: query
-      name: sort
-      description: 'Allows sorting by a single field.<br>
-
-        Use a dash ("-") to sort descending.<br>
-
-        Supported fields: `region`, `project_title`, `type`, `plan`, `status`, `created_at`, `updated_at`.
-
-        '
-      schema:
-        type: string
-        example: -updated_at
-    OrganizationID:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the organization.
-      schema:
-        type: string
-        format: ulid
-    subscription_storage:
-      name: storage
-      in: query
-      description: The total storage available to each environment, in MiB. Only multiples of 1024 are accepted as legal values.
-      schema:
-        type: integer
-        default: null
-    subscription_status:
-      name: filter[status]
-      in: query
-      description: 'The status of the subscription. '
-      schema:
-        type: string
-        enum:
-        - active
-        - provisioning
-        - provisioning failure
-        - suspended
-        - deleted
-    subscription_id:
-      name: subscriptionId
-      in: path
-      description: The ID of the subscription
-      required: true
-      schema:
-        type: string
-    subscription_user_licenses:
-      name: user_licenses
-      in: query
-      description: The number of user licenses.
-      schema:
-        type: integer
-    project_id:
-      name: filter[project_id]
-      in: query
-      description: Allows filtering by `project_id` using one or more operators.
-      style: deepObject
-      explode: true
-      schema:
-        $ref: '#/components/schemas/StringFilter'
-    SubscriptionID:
-      in: path
-      name: subscription_id
-      description: The ID of the subscription.
-      required: true
-      schema:
-        type: string
-    page_before:
-      in: query
-      name: page[before]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
-    OrganizationIDName:
-      in: path
-      name: organization_id
-      description: 'The ID of the organization.<br>
-
-        Prefix with name= to retrieve the organization by name instead.
-
-        '
-      required: true
-      schema:
-        type: string
-    PageBefore:
-      in: query
-      name: page[before]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
-    PageAfter:
-      in: query
-      name: page[after]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
-    PageSize:
-      in: query
-      name: page[size]
-      description: Determines the number of items to show.
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: null
-    FilterRegion:
-      in: query
-      name: filter[region]
-      description: Allows filtering by `region` using one or more operators.
-      style: deepObject
-      explode: true
-      schema:
-        $ref: '#/components/schemas/StringFilter'
-    FilterUpdatedAt:
-      in: query
-      name: filter[updated_at]
-      description: Allows filtering by `updated_at` using one or more operators.
-      style: deepObject
-      explode: true
-      schema:
-        $ref: '#/components/schemas/DateTimeFilter'
-    FilterProjectID:
-      in: query
-      name: filter[project_id]
-      description: Allows filtering by `project_id` using one or more operators.
-      style: deepObject
-      explode: true
-      schema:
-        $ref: '#/components/schemas/StringFilter'
   responses:
     Forbidden:
       description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error_2'
-    NoContent:
-      description: No Content
-    BadRequest:
-      description: Bad Request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error_2'
-    NotFound:
-      description: Not Found
       content:
         application/problem+json:
           schema:
@@ -1377,30 +1353,20 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
-    Forbidden_2:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error_3'
-    BadRequest_2:
-      description: Bad Request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error_3'
-    NotFound_2:
+    NoContent:
+      description: No Content
+    NotFound:
       description: Not Found
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/Error_3'
-    Conflict_2:
-      description: Conflict
+            $ref: '#/components/schemas/Error_2'
+    BadRequest:
+      description: Bad Request
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/Error_3'
+            $ref: '#/components/schemas/Error_2'
   securitySchemes:
     OAuth2:
       type: oauth2
@@ -1426,7 +1392,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

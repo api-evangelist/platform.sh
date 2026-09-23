@@ -1,16 +1,19 @@
 openapi: 3.2.0
 info:
-  title: Platform.sh Task API
+  title: Upsun.com Rest Task API
   version: '1.0'
   contact:
     name: Support
     url: https://upsun.com/contact-us/
   termsOfService: https://upsun.com/trust-center/legal/tos/
+  description: '# Introduction
+
+
+    Upsun, formerly Platform.sh, is a container-based Platform-as-a-Service.'
   x-logo:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Task across 2 of this provider''s published API definitions: platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -27,11 +30,9 @@ tags:
 
     any ad-hoc operations that need to be executed within the environment. For more information on how to use tasks,
 
-    see the [Tasks](https://docs.upsun.com/anchors/environments/actions#environment-actions/) section of the
+    see the Tasks section of the
 
-    documentation.
-
-    '
+    documentation.'
 paths:
   /projects/{projectId}/environments/{environmentId}/tasks:
     get:
@@ -56,12 +57,8 @@ paths:
                 $ref: '#/components/schemas/TaskCollection'
       tags:
       - Task
-    servers:
-    - url: '{schemes}://api.upsun.com'
-      description: The Upsun.com API gateway
-      variables:
-        schemes:
-          default: https
+      summary: List projects environments tasks
+      x-summary-source: derived
   /projects/{projectId}/environments/{environmentId}/tasks/{taskId}:
     get:
       parameters:
@@ -90,12 +87,8 @@ paths:
                 $ref: '#/components/schemas/Task'
       tags:
       - Task
-    servers:
-    - url: '{schemes}://api.upsun.com'
-      description: The Upsun.com API gateway
-      variables:
-        schemes:
-          default: https
+      summary: Get projects environments tasks
+      x-summary-source: derived
   /projects/{projectId}/environments/{environmentId}/tasks/{taskId}/run:
     post:
       parameters:
@@ -131,14 +124,14 @@ paths:
               $ref: '#/components/schemas/TaskTriggerInput'
       tags:
       - Task
-    servers:
-    - url: '{schemes}://api.upsun.com'
-      description: The Upsun.com API gateway
-      variables:
-        schemes:
-          default: https
+      summary: Run task
+      x-summary-source: derived
 components:
   schemas:
+    TaskCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Task'
     AcceptedResponse:
       type: object
       properties:
@@ -165,10 +158,6 @@ components:
           title: Variables
           description: Environment variables for the task
       additionalProperties: false
-    TaskCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Task'
     Task:
       type: object
       properties:
@@ -396,9 +385,6 @@ components:
     BearerAuth:
       type: http
       scheme: bearer
-x-refined-from:
-- platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:
@@ -410,6 +396,7 @@ x-tagGroups:
 - name: Project Administration
   tags:
   - Project
+  - Domain Claim
   - Domain Management
   - Cert Management
   - Certificate Provisioner
@@ -428,6 +415,7 @@ x-tagGroups:
   - Runtime Operations
   - Deployment
   - Autoscaling
+  - Task
 - name: User Activity
   tags:
   - Project Activity
@@ -457,11 +445,19 @@ x-tagGroups:
   - Vouchers
   - Records
   - Profiles
+  - Billing Profile Projects
 - name: Global Info
   tags:
   - Project Discovery
   - References
   - Regions
+- name: Observability
+  tags:
+  - Blackfire Profiling
+  - Blackfire Monitoring
+  - Resources
+  - Http Traffic
+  - Continuous Profiling
 - name: Internal APIs
   tags:
   - Project Settings

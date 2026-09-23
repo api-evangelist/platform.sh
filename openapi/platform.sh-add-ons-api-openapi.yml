@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Add-ons across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Add-ons across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -18,7 +18,7 @@ servers:
     schemes:
       default: https
 tags:
-- name: Add-ons
+- name: Add Ons
 paths:
   /organizations/{organization_id}/addons:
     get:
@@ -26,7 +26,7 @@ paths:
       description: Retrieves information about the add-ons for an organization.
       operationId: get-org-addons
       tags:
-      - Add-ons
+      - Add Ons
       parameters:
       - $ref: '#/components/parameters/OrganizationIDName'
       responses:
@@ -59,6 +59,30 @@ paths:
           default: https
 components:
   schemas:
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
     OrganizationAddonsObject:
       type: object
       description: The list of available and current add-ons of an organization.
@@ -109,39 +133,7 @@ components:
               description: Available upgrade options for support.
               items:
                 type: string
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
     Error_2:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-      required:
-      - error
-    Error_3:
       type: object
       properties:
         error:
@@ -186,7 +178,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

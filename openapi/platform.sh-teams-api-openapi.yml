@@ -10,7 +10,7 @@ info:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
     altText: Upsun logo
-  description: 'Operations tagged Teams across 3 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json, platform.sh-rest-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Teams across 2 of this provider''s published API definitions: platform.sh-developer-portal-openapi-original.json, platform.sh-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: '{schemes}://api.upsun.com'
   description: The Upsun.com API gateway
@@ -538,6 +538,23 @@ paths:
           default: https
 components:
   schemas:
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
     Team:
       description: ''
       type: object
@@ -620,15 +637,6 @@ components:
           type: string
           format: date-time
           description: The date and time when the team member was last updated.
-    ListLinks:
-      type: object
-      properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
     StringFilter:
       type: object
       properties:
@@ -656,38 +664,6 @@ components:
         ends:
           type: string
           description: Ends with
-    DateTimeFilter:
-      type: object
-      properties:
-        eq:
-          type: string
-          description: Equal
-        ne:
-          type: string
-          description: Not equal
-        between:
-          type: string
-          description: Between (comma-separated list)
-        gt:
-          type: string
-          description: Greater than
-        gte:
-          type: string
-          description: Greater than or equal
-        lt:
-          type: string
-          description: Less than
-        lte:
-          type: string
-          description: Less than or equal
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
     Error:
       description: ''
       type: object
@@ -712,6 +688,30 @@ components:
             field:
             - This field is required.
           title: Bad Request
+    DateTimeFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        between:
+          type: string
+          description: Between (comma-separated list)
+        gt:
+          type: string
+          description: Greater than
+        gte:
+          type: string
+          description: Greater than or equal
+        lt:
+          type: string
+          description: Less than
+        lte:
+          type: string
+          description: Less than or equal
     Error_2:
       type: object
       properties:
@@ -720,15 +720,14 @@ components:
           description: Error message
       required:
       - error
-    Error_3:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-      required:
-      - error
   parameters:
+    TeamID:
+      name: team_id
+      in: path
+      required: true
+      description: The ID of the team.
+      schema:
+        type: string
     UserID:
       name: user_id
       in: path
@@ -738,13 +737,6 @@ components:
         type: string
         example: d81c8ee2-44b3-429f-b944-a33ad7437690
         format: uuid
-    TeamID:
-      name: team_id
-      in: path
-      required: true
-      description: The ID of the team.
-      schema:
-        type: string
   securitySchemes:
     OAuth2:
       type: oauth2
@@ -770,7 +762,6 @@ components:
 x-refined-from:
 - platform.sh-developer-portal-openapi-original.json
 - platform.sh-openapi-original.json
-- platform.sh-rest-api-openapi.json
 x-tagGroups:
 - name: Organization Administration
   tags:

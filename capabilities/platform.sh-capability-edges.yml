@@ -1,0 +1,253 @@
+slug: platform.sh
+provider: Platform.sh
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 24
+edges:
+- tag: Autoscaling
+  spec_file: platform.sh-autoscaling-api-openapi.yml
+  capability_id: BC-4220.50
+  capability_id_l1: BC-4220
+  capability_name: Capacity & Performance Management
+  confidence: 0.9
+  evidence: get-autoscaler-settings  Retrieves Autoscaler settings; schemas AutoscalerCPUTrigger, AutoscalerScalingCooldown
+  reason: Configuration of auto-scaling triggers and resources for environments — capacity and performance
+    management of the running service.
+- tag: API Tokens
+  spec_file: platform.sh-api-tokens-api-openapi.yml
+  capability_id: BC-4270.40
+  capability_id_l1: BC-4270
+  capability_name: Developer Identity & Credential Management
+  confidence: 0.85
+  evidence: POST /users/{user_id}/api-tokens  create-api-token  Create an API token
+  reason: Issuance and lifecycle of API tokens used by developers to call the platform API — developer
+    identity & credential management.
+- tag: Blackfire Monitoring
+  spec_file: platform.sh-blackfire-monitoring-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.85
+  evidence: Get server monitoring overview / Get server transaction breakdown / Get top spans
+  reason: Observability endpoints exposing server metrics, transaction breakdowns and traces (spans) for
+    running environments.
+- tag: Environment Variables
+  spec_file: platform.sh-environment-variables-api-openapi.yml
+  capability_id: BC-4210.60
+  capability_id_l1: BC-4210
+  capability_name: Configuration & Secrets Management
+  confidence: 0.85
+  evidence: POST .../environments/{environmentId}/variables  'Add an environment variable'; schema EnvironmentVariableCreateInput
+  reason: CRUD over runtime configuration values injected into deployed environments — directly Configuration
+    & Secrets Management, not a business-domain object.
+- tag: Http Traffic
+  spec_file: platform.sh-http-traffic-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.85
+  evidence: GET .../observability/http/breakdown/urls  'Get HTTP traffic timeline by URL'
+  reason: Metrics/telemetry endpoints under an explicit /observability path returning HTTP traffic timelines
+    for a running environment — production observability of the service, not marketing web analytics.
+- tag: Invoices
+  spec_file: platform.sh-invoices-api-openapi.yml
+  capability_id: BC-4250.30
+  capability_id_l1: BC-4250
+  capability_name: Invoicing & Statement Management
+  confidence: 0.85
+  evidence: GET /organizations/{organization_id}/invoices  'List invoices'; schemas Invoice, InvoicePDF
+  reason: Customer-facing retrieval of subscription invoices and invoice PDFs for the organization account
+    — invoicing and statement management for the SaaS commercial model.
+- tag: MFA
+  spec_file: platform.sh-mfa-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.85
+  evidence: POST /users/{user_id}/totp  'Confirm TOTP enrollment'; POST /organizations/{organization_id}/mfa-enforcement/enable  'Enable
+    organization MFA enforcement'
+  reason: TOTP enrollment, recovery codes and organization-wide MFA enforcement are authentication strength
+    controls — Identity & Access Management.
+- tag: Support
+  spec_file: platform.sh-support-api-openapi.yml
+  capability_id: BC-430.10
+  capability_id_l1: BC-430
+  capability_name: Customer Inquiry Management
+  confidence: 0.85
+  evidence: POST /tickets  "Create a new support ticket"; GET /tickets/priority  "List support ticket
+    priorities"
+  reason: Creating and updating support tickets with priorities and categories is inbound customer contact
+    capture, routing and resolution — customer inquiry management.
+- tag: User Access
+  spec_file: platform.sh-user-access-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.82
+  evidence: 'POST /projects/{project_id}/user-access  grant-project-user-access  Grant user access to
+    a project ... schemas: ProjectPermissions'
+  reason: Operations grant, update and revoke per-user permissions on projects — access rights administration,
+    i.e. identity & access management, not a domain business function.
+- tag: Environment
+  spec_file: platform.sh-environment-api-openapi.yml
+  capability_id: BC-4210.20
+  capability_id_l1: BC-4210
+  capability_name: Environment Management
+  confidence: 0.8
+  evidence: POST /projects/{projectId}/environments/{environmentId}/branch  branch-environment  Branch
+    an environment
+  reason: Full lifecycle of ephemeral staging/development environments — activate, branch, deploy, deactivate,
+    merge, pause — which is exactly provisioning and stewardship of non-production environments.
+- tag: Project Variables
+  spec_file: platform.sh-project-variables-api-openapi.yml
+  capability_id: BC-4210.60
+  capability_id_l1: BC-4210
+  capability_name: Configuration & Secrets Management
+  confidence: 0.8
+  evidence: POST /projects/{projectId}/variables  create-projects-variables  Add a project variable; schemas
+    ProjectVariable, ProjectVariableCreateInput
+  reason: Full lifecycle of project-level variables (environment/config values and secrets consumed by
+    the deployed services), which is squarely Configuration & Secrets Management.
+- tag: Repository
+  spec_file: platform.sh-repository-api-openapi.yml
+  capability_id: BC-4200.40
+  capability_id_l1: BC-4200
+  capability_name: Software Construction Management
+  confidence: 0.8
+  evidence: GET /projects/{projectId}/git/commits/{repositoryCommitId}  get-projects-git-commits  Get
+    a commit object; schemas Ref, Blob, Commit, Tree
+  reason: Exposes Git object-model access (blobs, trees, commits, refs) for the project repository — source-control
+    access, which falls under Software Construction Management (source control practice).
+- tag: Subscriptions
+  spec_file: platform.sh-subscriptions-api-openapi.yml
+  capability_id: BC-4240
+  capability_id_l1: BC-4240
+  capability_name: Subscription Lifecycle Management
+  confidence: 0.78
+  evidence: POST /organizations/{organization_id}/subscriptions  "Create subscription"; GET .../subscriptions/{subscription_id}/estimate  "Estimate
+    the price of a subscription"; "List addons for a subscription"
+  reason: Operations create, retrieve, price-estimate, and inspect usage/addons of commercial subscriptions
+    tied to a plan (ProjectPlan, Subscription, SubscriptionAddonsObject) — the SaaS subscription commercial
+    lifecycle. Mix of provisioning, modification (addons) and usage/pricing means no single L2 dominates.
+- tag: Blackfire Profiling
+  spec_file: platform.sh-blackfire-profiling-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.75
+  evidence: blackfire_profile_graph  Get profile call graph / blackfire_profiles_list  List profiling
+    results
+  reason: Application performance profiling data (call graphs, timelines, spans) for deployed environments
+    — observability/performance instrumentation; could also read as performance management, hence moderate
+    confidence.
+- tag: Deployment
+  spec_file: platform.sh-deployment-api-openapi.yml
+  capability_id: BC-4210.40
+  capability_id_l1: BC-4210
+  capability_name: Deployment Orchestration
+  confidence: 0.75
+  evidence: 'Get an environment''s deployment information ... schemas: Deployment, UpstreamRoute, DeploymentCollection'
+  reason: Exposes the deployed state of an environment (routes, deployment records) for a PaaS that delivers
+    code changes to running environments — deployment orchestration within software release management.
+- tag: Grants
+  spec_file: platform.sh-grants-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.72
+  evidence: GET /users/{user_id}/extended-access  'List extended access of a user'; GET /access/{access_id}  'Get
+    access document by access ID'
+  reason: Operations expose access grants held by a user across platform resources — access rights administration,
+    i.e. Identity & Access Management. Sparse schema set keeps confidence moderate.
+- tag: Organization Members
+  spec_file: platform.sh-organization-members-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.72
+  evidence: POST /organizations/{organization_id}/members  'Create organization member'; schema Permissions
+  reason: Membership CRUD carrying a Permissions object defines who may access the organization's resources
+    — access administration, not Human Capital Management (these are platform user accounts, not employees).
+- tag: Team Access
+  spec_file: platform.sh-team-access-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.72
+  evidence: POST /projects/{project_id}/team-access  "Grant team access to a project"; DELETE /teams/{team_id}/project-access/{project_id}  "Remove
+    project access for a team"
+  reason: Granting and revoking team-level access rights to projects is authorisation/entitlement administration
+    for platform resources, i.e. identity & access management.
+- tag: Tickets
+  spec_file: platform.sh-tickets-api-openapi.yml
+  capability_id: BC-430.10
+  capability_id_l1: BC-430
+  capability_name: Customer Inquiry Management
+  confidence: 0.72
+  evidence: GET /tickets  list-tickets  List support tickets
+  reason: Single operation lists customer support tickets raised against the PaaS, i.e. inbound support
+    contact records — customer inquiry/support management. Only one read operation, so sub-capability
+    choice is somewhat thin, hence moderate confidence.
+- tag: Users
+  spec_file: platform.sh-users-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.72
+  evidence: POST /users/{user_id}/resetpassword  reset-password  Reset user password
+  reason: User account retrieval, update, email reset, password reset and verification checks are identity
+    account administration for the platform, best fitting Identity & Access Management rather than any
+    business domain capability.
+- tag: Continuous Profiling
+  spec_file: platform.sh-continuous-profiling-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.7
+  evidence: GET /projects/{projectId}/environments/{envId}/continuous-profiling  list_applications  List
+    profiled applications
+  reason: Read-only retrieval of application profiles/timelines from running environments is a production
+    telemetry signal — observability of the running service. Not product usage telemetry (no business
+    events), so BC-4280 is wrong.
+- tag: Environment Backups
+  spec_file: platform.sh-environment-backups-api-openapi.yml
+  capability_id: BC-4220.60
+  capability_id_l1: BC-4220
+  capability_name: Disaster Recovery & Resilience
+  confidence: 0.7
+  evidence: POST /projects/{projectId}/environments/{environmentId}/backups/{backupId}/restore  restore-backup  Restore
+    an environment snapshot
+  reason: Create, list, delete and restore environment backups is backup-and-restore capability for the
+    running service. BC-4230.60 (tenant export) was considered but these are service snapshots/restores
+    rather than customer data export.
+- tag: Orders
+  spec_file: platform.sh-orders-api-openapi.yml
+  capability_id: BC-4250
+  capability_id_l1: BC-4250
+  capability_name: Subscription Billing & Revenue Management
+  confidence: 0.7
+  evidence: GET /organizations/{organization_id}/orders  'List orders'; POST .../orders/{order_id}/authorize  'Create
+    confirmation credentials for for 3D-Secure'; schemas LineItem, Order
+  reason: Commercial order documents with line items plus invoice download and 3D-Secure payment authorisation
+    — clearly subscription billing/revenue territory, but it straddles invoicing and payment collection
+    so no single L2 is named.
+- tag: Records
+  spec_file: platform.sh-records-api-openapi.yml
+  capability_id: BC-4250.10
+  capability_id_l1: BC-4250
+  capability_name: Usage Metering
+  confidence: 0.7
+  evidence: GET /organizations/{organization_id}/records/usage  list-org-usage-records  List usage records;
+    schemas PlanRecords, Usage
+  reason: Exposes per-organization usage records and plan records that feed consumption-based billing
+    for the PaaS subscription, matching Usage Metering. Slight ambiguity between metering and rating/analytics
+    keeps confidence moderate.
