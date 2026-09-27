@@ -131,6 +131,24 @@ components:
       - status
       - code
       additionalProperties: false
+    EnvironmentSourceOperationInput:
+      type: object
+      properties:
+        operation:
+          type: string
+          title: Operation name
+          description: The name of the operation to execute
+        variables:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties: {}
+          title: Variables
+          description: The variables of the application.
+      required:
+      - operation
+      - variables
+      additionalProperties: false
     EnvironmentSourceOperation:
       type: object
       properties:
@@ -155,24 +173,6 @@ components:
       - app
       - operation
       - command
-      additionalProperties: false
-    EnvironmentSourceOperationInput:
-      type: object
-      properties:
-        operation:
-          type: string
-          title: Operation name
-          description: The name of the operation to execute
-        variables:
-          type: object
-          additionalProperties:
-            type: object
-            additionalProperties: {}
-          title: Variables
-          description: The variables of the application.
-      required:
-      - operation
-      - variables
       additionalProperties: false
     EnvironmentSourceOperationInput_2:
       type: object

@@ -203,21 +203,6 @@ paths:
           default: https
 components:
   schemas:
-    AcceptedResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
-      additionalProperties: false
     ProjectCapabilities:
       type: object
       properties:
@@ -667,6 +652,21 @@ components:
       - build_resources
       - data_retention
       - autoscaling
+      additionalProperties: false
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
       additionalProperties: false
     ProjectPatch:
       type: object

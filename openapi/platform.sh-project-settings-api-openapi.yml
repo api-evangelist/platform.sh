@@ -86,90 +86,6 @@ paths:
           default: https
 components:
   schemas:
-    AcceptedResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
-      additionalProperties: false
-    ProjectSettingsPatch:
-      type: object
-      properties:
-        initialize:
-          type: object
-          title: Initialization key
-          description: ''
-        data_retention:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: object
-            properties:
-              max_backups:
-                type: integer
-                title: Maximum Backups
-                description: The maximum number of backups per environment
-              default_config:
-                type: object
-                properties:
-                  manual_count:
-                    type: integer
-                    title: Manual Count
-                    description: The number of manual backups to keep.
-                  schedule:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        interval:
-                          type: string
-                          title: Interval
-                          description: The policy interval specification.
-                        count:
-                          type: integer
-                          title: Count
-                          description: The number of backups to keep under this interval.
-                      required:
-                      - interval
-                      - count
-                      additionalProperties: false
-                    title: Schedule
-                    description: The backup schedule specification.
-                additionalProperties: false
-                title: Default Config
-                description: ''
-                x-stability: EXPERIMENTAL
-            required:
-            - default_config
-            additionalProperties: false
-          title: Data retention configuration
-          description: Data retention configuration
-        build_resources:
-          type: object
-          properties:
-            cpu:
-              type: number
-              format: float
-              title: CPU
-              description: ''
-            memory:
-              type: integer
-              title: Memory
-              description: ''
-          additionalProperties: false
-          title: Build Resources
-          description: ''
-      additionalProperties: false
     ProjectSettings:
       type: object
       properties:
@@ -667,7 +583,7 @@ components:
       - allow_burst
       - router_resources
       additionalProperties: false
-    ProjectSettingsPatch_2:
+    ProjectSettingsPatch:
       type: object
       properties:
         initialize:
@@ -735,38 +651,21 @@ components:
           additionalProperties: false
           title: Build Resources
           description: ''
-        maintenance_window:
-          type:
-          - object
-          - 'null'
-          properties:
-            recurrence:
-              type: object
-              properties:
-                interval:
-                  type: string
-                  title: Interval
-                  description: Interval in weeks, either 2w or 4w
-                day_of_week:
-                  type: integer
-                  title: Day of week
-                  description: Day of week, where Monday is 0
-                time:
-                  type: string
-                  title: Time
-                  description: Exact time in HH:MM format
-              required:
-              - interval
-              - day_of_week
-              - time
-              additionalProperties: false
-              title: Recurrence
-              description: Defines the recurring schedule for the maintenance window
-          required:
-          - recurrence
-          additionalProperties: false
-          title: Maintenance window configuration
-          description: Configuration for the maintenance window schedule
+      additionalProperties: false
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
       additionalProperties: false
     ProjectSettings_2:
       type: object
@@ -1327,6 +1226,107 @@ components:
       - save_applications_vendors
       - locations_script_default
       - support_oci_images
+      additionalProperties: false
+    ProjectSettingsPatch_2:
+      type: object
+      properties:
+        initialize:
+          type: object
+          title: Initialization key
+          description: ''
+        data_retention:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: object
+            properties:
+              max_backups:
+                type: integer
+                title: Maximum Backups
+                description: The maximum number of backups per environment
+              default_config:
+                type: object
+                properties:
+                  manual_count:
+                    type: integer
+                    title: Manual Count
+                    description: The number of manual backups to keep.
+                  schedule:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        interval:
+                          type: string
+                          title: Interval
+                          description: The policy interval specification.
+                        count:
+                          type: integer
+                          title: Count
+                          description: The number of backups to keep under this interval.
+                      required:
+                      - interval
+                      - count
+                      additionalProperties: false
+                    title: Schedule
+                    description: The backup schedule specification.
+                additionalProperties: false
+                title: Default Config
+                description: ''
+                x-stability: EXPERIMENTAL
+            required:
+            - default_config
+            additionalProperties: false
+          title: Data retention configuration
+          description: Data retention configuration
+        build_resources:
+          type: object
+          properties:
+            cpu:
+              type: number
+              format: float
+              title: CPU
+              description: ''
+            memory:
+              type: integer
+              title: Memory
+              description: ''
+          additionalProperties: false
+          title: Build Resources
+          description: ''
+        maintenance_window:
+          type:
+          - object
+          - 'null'
+          properties:
+            recurrence:
+              type: object
+              properties:
+                interval:
+                  type: string
+                  title: Interval
+                  description: Interval in weeks, either 2w or 4w
+                day_of_week:
+                  type: integer
+                  title: Day of week
+                  description: Day of week, where Monday is 0
+                time:
+                  type: string
+                  title: Time
+                  description: Exact time in HH:MM format
+              required:
+              - interval
+              - day_of_week
+              - time
+              additionalProperties: false
+              title: Recurrence
+              description: Defines the recurring schedule for the maintenance window
+          required:
+          - recurrence
+          additionalProperties: false
+          title: Maintenance window configuration
+          description: Configuration for the maintenance window schedule
       additionalProperties: false
   securitySchemes:
     OAuth2:

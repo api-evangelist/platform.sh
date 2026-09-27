@@ -132,6 +132,30 @@ components:
         href:
           type: string
           description: URL of the link
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
     PlanRecords:
       description: The plan record object.
       properties:
@@ -199,30 +223,6 @@ components:
           type: string
           format: date-time
       type: object
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
     Error_2:
       type: object
       properties:
@@ -232,37 +232,17 @@ components:
       required:
       - error
   parameters:
-    record_started_at:
-      name: filter[started_at]
-      in: query
-      description: The record's start timestamp. You can use this filter to list records started after, or before a certain time. E.g. filter[started_at][value]=2020-01-01&filter[started_at][operator]=>
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
       schema:
         type: string
-        format: date-time
-    record_start:
-      name: filter[start]
-      in: query
-      description: The start of the observation period for the record. E.g. filter[start]=2018-01-01 will display all records that were active (i.e. did not end) on 2018-01-01
-      schema:
-        type: string
-        format: date-time
-    record_end:
-      name: filter[end]
-      in: query
-      description: The end of the observation period for the record. E.g. filter[end]=2018-01-01 will display all records that were active on (i.e. they started before) 2018-01-01
-      schema:
-        type: string
-        format: date-time
-    record_usage_group:
-      name: filter[usage_group]
-      in: query
-      description: Filter records by the type of usage.
-      schema:
-        type: string
-        enum:
-        - storage
-        - environments
-        - user_licenses
     page:
       name: page
       in: query
@@ -278,6 +258,22 @@ components:
       required: false
       schema:
         type: string
+    record_status:
+      name: filter[status]
+      in: query
+      description: 'The status of the plan record. '
+      schema:
+        type: string
+        enum:
+        - active
+        - suspended
+    record_started_at:
+      name: filter[started_at]
+      in: query
+      description: The record's start timestamp. You can use this filter to list records started after, or before a certain time. E.g. filter[started_at][value]=2020-01-01&filter[started_at][operator]=>
+      schema:
+        type: string
+        format: date-time
     filter_subscription_plan:
       name: filter[plan]
       in: query
@@ -291,15 +287,13 @@ components:
         - large
         - xlarge
         - 2xlarge
-    record_status:
-      name: filter[status]
+    record_end:
+      name: filter[end]
       in: query
-      description: 'The status of the plan record. '
+      description: The end of the observation period for the record. E.g. filter[end]=2018-01-01 will display all records that were active on (i.e. they started before) 2018-01-01
       schema:
         type: string
-        enum:
-        - active
-        - suspended
+        format: date-time
     record_ended_at:
       name: filter[ended_at]
       in: query
@@ -307,17 +301,23 @@ components:
       schema:
         type: string
         format: date-time
-    OrganizationIDName:
-      in: path
-      name: organization_id
-      description: 'The ID of the organization.<br>
-
-        Prefix with name= to retrieve the organization by name instead.
-
-        '
-      required: true
+    record_start:
+      name: filter[start]
+      in: query
+      description: The start of the observation period for the record. E.g. filter[start]=2018-01-01 will display all records that were active (i.e. did not end) on 2018-01-01
       schema:
         type: string
+        format: date-time
+    record_usage_group:
+      name: filter[usage_group]
+      in: query
+      description: Filter records by the type of usage.
+      schema:
+        type: string
+        enum:
+        - storage
+        - environments
+        - user_licenses
   securitySchemes:
     OAuth2:
       type: oauth2

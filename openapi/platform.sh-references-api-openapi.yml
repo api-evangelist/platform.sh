@@ -293,27 +293,32 @@ components:
     RegionZone:
       type: string
       description: The geographical zone of the region.
+    RegionLabel:
+      type: string
+      description: The human-readable name of the region.
+    UpdatedAt:
+      type: string
+      format: date-time
+      description: The date and time when the resource was last updated.
+    SubscriptionID:
+      type: string
+      description: The ID of the subscription.
+    ProjectPlan:
+      type: string
+      description: The project plan.
+    CreatedAt:
+      type: string
+      format: date-time
+      description: The date and time when the resource was created.
     RegionTimezone:
       type: string
       description: Default timezone of the region.
-    RegionProvider:
-      type: object
-      description: Information about the region provider.
-    ProjectID:
-      type: string
-      description: The ID of the project.
-    RegionEnvImpact:
-      type: object
-      description: Information about the region provider's environmental impact.
-    RegionProjectLabel:
-      type: string
-      description: The label to display on existing projects.
     ProjectTitle:
       type: string
       description: The title of the project.
-    RegionEndpoint:
-      type: string
-      description: Link to the region API endpoint.
+    RegionPrivate:
+      type: boolean
+      description: Indicator whether or not this platform is for private use only.
     ProjectStatus:
       type: string
       description: The status of the project.
@@ -323,6 +328,67 @@ components:
       - failed
       - suspended
       - deleted
+    RegionProvider:
+      type: object
+      description: Information about the region provider.
+    RegionCompliance:
+      type: object
+      description: Information about the region's compliance.
+    UserReference:
+      description: The referenced user, or null if it no longer exists.
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of the user.
+        username:
+          type: string
+          description: The user's username.
+        email:
+          type: string
+          format: email
+          description: The user's email address.
+        first_name:
+          type: string
+          description: The user's first name.
+        last_name:
+          type: string
+          description: The user's last name.
+        picture:
+          type: string
+          format: uri
+          description: The user's picture.
+        mfa_enabled:
+          type: boolean
+          description: 'Whether the user has enabled MFA. Note: the built-in MFA feature may not be necessary if the user is linked to a mandatory SSO provider that itself supports MFA (see "sso_enabled\").'
+        sso_enabled:
+          type: boolean
+          description: Whether the user is linked to a mandatory SSO provider.
+      x-examples:
+        example-1:
+          email: hello@platform.sh
+          first_name: Hello
+          id: d81c8ee2-44b3-429f-b944-a33ad7437690
+          last_name: World
+          picture: https://accounts.platform.sh/profiles/blimp_profile/themes/platformsh_theme/images/mail/logo.png
+          username: platform-sh
+          mfa_enabled: true
+          sso_enabled: true
+    RegionAvailable:
+      type: boolean
+      description: Indicator whether or not this region is selectable during the checkout. Not available regions will never show up during checkout.
+    ProjectType:
+      type: string
+      description: The type of projects.
+      enum:
+      - grid
+      - dedicated
+    ProjectID:
+      type: string
+      description: The ID of the project.
     TeamReference:
       description: The referenced team, or null if it no longer exists.
       type: object
@@ -386,12 +452,55 @@ components:
           - development:admin
           created_at: '2021-05-24T07:20:35.683264Z'
           updated_at: '2021-05-24T07:20:35.683264Z'
-    RegionLabel:
+    RegionEndpoint:
       type: string
-      description: The human-readable name of the region.
-    OrganizationID:
+      description: Link to the region API endpoint.
+    ProjectReference:
+      description: The referenced project, or null if it no longer exists.
+      type:
+      - object
+      - 'null'
+      required:
+      - id
+      - organization_id
+      - subscription_id
+      - region
+      - title
+      - type
+      - plan
+      - status
+      - created_at
+      - updated_at
+      properties:
+        id:
+          $ref: '#/components/schemas/ProjectID'
+        organization_id:
+          $ref: '#/components/schemas/OrganizationID'
+        subscription_id:
+          $ref: '#/components/schemas/SubscriptionID'
+        region:
+          $ref: '#/components/schemas/RegionID'
+        title:
+          $ref: '#/components/schemas/ProjectTitle'
+        type:
+          $ref: '#/components/schemas/ProjectType'
+        plan:
+          $ref: '#/components/schemas/ProjectPlan'
+        status:
+          $ref: '#/components/schemas/ProjectStatus'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+    RegionProjectLabel:
       type: string
-      description: The ID of the organization.
+      description: The label to display on existing projects.
+    RegionEnvImpact:
+      type: object
+      description: Information about the region provider's environmental impact.
+    RegionCode:
+      type: string
+      description: The code of the region
     RegionReference:
       description: The referenced region, or null if it no longer exists.
       type:
@@ -444,12 +553,6 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
-    RegionCode:
-      type: string
-      description: The code of the region
-    SubscriptionID:
-      type: string
-      description: The ID of the subscription.
     OrganizationReference:
       description: The referenced organization, or null if it no longer exists.
       type:
@@ -484,12 +587,6 @@ components:
           type: string
           format: date-time
           description: The date and time when the organization was last updated.
-    RegionID:
-      type: string
-      description: The machine name of the region where the project is located.
-    RegionCompliance:
-      type: object
-      description: Information about the region's compliance.
     Error:
       description: ''
       type: object
@@ -514,57 +611,38 @@ components:
             field:
             - This field is required.
           title: Bad Request
-    UserReference:
-      description: The referenced user, or null if it no longer exists.
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The ID of the user.
-        username:
-          type: string
-          description: The user's username.
-        email:
-          type: string
-          format: email
-          description: The user's email address.
-        first_name:
-          type: string
-          description: The user's first name.
-        last_name:
-          type: string
-          description: The user's last name.
-        picture:
-          type: string
-          format: uri
-          description: The user's picture.
-        mfa_enabled:
-          type: boolean
-          description: 'Whether the user has enabled MFA. Note: the built-in MFA feature may not be necessary if the user is linked to a mandatory SSO provider that itself supports MFA (see "sso_enabled\").'
-        sso_enabled:
-          type: boolean
-          description: Whether the user is linked to a mandatory SSO provider.
-      x-examples:
-        example-1:
-          email: hello@platform.sh
-          first_name: Hello
-          id: d81c8ee2-44b3-429f-b944-a33ad7437690
-          last_name: World
-          picture: https://accounts.platform.sh/profiles/blimp_profile/themes/platformsh_theme/images/mail/logo.png
-          username: platform-sh
-          mfa_enabled: true
-          sso_enabled: true
     RegionDataCenter:
       type: object
       description: Information about the region provider data center.
-    CreatedAt:
+    RegionSelectionLabel:
       type: string
-      format: date-time
-      description: The date and time when the resource was created.
-    ProjectReference:
+      description: The label to display when choosing between regions for new projects.
+    RegionID:
+      type: string
+      description: The machine name of the region where the project is located.
+    OrganizationID:
+      type: string
+      description: The ID of the organization.
+    RegionProvider_2:
+      type: object
+      description: Information about the region provider.
+      properties:
+        name:
+          type: string
+          description: The name of the cloud provider.
+        logo:
+          type: string
+          description: The logo of the cloud provider (base64 encoded SVG).
+      additionalProperties: false
+    RegionCompliance_2:
+      type: object
+      description: Information about the region's compliance.
+      properties:
+        hipaa:
+          type: boolean
+          description: Indicator whether or not this region is HIPAA compliant.
+      additionalProperties: false
+    ProjectReference_2:
       description: The referenced project, or null if it no longer exists.
       type:
       - object
@@ -601,38 +679,9 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
-    RegionSelectionLabel:
-      type: string
-      description: The label to display when choosing between regions for new projects.
-    ProjectType:
-      type: string
-      description: The type of projects.
-      enum:
-      - grid
-      - dedicated
-    RegionAvailable:
-      type: boolean
-      description: Indicator whether or not this region is selectable during the checkout. Not available regions will never show up during checkout.
-    RegionPrivate:
-      type: boolean
-      description: Indicator whether or not this platform is for private use only.
-    ProjectPlan:
-      type: string
-      description: The project plan.
-    UpdatedAt:
-      type: string
-      format: date-time
-      description: The date and time when the resource was last updated.
-    RegionProvider_2:
-      type: object
-      description: Information about the region provider.
-      properties:
-        name:
-          type: string
-          description: The name of the cloud provider.
-        logo:
-          type: string
-          description: The logo of the cloud provider (base64 encoded SVG).
+        invoiced:
+          type: boolean
+          description: Whether the project is invoiced.
       additionalProperties: false
     RegionEnvImpact_2:
       type: object
@@ -705,14 +754,6 @@ components:
           type: object
           description: Environmental impact information for the region.
       additionalProperties: false
-    RegionCompliance_2:
-      type: object
-      description: Information about the region's compliance.
-      properties:
-        hipaa:
-          type: boolean
-          description: Indicator whether or not this region is HIPAA compliant.
-      additionalProperties: false
     Error_2:
       type: object
       properties:
@@ -721,47 +762,6 @@ components:
           description: Error message
       required:
       - error
-    ProjectReference_2:
-      description: The referenced project, or null if it no longer exists.
-      type:
-      - object
-      - 'null'
-      required:
-      - id
-      - organization_id
-      - subscription_id
-      - region
-      - title
-      - type
-      - plan
-      - status
-      - created_at
-      - updated_at
-      properties:
-        id:
-          $ref: '#/components/schemas/ProjectID'
-        organization_id:
-          $ref: '#/components/schemas/OrganizationID'
-        subscription_id:
-          $ref: '#/components/schemas/SubscriptionID'
-        region:
-          $ref: '#/components/schemas/RegionID'
-        title:
-          $ref: '#/components/schemas/ProjectTitle'
-        type:
-          $ref: '#/components/schemas/ProjectType'
-        plan:
-          $ref: '#/components/schemas/ProjectPlan'
-        status:
-          $ref: '#/components/schemas/ProjectStatus'
-        created_at:
-          $ref: '#/components/schemas/CreatedAt'
-        updated_at:
-          $ref: '#/components/schemas/UpdatedAt'
-        invoiced:
-          type: boolean
-          description: Whether the project is invoiced.
-      additionalProperties: false
     RegionDatacenter:
       type: object
       description: Information about the region provider data center.

@@ -197,92 +197,24 @@ paths:
           default: https
 components:
   schemas:
-    ProjectVariableCreateInput:
-      type: object
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Name of the variable
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        value:
-          type: string
-          title: Value
-          description: Value of the variable
-        is_json:
-          type: boolean
-          title: Is JSON
-          description: The variable is a JSON string
-        is_sensitive:
-          type: boolean
-          title: Is Sensitive
-          description: The variable is sensitive
-        visible_build:
-          type: boolean
-          title: Visible during build
-          description: The variable is visible during build
-        visible_runtime:
-          type: boolean
-          title: Visible at runtime
-          description: The variable is visible at runtime
-        application_scope:
-          type: array
-          items:
-            type: string
-          title: Application Scope
-          description: Applications that have access to this variable
-      required:
-      - name
-      - value
-      additionalProperties: false
     ProjectVariableCollection:
       type: array
       items:
         $ref: '#/components/schemas/ProjectVariable'
-    ProjectVariablePatch:
+    AcceptedResponse:
       type: object
       properties:
-        name:
+        status:
           type: string
-          title: Name
-          description: Name of the variable
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        value:
-          type: string
-          title: Value
-          description: Value of the variable
-        is_json:
-          type: boolean
-          title: Is JSON
-          description: The variable is a JSON string
-        is_sensitive:
-          type: boolean
-          title: Is Sensitive
-          description: The variable is sensitive
-        visible_build:
-          type: boolean
-          title: Visible during build
-          description: The variable is visible during build
-        visible_runtime:
-          type: boolean
-          title: Visible at runtime
-          description: The variable is visible at runtime
-        application_scope:
-          type: array
-          items:
-            type: string
-          title: Application Scope
-          description: Applications that have access to this variable
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
       additionalProperties: false
     ProjectVariable:
       type: object
@@ -353,20 +285,88 @@ components:
       - visible_runtime
       - application_scope
       additionalProperties: false
-    AcceptedResponse:
+    ProjectVariablePatch:
       type: object
       properties:
-        status:
+        name:
           type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
+          title: Name
+          description: Name of the variable
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        value:
+          type: string
+          title: Value
+          description: Value of the variable
+        is_json:
+          type: boolean
+          title: Is JSON
+          description: The variable is a JSON string
+        is_sensitive:
+          type: boolean
+          title: Is Sensitive
+          description: The variable is sensitive
+        visible_build:
+          type: boolean
+          title: Visible during build
+          description: The variable is visible during build
+        visible_runtime:
+          type: boolean
+          title: Visible at runtime
+          description: The variable is visible at runtime
+        application_scope:
+          type: array
+          items:
+            type: string
+          title: Application Scope
+          description: Applications that have access to this variable
+      additionalProperties: false
+    ProjectVariableCreateInput:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Name of the variable
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        value:
+          type: string
+          title: Value
+          description: Value of the variable
+        is_json:
+          type: boolean
+          title: Is JSON
+          description: The variable is a JSON string
+        is_sensitive:
+          type: boolean
+          title: Is Sensitive
+          description: The variable is sensitive
+        visible_build:
+          type: boolean
+          title: Visible during build
+          description: The variable is visible during build
+        visible_runtime:
+          type: boolean
+          title: Visible at runtime
+          description: The variable is visible at runtime
+        application_scope:
+          type: array
+          items:
+            type: string
+          title: Application Scope
+          description: Applications that have access to this variable
       required:
-      - status
-      - code
+      - name
+      - value
       additionalProperties: false
   securitySchemes:
     OAuth2:

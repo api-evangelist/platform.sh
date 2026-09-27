@@ -384,41 +384,30 @@ paths:
           default: https
 components:
   schemas:
-    OwnerInfo:
-      description: Project owner information that can be exposed to collaborators.
-      properties:
-        type:
-          description: Type of the owner, usually 'user'.
-          type: string
-        username:
-          description: The username of the owner.
-          type: string
-        display_name:
-          description: The full name of the owner.
-          type: string
+    Error:
+      description: ''
       type: object
-    SSHKey:
-      description: The ssh key object.
       properties:
-        key_id:
-          description: The ID of the public key.
-          type: integer
-        uid:
-          description: The internal user ID.
-          type: integer
-        fingerprint:
-          description: The fingerprint of the public key.
+        status:
           type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
         title:
-          description: The title of the public key.
           type: string
-        value:
-          description: The actual value of the public key.
-          type: string
-        changed:
-          description: The time of the last key modification (ISO 8601)
-          type: string
-      type: object
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
     User:
       description: ''
       type: object
@@ -516,30 +505,41 @@ components:
           website: https://platform.sh
           consented_at: '2010-04-19T10:00:00Z'
           consent_method: opt-in
-    Error:
-      description: ''
-      type: object
+    OwnerInfo:
+      description: Project owner information that can be exposed to collaborators.
       properties:
-        status:
+        type:
+          description: Type of the owner, usually 'user'.
           type: string
-        message:
+        username:
+          description: The username of the owner.
           type: string
-        code:
-          type: number
-        detail:
-          type: object
+        display_name:
+          description: The full name of the owner.
+          type: string
+      type: object
+    SSHKey:
+      description: The ssh key object.
+      properties:
+        key_id:
+          description: The ID of the public key.
+          type: integer
+        uid:
+          description: The internal user ID.
+          type: integer
+        fingerprint:
+          description: The fingerprint of the public key.
+          type: string
         title:
+          description: The title of the public key.
           type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
+        value:
+          description: The actual value of the public key.
+          type: string
+        changed:
+          description: The time of the last key modification (ISO 8601)
+          type: string
+      type: object
     CurrentUser:
       description: The user object.
       properties:

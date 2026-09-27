@@ -384,6 +384,30 @@ components:
         href:
           type: string
           description: URL of the link
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
     ListLinks:
       type: object
       properties:
@@ -448,30 +472,18 @@ components:
                 method:
                   type: string
                   description: The HTTP method to use.
-    Error:
-      description: ''
+    Error_2:
       type: object
       properties:
-        status:
+        error:
           type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
+          description: Error message
+      required:
+      - error
+    UpdatedAt:
+      type: string
+      format: date-time
+      description: The date and time when the resource was last updated.
     TeamProjectAccess_2:
       type: object
       properties:
@@ -532,18 +544,6 @@ components:
       type: string
       format: date-time
       description: The date and time when the access was granted.
-    Error_2:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-      required:
-      - error
-    UpdatedAt:
-      type: string
-      format: date-time
-      description: The date and time when the resource was last updated.
   parameters:
     ProjectID:
       name: project_id
@@ -559,6 +559,18 @@ components:
       description: The ID of the team.
       schema:
         type: string
+    PageAfter:
+      in: query
+      name: page[after]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
+    PageBefore:
+      in: query
+      name: page[before]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
     PageSizeAccess:
       in: query
       name: page[size]
@@ -568,21 +580,9 @@ components:
         minimum: 1
         maximum: 200
         default: null
-    PageBefore:
-      in: query
-      name: page[before]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
-    PageAfter:
-      in: query
-      name: page[after]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
   responses:
-    NotFound:
-      description: Not Found
+    Conflict:
+      description: Conflict
       content:
         application/problem+json:
           schema:
@@ -593,14 +593,14 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
-    Conflict:
-      description: Conflict
+    NoContent:
+      description: No Content
+    NotFound:
+      description: Not Found
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
-    NoContent:
-      description: No Content
     Forbidden:
       description: Forbidden
       content:

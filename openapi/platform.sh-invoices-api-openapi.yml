@@ -108,7 +108,99 @@ paths:
         schemes:
           default: https
 components:
+  parameters:
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
+      schema:
+        type: string
+    filter_invoice_type:
+      name: filter[type]
+      in: query
+      description: The invoice type. Use invoice for standard invoices, credit_memo for refund/credit invoices.
+      schema:
+        type: string
+        enum:
+        - credit_memo
+        - invoice
+    page:
+      name: page
+      in: query
+      description: Page to be displayed. Defaults to 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+    filter_invoice_status:
+      name: filter[status]
+      in: query
+      description: The status of the invoice.
+      schema:
+        type: string
+        enum:
+        - paid
+        - charged_off
+        - pending
+        - refunded
+        - canceled
+        - refund_pending
+    InvoiceID:
+      in: path
+      name: invoice_id
+      description: The ID of the invoice.
+      required: true
+      schema:
+        type: string
+    filter_order_id:
+      name: filter[order_id]
+      in: query
+      description: The order id of Invoice.
+      schema:
+        type: string
   schemas:
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    InvoicePDF:
+      description: Invoice PDF document details.
+      properties:
+        url:
+          description: A link to the PDF invoice.
+          type: string
+        status:
+          description: The status of the PDF document. We generate invoice PDF asyncronously in batches. An invoice PDF document may not be immediately available to download. If status is 'ready', the PDF is ready to download. 'pending' means the PDF is not created but queued up. If you get this status, try again later.
+          type: string
+          enum:
+          - ready
+          - pending
+      type: object
     Address:
       description: The address of the user.
       properties:
@@ -221,43 +313,6 @@ components:
           type: string
         invoice_pdf:
           $ref: '#/components/schemas/InvoicePDF'
-    InvoicePDF:
-      description: Invoice PDF document details.
-      properties:
-        url:
-          description: A link to the PDF invoice.
-          type: string
-        status:
-          description: The status of the PDF document. We generate invoice PDF asyncronously in batches. An invoice PDF document may not be immediately available to download. If status is 'ready', the PDF is ready to download. 'pending' means the PDF is not created but queued up. If you get this status, try again later.
-          type: string
-          enum:
-          - ready
-          - pending
-      type: object
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
     Error_2:
       type: object
       properties:
@@ -266,61 +321,6 @@ components:
           description: Error message
       required:
       - error
-  parameters:
-    filter_invoice_type:
-      name: filter[type]
-      in: query
-      description: The invoice type. Use invoice for standard invoices, credit_memo for refund/credit invoices.
-      schema:
-        type: string
-        enum:
-        - credit_memo
-        - invoice
-    filter_invoice_status:
-      name: filter[status]
-      in: query
-      description: The status of the invoice.
-      schema:
-        type: string
-        enum:
-        - paid
-        - charged_off
-        - pending
-        - refunded
-        - canceled
-        - refund_pending
-    page:
-      name: page
-      in: query
-      description: Page to be displayed. Defaults to 1.
-      required: false
-      schema:
-        type: integer
-        format: int32
-    InvoiceID:
-      in: path
-      name: invoice_id
-      description: The ID of the invoice.
-      required: true
-      schema:
-        type: string
-    filter_order_id:
-      name: filter[order_id]
-      in: query
-      description: The order id of Invoice.
-      schema:
-        type: string
-    OrganizationIDName:
-      in: path
-      name: organization_id
-      description: 'The ID of the organization.<br>
-
-        Prefix with name= to retrieve the organization by name instead.
-
-        '
-      required: true
-      schema:
-        type: string
   securitySchemes:
     OAuth2:
       type: oauth2

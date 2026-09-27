@@ -291,10 +291,6 @@ components:
       - object
       - sha
       additionalProperties: false
-    RefCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Ref'
     Tree:
       type: object
       properties:
@@ -347,6 +343,43 @@ components:
       - id
       - sha
       - tree
+      additionalProperties: false
+    RefCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Ref'
+    Blob:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Blob Identifier
+          description: The identifier of Blob
+        sha:
+          type: string
+          title: SHA
+          description: The identifier of the tag
+        size:
+          type: integer
+          title: Size
+          description: The size of the blob
+        encoding:
+          type: string
+          enum:
+          - base64
+          - utf-8
+          title: Encoding
+          description: The encoding of the contents
+        content:
+          type: string
+          title: Content
+          description: The contents
+      required:
+      - id
+      - sha
+      - size
+      - encoding
+      - content
       additionalProperties: false
     Commit:
       type: object
@@ -427,39 +460,6 @@ components:
       - message
       - tree
       - parents
-      additionalProperties: false
-    Blob:
-      type: object
-      properties:
-        id:
-          type: string
-          title: Blob Identifier
-          description: The identifier of Blob
-        sha:
-          type: string
-          title: SHA
-          description: The identifier of the tag
-        size:
-          type: integer
-          title: Size
-          description: The size of the blob
-        encoding:
-          type: string
-          enum:
-          - base64
-          - utf-8
-          title: Encoding
-          description: The encoding of the contents
-        content:
-          type: string
-          title: Content
-          description: The contents
-      required:
-      - id
-      - sha
-      - size
-      - encoding
-      - content
       additionalProperties: false
   securitySchemes:
     OAuth2:

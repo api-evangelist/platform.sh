@@ -132,6 +132,17 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/Task'
+    TaskTriggerInput:
+      type: object
+      properties:
+        variables:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties: {}
+          title: Variables
+          description: Environment variables for the task
+      additionalProperties: false
     AcceptedResponse:
       type: object
       properties:
@@ -146,17 +157,6 @@ components:
       required:
       - status
       - code
-      additionalProperties: false
-    TaskTriggerInput:
-      type: object
-      properties:
-        variables:
-          type: object
-          additionalProperties:
-            type: object
-            additionalProperties: {}
-          title: Variables
-          description: Environment variables for the task
       additionalProperties: false
     Task:
       type: object

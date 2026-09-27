@@ -251,20 +251,25 @@ paths:
           default: https
 components:
   schemas:
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
     BackupCollection:
       type: array
       items:
         $ref: '#/components/schemas/Backup'
-    EnvironmentBackupInput:
-      type: object
-      properties:
-        safe:
-          type: boolean
-          title: Safe or live backup
-          description: Take a safe or a live backup
-      required:
-      - safe
-      additionalProperties: false
     EnvironmentRestoreInput:
       type: object
       properties:
@@ -418,28 +423,15 @@ components:
       - restorable
       - automated
       additionalProperties: false
-    AcceptedResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
-      additionalProperties: false
-    EnvironmentBackupInput_2:
+    EnvironmentBackupInput:
       type: object
       properties:
         safe:
           type: boolean
           title: Safe or live backup
           description: Take a safe or a live backup
+      required:
+      - safe
       additionalProperties: false
     EnvironmentRestoreInput_2:
       type: object
@@ -592,6 +584,14 @@ components:
       - deployment
       - restorable
       - automated
+      additionalProperties: false
+    EnvironmentBackupInput_2:
+      type: object
+      properties:
+        safe:
+          type: boolean
+          title: Safe or live backup
+          description: Take a safe or a live backup
       additionalProperties: false
   securitySchemes:
     OAuth2:

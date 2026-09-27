@@ -250,6 +250,95 @@ paths:
           default: https
 components:
   schemas:
+    Address:
+      description: The address of the user.
+      properties:
+        country:
+          description: Two-letter country codes are used to represent countries and states
+          type: string
+          format: ISO ALPHA-2
+        name_line:
+          description: The full name of the user
+          type: string
+        premise:
+          description: Premise (i.e. Apt, Suite, Bldg.)
+          type: string
+        sub_premise:
+          description: Sub Premise (i.e. Suite, Apartment, Floor, Unknown.
+          type: string
+        thoroughfare:
+          description: The address of the user
+          type: string
+        administrative_area:
+          description: The administrative area of the user address
+          type: string
+          format: ISO ALPHA-2
+        sub_administrative_area:
+          description: The sub-administrative area of the user address
+          type: string
+        locality:
+          description: The locality of the user address
+          type: string
+        dependent_locality:
+          description: The dependant_locality area of the user address
+          type: string
+        postal_code:
+          description: The postal code area of the user address
+          type: string
+      type: object
+    AddressMetadata:
+      description: Information about fields required to express an address.
+      properties:
+        metadata:
+          description: Address field metadata.
+          properties:
+            required_fields:
+              description: Fields required to express the address.
+              type: array
+              items:
+                type: string
+            field_labels:
+              description: Localized labels for address fields.
+              type: object
+            show_vat:
+              description: Whether this country supports a VAT number.
+              type: boolean
+          type: object
+      type: object
+    HalLinks:
+      description: Links to _self, and previous or next page, given that they exist.
+      properties:
+        self:
+          description: The cardinal link to the self resource.
+          properties:
+            title:
+              description: Title of the link
+              type: string
+            href:
+              description: URL of the link
+              type: string
+          type: object
+        previous:
+          description: The link to the previous resource page, given that it exists.
+          properties:
+            title:
+              description: Title of the link
+              type: string
+            href:
+              description: URL of the link
+              type: string
+          type: object
+        next:
+          description: The link to the next resource page, given that it exists.
+          properties:
+            title:
+              description: Title of the link
+              type: string
+            href:
+              description: URL of the link
+              type: string
+          type: object
+      type: object
     Profile:
       description: The user profile.
       properties:
@@ -433,95 +522,6 @@ components:
         invoiced:
           description: The customer is invoiced.
           type: boolean
-      type: object
-    HalLinks:
-      description: Links to _self, and previous or next page, given that they exist.
-      properties:
-        self:
-          description: The cardinal link to the self resource.
-          properties:
-            title:
-              description: Title of the link
-              type: string
-            href:
-              description: URL of the link
-              type: string
-          type: object
-        previous:
-          description: The link to the previous resource page, given that it exists.
-          properties:
-            title:
-              description: Title of the link
-              type: string
-            href:
-              description: URL of the link
-              type: string
-          type: object
-        next:
-          description: The link to the next resource page, given that it exists.
-          properties:
-            title:
-              description: Title of the link
-              type: string
-            href:
-              description: URL of the link
-              type: string
-          type: object
-      type: object
-    Address:
-      description: The address of the user.
-      properties:
-        country:
-          description: Two-letter country codes are used to represent countries and states
-          type: string
-          format: ISO ALPHA-2
-        name_line:
-          description: The full name of the user
-          type: string
-        premise:
-          description: Premise (i.e. Apt, Suite, Bldg.)
-          type: string
-        sub_premise:
-          description: Sub Premise (i.e. Suite, Apartment, Floor, Unknown.
-          type: string
-        thoroughfare:
-          description: The address of the user
-          type: string
-        administrative_area:
-          description: The administrative area of the user address
-          type: string
-          format: ISO ALPHA-2
-        sub_administrative_area:
-          description: The sub-administrative area of the user address
-          type: string
-        locality:
-          description: The locality of the user address
-          type: string
-        dependent_locality:
-          description: The dependant_locality area of the user address
-          type: string
-        postal_code:
-          description: The postal code area of the user address
-          type: string
-      type: object
-    AddressMetadata:
-      description: Information about fields required to express an address.
-      properties:
-        metadata:
-          description: Address field metadata.
-          properties:
-            required_fields:
-              description: Fields required to express the address.
-              type: array
-              items:
-                type: string
-            field_labels:
-              description: Localized labels for address fields.
-              type: object
-            show_vat:
-              description: Whether this country supports a VAT number.
-              type: boolean
-          type: object
       type: object
     Profile_2:
       description: The user profile.

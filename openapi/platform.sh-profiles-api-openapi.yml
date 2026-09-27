@@ -191,7 +191,87 @@ paths:
         schemes:
           default: https
 components:
+  parameters:
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
+      schema:
+        type: string
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
   schemas:
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    Address:
+      description: The address of the user.
+      properties:
+        country:
+          description: Two-letter country codes are used to represent countries and states
+          type: string
+          format: ISO ALPHA-2
+        name_line:
+          description: The full name of the user
+          type: string
+        premise:
+          description: Premise (i.e. Apt, Suite, Bldg.)
+          type: string
+        sub_premise:
+          description: Sub Premise (i.e. Suite, Apartment, Floor, Unknown.
+          type: string
+        thoroughfare:
+          description: The address of the user
+          type: string
+        administrative_area:
+          description: The administrative area of the user address
+          type: string
+          format: ISO ALPHA-2
+        sub_administrative_area:
+          description: The sub-administrative area of the user address
+          type: string
+        locality:
+          description: The locality of the user address
+          type: string
+        dependent_locality:
+          description: The dependant_locality area of the user address
+          type: string
+        postal_code:
+          description: The postal code area of the user address
+          type: string
+      type: object
     Profile:
       description: The user profile.
       properties:
@@ -376,66 +456,14 @@ components:
           description: The customer is invoiced.
           type: boolean
       type: object
-    Error:
-      description: ''
+    Error_2:
       type: object
       properties:
-        status:
+        error:
           type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
-    Address:
-      description: The address of the user.
-      properties:
-        country:
-          description: Two-letter country codes are used to represent countries and states
-          type: string
-          format: ISO ALPHA-2
-        name_line:
-          description: The full name of the user
-          type: string
-        premise:
-          description: Premise (i.e. Apt, Suite, Bldg.)
-          type: string
-        sub_premise:
-          description: Sub Premise (i.e. Suite, Apartment, Floor, Unknown.
-          type: string
-        thoroughfare:
-          description: The address of the user
-          type: string
-        administrative_area:
-          description: The administrative area of the user address
-          type: string
-          format: ISO ALPHA-2
-        sub_administrative_area:
-          description: The sub-administrative area of the user address
-          type: string
-        locality:
-          description: The locality of the user address
-          type: string
-        dependent_locality:
-          description: The dependant_locality area of the user address
-          type: string
-        postal_code:
-          description: The postal code area of the user address
-          type: string
-      type: object
+          description: Error message
+      required:
+      - error
     Profile_2:
       description: The user profile.
       properties:
@@ -522,34 +550,6 @@ components:
           description: The legal entity name of the customer.
           type: string
       type: object
-    Error_2:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-      required:
-      - error
-  parameters:
-    OrganizationID:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the organization.
-      schema:
-        type: string
-        format: ulid
-    OrganizationIDName:
-      in: path
-      name: organization_id
-      description: 'The ID of the organization.<br>
-
-        Prefix with name= to retrieve the organization by name instead.
-
-        '
-      required: true
-      schema:
-        type: string
   securitySchemes:
     OAuth2:
       type: oauth2

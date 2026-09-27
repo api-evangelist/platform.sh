@@ -230,10 +230,21 @@ paths:
           default: https
 components:
   schemas:
-    EnvironmentVariableCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/EnvironmentVariable'
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
     EnvironmentVariablePatch:
       type: object
       properties:
@@ -333,6 +344,10 @@ components:
       - name
       - value
       additionalProperties: false
+    EnvironmentVariableCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/EnvironmentVariable'
     EnvironmentVariable:
       type: object
       properties:
@@ -426,21 +441,6 @@ components:
       - inherited
       - is_enabled
       - is_inheritable
-      additionalProperties: false
-    AcceptedResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
       additionalProperties: false
   securitySchemes:
     OAuth2:

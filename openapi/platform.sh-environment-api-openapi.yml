@@ -840,158 +840,6 @@ paths:
           default: https
 components:
   schemas:
-    VersionPatch:
-      type: object
-      properties:
-        routing:
-          type: object
-          properties:
-            percentage:
-              type: integer
-              title: Traffic percentage
-              description: The percentage of traffic routed to this version
-          additionalProperties: false
-          title: Routing
-          description: Configuration about the traffic routed to this version
-      additionalProperties: false
-    EnvironmentDeployInput:
-      type: object
-      properties:
-        strategy:
-          type: string
-          enum:
-          - rolling
-          - stopstart
-          title: Deployment strategy
-          description: The deployment strategy (`rolling` or `stopstart`)
-      required:
-      - strategy
-      additionalProperties: false
-    EnvironmentPatch:
-      type: object
-      properties:
-        name:
-          type: string
-          title: Name
-          description: The name of the environment
-        title:
-          type: string
-          title: Title
-          description: The title of the environment
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        type:
-          type: string
-          enum:
-          - development
-          - production
-          - staging
-          title: Type
-          description: The type of environment (`production`, `staging` or `development`), if not provided, a default will be calculated
-        parent:
-          type:
-          - string
-          - 'null'
-          title: Parent environment
-          description: The name of the parent environment
-        clone_parent_on_create:
-          type: boolean
-          title: Clone parent on create
-          description: Clone data when creating that environment
-        http_access:
-          type: object
-          properties:
-            is_enabled:
-              type: boolean
-              title: Is enabled
-              description: Whether http_access control is enabled
-            addresses:
-              type: array
-              items:
-                type: object
-                properties:
-                  permission:
-                    type: string
-                    enum:
-                    - allow
-                    - deny
-                    title: Permission
-                    description: ''
-                  address:
-                    type: string
-                    title: Address
-                    description: IP address or CIDR
-                required:
-                - permission
-                - address
-                additionalProperties: false
-              title: Address grants
-              description: ''
-            basic_auth:
-              type: object
-              additionalProperties:
-                type: string
-              title: Basic auth grants
-              description: ''
-          additionalProperties: false
-          title: HTTP access permissions
-          description: The HTTP access permissions for this environment
-        enable_smtp:
-          type: boolean
-          title: Enable SMTP
-          description: Whether to configure SMTP for this environment
-        restrict_robots:
-          type: boolean
-          title: Restrict robots
-          description: Whether to restrict robots for this environment
-      additionalProperties: false
-    VersionCreateInput:
-      type: object
-      properties:
-        routing:
-          type: object
-          properties:
-            percentage:
-              type: integer
-              title: Traffic percentage
-              description: The percentage of traffic routed to this version
-          additionalProperties: false
-          title: Routing
-          description: Configuration about the traffic routed to this version
-      additionalProperties: false
-    VersionCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Version'
-    EnvironmentSynchronizeInput:
-      type: object
-      properties:
-        synchronize_code:
-          type: boolean
-          title: Is code synchronized
-          description: Synchronize code?
-        rebase:
-          type: boolean
-          title: Is code rebased
-          description: Synchronize code by rebasing instead of merging
-        synchronize_data:
-          type: boolean
-          title: Is data synchronized
-          description: Synchronize data?
-        synchronize_resources:
-          type: boolean
-          title: Are resources synchronized
-          description: Synchronize resources?
-      required:
-      - synchronize_code
-      - rebase
-      - synchronize_data
-      - synchronize_resources
-      additionalProperties: false
     EnvironmentInitializeInput:
       type: object
       properties:
@@ -1086,6 +934,19 @@ components:
       required:
       - resources
       additionalProperties: false
+    EnvironmentDeployInput:
+      type: object
+      properties:
+        strategy:
+          type: string
+          enum:
+          - rolling
+          - stopstart
+          title: Deployment strategy
+          description: The deployment strategy (`rolling` or `stopstart`)
+      required:
+      - strategy
+      additionalProperties: false
     EnvironmentBranchInput:
       type: object
       properties:
@@ -1135,10 +996,49 @@ components:
       - type
       - resources
       additionalProperties: false
-    EnvironmentCollection:
+    VersionPatch:
+      type: object
+      properties:
+        routing:
+          type: object
+          properties:
+            percentage:
+              type: integer
+              title: Traffic percentage
+              description: The percentage of traffic routed to this version
+          additionalProperties: false
+          title: Routing
+          description: Configuration about the traffic routed to this version
+      additionalProperties: false
+    VersionCollection:
       type: array
       items:
-        $ref: '#/components/schemas/Environment'
+        $ref: '#/components/schemas/Version'
+    EnvironmentSynchronizeInput:
+      type: object
+      properties:
+        synchronize_code:
+          type: boolean
+          title: Is code synchronized
+          description: Synchronize code?
+        rebase:
+          type: boolean
+          title: Is code rebased
+          description: Synchronize code by rebasing instead of merging
+        synchronize_data:
+          type: boolean
+          title: Is data synchronized
+          description: Synchronize data?
+        synchronize_resources:
+          type: boolean
+          title: Are resources synchronized
+          description: Synchronize resources?
+      required:
+      - synchronize_code
+      - rebase
+      - synchronize_data
+      - synchronize_resources
+      additionalProperties: false
     Version:
       type: object
       properties:
@@ -1173,6 +1073,20 @@ components:
       - commit
       - locked
       - routing
+      additionalProperties: false
+    VersionCreateInput:
+      type: object
+      properties:
+        routing:
+          type: object
+          properties:
+            percentage:
+              type: integer
+              title: Traffic percentage
+              description: The percentage of traffic routed to this version
+          additionalProperties: false
+          title: Routing
+          description: Configuration about the traffic routed to this version
       additionalProperties: false
     AcceptedResponse:
       type: object
@@ -1722,6 +1636,10 @@ components:
       - has_deployment
       - supports_restrict_robots
       additionalProperties: false
+    EnvironmentCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Environment'
     EnvironmentActivateInput:
       type: object
       properties:
@@ -1748,36 +1666,87 @@ components:
       required:
       - resources
       additionalProperties: false
-    EnvironmentDeployInput_2:
+    EnvironmentPatch:
       type: object
       properties:
-        strategy:
+        name:
+          type: string
+          title: Name
+          description: The name of the environment
+        title:
+          type: string
+          title: Title
+          description: The title of the environment
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        type:
           type: string
           enum:
-          - rolling
-          - stopstart
-          title: Deployment strategy
-          description: The deployment strategy (`rolling` or `stopstart`)
-      additionalProperties: false
-    EnvironmentSynchronizeInput_2:
-      type: object
-      properties:
-        synchronize_code:
+          - development
+          - production
+          - staging
+          title: Type
+          description: The type of environment (`production`, `staging` or `development`), if not provided, a default will be calculated
+        parent:
+          type:
+          - string
+          - 'null'
+          title: Parent environment
+          description: The name of the parent environment
+        clone_parent_on_create:
           type: boolean
-          title: Is code synchronized
-          description: Synchronize code?
-        rebase:
+          title: Clone parent on create
+          description: Clone data when creating that environment
+        http_access:
+          type: object
+          properties:
+            is_enabled:
+              type: boolean
+              title: Is enabled
+              description: Whether http_access control is enabled
+            addresses:
+              type: array
+              items:
+                type: object
+                properties:
+                  permission:
+                    type: string
+                    enum:
+                    - allow
+                    - deny
+                    title: Permission
+                    description: ''
+                  address:
+                    type: string
+                    title: Address
+                    description: IP address or CIDR
+                required:
+                - permission
+                - address
+                additionalProperties: false
+              title: Address grants
+              description: ''
+            basic_auth:
+              type: object
+              additionalProperties:
+                type: string
+              title: Basic auth grants
+              description: ''
+          additionalProperties: false
+          title: HTTP access permissions
+          description: The HTTP access permissions for this environment
+        enable_smtp:
           type: boolean
-          title: Is code rebased
-          description: Synchronize code by rebasing instead of merging
-        synchronize_data:
+          title: Enable SMTP
+          description: Whether to configure SMTP for this environment
+        restrict_robots:
           type: boolean
-          title: Is data synchronized
-          description: Synchronize data?
-        synchronize_resources:
-          type: boolean
-          title: Are resources synchronized
-          description: Synchronize resources?
+          title: Restrict robots
+          description: Whether to restrict robots for this environment
       additionalProperties: false
     EnvironmentInitializeInput_2:
       type: object
@@ -1862,6 +1831,17 @@ components:
           title: Resources
           description: ''
       additionalProperties: false
+    EnvironmentDeployInput_2:
+      type: object
+      properties:
+        strategy:
+          type: string
+          enum:
+          - rolling
+          - stopstart
+          title: Deployment strategy
+          description: The deployment strategy (`rolling` or `stopstart`)
+      additionalProperties: false
     EnvironmentBranchInput_2:
       type: object
       properties:
@@ -1905,6 +1885,26 @@ components:
       required:
       - title
       - name
+      additionalProperties: false
+    EnvironmentSynchronizeInput_2:
+      type: object
+      properties:
+        synchronize_code:
+          type: boolean
+          title: Is code synchronized
+          description: Synchronize code?
+        rebase:
+          type: boolean
+          title: Is code rebased
+          description: Synchronize code by rebasing instead of merging
+        synchronize_data:
+          type: boolean
+          title: Is data synchronized
+          description: Synchronize data?
+        synchronize_resources:
+          type: boolean
+          title: Are resources synchronized
+          description: Synchronize resources?
       additionalProperties: false
     Environment_2:
       type: object

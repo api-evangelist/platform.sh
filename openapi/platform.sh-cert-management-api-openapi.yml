@@ -283,6 +283,80 @@ paths:
           default: https
 components:
   schemas:
+    CertificateCreateInput:
+      type: object
+      properties:
+        certificate:
+          type: string
+          title: Certificate
+          description: The PEM-encoded certificate
+        key:
+          type: string
+          title: Private Key
+          description: The PEM-encoded private key
+        chain:
+          type: array
+          items:
+            type: string
+          title: Certificate chain
+          description: The certificate chain
+        is_invalid:
+          type: boolean
+          title: Is Invalid
+          description: Whether this certificate should be skipped during provisioning
+      required:
+      - certificate
+      - key
+      additionalProperties: false
+    CertificateProvisioner:
+      type: object
+      properties:
+        id:
+          type: string
+          title: CertificateProvisioner Identifier
+          description: The identifier of CertificateProvisioner
+        directory_url:
+          type: string
+          title: ACME directory url
+          description: The URL to the ACME directory
+        email:
+          type: string
+          title: Contacted email address
+          description: The email address for contact information
+        eab_kid:
+          type:
+          - string
+          - 'null'
+          title: EAB Key identifier
+          description: The key identifier for Entity Attestation Binding
+        eab_hmac_key:
+          type:
+          - string
+          - 'null'
+          title: EAB HMAC Key
+          description: The Keyed-'Hashing Message Authentication Code' for Entity Attestation Binding
+      required:
+      - id
+      - directory_url
+      - email
+      - eab_kid
+      - eab_hmac_key
+      additionalProperties: false
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
     Certificate:
       type: object
       properties:
@@ -383,44 +457,6 @@ components:
       - issuer
       - expires_at
       additionalProperties: false
-    CertificateProvisioner:
-      type: object
-      properties:
-        id:
-          type: string
-          title: CertificateProvisioner Identifier
-          description: The identifier of CertificateProvisioner
-        directory_url:
-          type: string
-          title: ACME directory url
-          description: The URL to the ACME directory
-        email:
-          type: string
-          title: Contacted email address
-          description: The email address for contact information
-        eab_kid:
-          type:
-          - string
-          - 'null'
-          title: EAB Key identifier
-          description: The key identifier for Entity Attestation Binding
-        eab_hmac_key:
-          type:
-          - string
-          - 'null'
-          title: EAB HMAC Key
-          description: The Keyed-'Hashing Message Authentication Code' for Entity Attestation Binding
-      required:
-      - id
-      - directory_url
-      - email
-      - eab_kid
-      - eab_hmac_key
-      additionalProperties: false
-    CertificateProvisionerCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/CertificateProvisioner'
     CertificateCollection:
       type: array
       items:
@@ -449,46 +485,6 @@ components:
           title: EAB HMAC Key
           description: The Keyed-'Hashing Message Authentication Code' for Entity Attestation Binding
       additionalProperties: false
-    CertificateCreateInput:
-      type: object
-      properties:
-        certificate:
-          type: string
-          title: Certificate
-          description: The PEM-encoded certificate
-        key:
-          type: string
-          title: Private Key
-          description: The PEM-encoded private key
-        chain:
-          type: array
-          items:
-            type: string
-          title: Certificate chain
-          description: The certificate chain
-        is_invalid:
-          type: boolean
-          title: Is Invalid
-          description: Whether this certificate should be skipped during provisioning
-      required:
-      - certificate
-      - key
-      additionalProperties: false
-    AcceptedResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
-      additionalProperties: false
     CertificatePatch:
       type: object
       properties:
@@ -503,6 +499,10 @@ components:
           title: Is Invalid
           description: Whether this certificate should be skipped during provisioning
       additionalProperties: false
+    CertificateProvisionerCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/CertificateProvisioner'
   securitySchemes:
     OAuth2:
       type: oauth2

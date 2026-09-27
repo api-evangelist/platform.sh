@@ -476,15 +476,47 @@ components:
         href:
           type: string
           description: URL of the link
-    ListLinks:
+    ProjectPermissions:
+      type: array
+      description: An array of project permissions.
+      items:
+        type: string
+        enum:
+        - admin
+        - viewer
+        - development:admin
+        - development:contributor
+        - development:viewer
+        - staging:admin
+        - staging:contributor
+        - staging:viewer
+        - production:admin
+        - production:contributor
+        - production:viewer
+    Error:
+      description: ''
       type: object
       properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
     UserProjectAccess:
       type: object
       properties:
@@ -542,47 +574,23 @@ components:
                 method:
                   type: string
                   description: The HTTP method to use.
-    Error:
-      description: ''
+    ListLinks:
       type: object
       properties:
-        status:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
+    Error_2:
+      type: object
+      properties:
+        error:
           type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
-    ProjectPermissions:
-      type: array
-      description: An array of project permissions.
-      items:
-        type: string
-        enum:
-        - admin
-        - viewer
-        - development:admin
-        - development:contributor
-        - development:viewer
-        - staging:admin
-        - staging:contributor
-        - staging:viewer
-        - production:admin
-        - production:contributor
-        - production:viewer
+          description: Error message
+      required:
+      - error
     UserProjectAccess_2:
       type: object
       properties:
@@ -641,30 +649,15 @@ components:
                   type: string
                   description: The HTTP method to use.
       additionalProperties: false
-    GrantedAt:
-      type: string
-      format: date-time
-      description: The date and time when the access was granted.
-    Error_2:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-      required:
-      - error
     UpdatedAt:
       type: string
       format: date-time
       description: The date and time when the resource was last updated.
+    GrantedAt:
+      type: string
+      format: date-time
+      description: The date and time when the access was granted.
   parameters:
-    ProjectID:
-      name: project_id
-      in: path
-      required: true
-      description: The ID of the project.
-      schema:
-        type: string
     UserID:
       name: user_id
       in: path
@@ -674,6 +667,25 @@ components:
         type: string
         example: d81c8ee2-44b3-429f-b944-a33ad7437690
         format: uuid
+    ProjectID:
+      name: project_id
+      in: path
+      required: true
+      description: The ID of the project.
+      schema:
+        type: string
+    PageAfter:
+      in: query
+      name: page[after]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
+    PageBefore:
+      in: query
+      name: page[before]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
     PageSizeAccess:
       in: query
       name: page[size]
@@ -683,21 +695,9 @@ components:
         minimum: 1
         maximum: 200
         default: null
-    PageBefore:
-      in: query
-      name: page[before]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
-    PageAfter:
-      in: query
-      name: page[after]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
   responses:
-    NotFound:
-      description: Not Found
+    Conflict:
+      description: Conflict
       content:
         application/problem+json:
           schema:
@@ -708,14 +708,14 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
-    Conflict:
-      description: Conflict
+    NoContent:
+      description: No Content
+    NotFound:
+      description: Not Found
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
-    NoContent:
-      description: No Content
     Forbidden:
       description: Forbidden
       content:

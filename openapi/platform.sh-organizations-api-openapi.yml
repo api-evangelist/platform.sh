@@ -508,22 +508,80 @@ paths:
         schemes:
           default: https
 components:
+  parameters:
+    from:
+      in: query
+      name: from
+      description: The start of the time frame for the query. Inclusive.
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    to:
+      in: query
+      name: to
+      description: The end of the time frame for the query. Exclusive.
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    interval:
+      in: query
+      name: interval
+      description: The interval by which the query groups the results. of the time frame for the query. Exclusive.
+      schema:
+        type: string
+        enum:
+        - day
+        - month
+        - year
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
+      schema:
+        type: string
+    UserID:
+      name: user_id
+      in: path
+      required: true
+      description: The ID of the user.
+      schema:
+        type: string
+        example: d81c8ee2-44b3-429f-b944-a33ad7437690
+        format: uuid
+    TimeRangeTo:
+      in: query
+      name: to
+      description: The end of the time frame for the query. Exclusive.
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    TimeRangeInterval:
+      in: query
+      name: interval
+      description: The interval by which the query groups the results. of the time frame for the query. Exclusive.
+      schema:
+        type: string
+        enum:
+        - day
+        - month
+        - year
+    TimeRangeFrom:
+      in: query
+      name: from
+      description: The start of the time frame for the query. Inclusive.
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
   schemas:
-    ArrayFilter:
-      type: object
-      properties:
-        eq:
-          type: string
-          description: Equal
-        ne:
-          type: string
-          description: Not equal
-        in:
-          type: string
-          description: In (comma-separated list)
-        nin:
-          type: string
-          description: Not in (comma-separated list)
     Organization:
       type: object
       properties:
@@ -712,32 +770,16 @@ components:
                 href:
                   type: string
                   description: URL of the link.
-    ListLinks:
-      type: object
-      properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
-    CarbonTotal:
-      type: number
-      description: The calculated total of the metric for the given interval.
-    ProjectID:
-      type: string
-      description: The ID of the project.
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
+    MetricsValues:
+      type: array
+      items:
+        $ref: '#/components/schemas/MetricsValue'
     ProjectTitle:
       type: string
       description: The title of the project.
+    CarbonTotal:
+      type: number
+      description: The calculated total of the metric for the given interval.
     StringFilter:
       type: object
       properties:
@@ -765,17 +807,6 @@ components:
         ends:
           type: string
           description: Ends with
-    MetricsMetadata:
-      type: object
-      properties:
-        from:
-          description: The value used to calculate the lower bound of the temporal query. Inclusive.
-        to:
-          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
-        interval:
-          description: The interval used to group the metric values.
-        units:
-          description: The units associated with the provided values.
     OrganizationCarbon:
       type: object
       properties:
@@ -789,6 +820,42 @@ components:
             $ref: '#/components/schemas/OrganizationProjectCarbon'
         total:
           $ref: '#/components/schemas/CarbonTotal'
+    ProjectID:
+      type: string
+      description: The ID of the project.
+    ArrayFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
+    OrganizationProjectCarbon:
+      type: object
+      properties:
+        project_id:
+          $ref: '#/components/schemas/ProjectID'
+        project_title:
+          $ref: '#/components/schemas/ProjectTitle'
+        values:
+          $ref: '#/components/schemas/MetricsValues'
+        total:
+          $ref: '#/components/schemas/CarbonTotal'
+    MetricsValue:
+      type: object
+      properties:
+        value:
+          description: The measured value of the metric for the given time interval.
+        start_time:
+          description: The timestamp at which the time interval began.
     DateTimeFilter:
       type: object
       properties:
@@ -813,13 +880,14 @@ components:
         lte:
           type: string
           description: Less than or equal
-    OrganizationID:
-      type: string
-      description: The ID of the organization.
-    MetricsValues:
-      type: array
-      items:
-        $ref: '#/components/schemas/MetricsValue'
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
     Error:
       description: ''
       type: object
@@ -844,24 +912,29 @@ components:
             field:
             - This field is required.
           title: Bad Request
-    MetricsValue:
+    ListLinks:
       type: object
       properties:
-        value:
-          description: The measured value of the metric for the given time interval.
-        start_time:
-          description: The timestamp at which the time interval began.
-    OrganizationProjectCarbon:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
+    MetricsMetadata:
       type: object
       properties:
-        project_id:
-          $ref: '#/components/schemas/ProjectID'
-        project_title:
-          $ref: '#/components/schemas/ProjectTitle'
-        values:
-          $ref: '#/components/schemas/MetricsValues'
-        total:
-          $ref: '#/components/schemas/CarbonTotal'
+        from:
+          description: The value used to calculate the lower bound of the temporal query. Inclusive.
+        to:
+          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
+        interval:
+          description: The interval used to group the metric values.
+        units:
+          description: The units associated with the provided values.
+    OrganizationID:
+      type: string
+      description: The ID of the organization.
     Organization_2:
       type: object
       properties:
@@ -1098,18 +1171,6 @@ components:
                 href:
                   type: string
                   description: URL of the link.
-    MetricsMetadata_2:
-      type: object
-      properties:
-        from:
-          description: The value used to calculate the lower bound of the temporal query. Inclusive.
-        to:
-          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
-        interval:
-          description: The interval used to group the metric values.
-        units:
-          description: The units associated with the provided values.
-      additionalProperties: false
     OrganizationCarbon_2:
       type: object
       properties:
@@ -1124,22 +1185,6 @@ components:
         total:
           $ref: '#/components/schemas/CarbonTotal'
       additionalProperties: false
-    Error_2:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-      required:
-      - error
-    MetricsValue_2:
-      type: object
-      properties:
-        value:
-          description: The measured value of the metric for the given time interval.
-        start_time:
-          description: The timestamp at which the time interval began.
-      additionalProperties: false
     OrganizationProjectCarbon_2:
       type: object
       properties:
@@ -1150,79 +1195,34 @@ components:
         values:
           $ref: '#/components/schemas/MetricsValues'
       additionalProperties: false
-  parameters:
-    from:
-      in: query
-      name: from
-      description: The start of the time frame for the query. Inclusive.
-      schema:
-        $ref: '#/components/schemas/DateTimeFilter'
-    interval:
-      in: query
-      name: interval
-      description: The interval by which the query groups the results. of the time frame for the query. Exclusive.
-      schema:
-        type: string
-        enum:
-        - day
-        - month
-        - year
-    UserID:
-      name: user_id
-      in: path
-      required: true
-      description: The ID of the user.
-      schema:
-        type: string
-        example: d81c8ee2-44b3-429f-b944-a33ad7437690
-        format: uuid
-    to:
-      in: query
-      name: to
-      description: The end of the time frame for the query. Exclusive.
-      schema:
-        $ref: '#/components/schemas/DateTimeFilter'
-    OrganizationIDName:
-      in: path
-      name: organization_id
-      description: 'The ID of the organization.<br>
-
-        Prefix with name= to retrieve the organization by name instead.
-
-        '
-      required: true
-      schema:
-        type: string
-    OrganizationID:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the organization.
-      schema:
-        type: string
-        format: ulid
-    TimeRangeTo:
-      in: query
-      name: to
-      description: The end of the time frame for the query. Exclusive.
-      schema:
-        $ref: '#/components/schemas/DateTimeFilter'
-    TimeRangeFrom:
-      in: query
-      name: from
-      description: The start of the time frame for the query. Inclusive.
-      schema:
-        $ref: '#/components/schemas/DateTimeFilter'
-    TimeRangeInterval:
-      in: query
-      name: interval
-      description: The interval by which the query groups the results. of the time frame for the query. Exclusive.
-      schema:
-        type: string
-        enum:
-        - day
-        - month
-        - year
+    MetricsValue_2:
+      type: object
+      properties:
+        value:
+          description: The measured value of the metric for the given time interval.
+        start_time:
+          description: The timestamp at which the time interval began.
+      additionalProperties: false
+    Error_2:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+    MetricsMetadata_2:
+      type: object
+      properties:
+        from:
+          description: The value used to calculate the lower bound of the temporal query. Inclusive.
+        to:
+          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
+        interval:
+          description: The interval used to group the metric values.
+        units:
+          description: The units associated with the provided values.
+      additionalProperties: false
   responses:
     Forbidden:
       description: Forbidden

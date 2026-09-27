@@ -141,16 +141,6 @@ paths:
         schemes:
           default: https
 components:
-  parameters:
-    UserID:
-      name: user_id
-      in: path
-      required: true
-      description: The ID of the user.
-      schema:
-        type: string
-        example: d81c8ee2-44b3-429f-b944-a33ad7437690
-        format: uuid
   schemas:
     Error:
       description: ''
@@ -184,6 +174,16 @@ components:
           description: Error message
       required:
       - error
+  parameters:
+    UserID:
+      name: user_id
+      in: path
+      required: true
+      description: The ID of the user.
+      schema:
+        type: string
+        example: d81c8ee2-44b3-429f-b944-a33ad7437690
+        format: uuid
   securitySchemes:
     OAuth2:
       type: oauth2

@@ -71,15 +71,14 @@ components:
         href:
           type: string
           description: URL of the link
-    ListLinks:
+    Error:
       type: object
       properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
     History:
       type: object
       properties:
@@ -112,14 +111,31 @@ components:
           type: string
           description: The ID of the user who triggered the event.
       additionalProperties: false
-    Error:
+    ListLinks:
       type: object
       properties:
-        error:
-          type: string
-          description: Error message
-      required:
-      - error
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
+  parameters:
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
+    ProjectID:
+      name: project_id
+      in: path
+      required: true
+      description: The ID of the project.
+      schema:
+        type: string
   responses:
     NotFound:
       description: Not Found
@@ -133,22 +149,6 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error'
-  parameters:
-    ProjectID:
-      name: project_id
-      in: path
-      required: true
-      description: The ID of the project.
-      schema:
-        type: string
-    OrganizationID:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the organization.
-      schema:
-        type: string
-        format: ulid
   securitySchemes:
     BearerAuth:
       type: http
