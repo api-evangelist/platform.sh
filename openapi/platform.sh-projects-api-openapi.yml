@@ -63,22 +63,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-      required:
-      - error
     History:
       type: object
       properties:
@@ -120,22 +104,22 @@ components:
           $ref: '#/components/schemas/Link'
         next:
           $ref: '#/components/schemas/Link'
-  parameters:
-    OrganizationID:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the organization.
-      schema:
-        type: string
-        format: ulid
-    ProjectID:
-      name: project_id
-      in: path
-      required: true
-      description: The ID of the project.
-      schema:
-        type: string
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
   responses:
     NotFound:
       description: Not Found
@@ -149,6 +133,22 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error'
+  parameters:
+    ProjectID:
+      name: project_id
+      in: path
+      required: true
+      description: The ID of the project.
+      schema:
+        type: string
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
   securitySchemes:
     BearerAuth:
       type: http

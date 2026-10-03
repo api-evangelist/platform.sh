@@ -468,31 +468,6 @@ paths:
           default: https
 components:
   schemas:
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
-    ProjectPermissions:
-      type: array
-      description: An array of project permissions.
-      items:
-        type: string
-        enum:
-        - admin
-        - viewer
-        - development:admin
-        - development:contributor
-        - development:viewer
-        - staging:admin
-        - staging:contributor
-        - staging:viewer
-        - production:admin
-        - production:contributor
-        - production:viewer
     Error:
       description: ''
       type: object
@@ -517,6 +492,15 @@ components:
             field:
             - This field is required.
           title: Bad Request
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
     UserProjectAccess:
       type: object
       properties:
@@ -574,15 +558,39 @@ components:
                 method:
                   type: string
                   description: The HTTP method to use.
-    ListLinks:
+    Link:
       type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
       properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
+        href:
+          type: string
+          description: URL of the link
+    ProjectPermissions:
+      type: array
+      description: An array of project permissions.
+      items:
+        type: string
+        enum:
+        - admin
+        - viewer
+        - development:admin
+        - development:contributor
+        - development:viewer
+        - staging:admin
+        - staging:contributor
+        - staging:viewer
+        - production:admin
+        - production:contributor
+        - production:viewer
+    UpdatedAt:
+      type: string
+      format: date-time
+      description: The date and time when the resource was last updated.
+    GrantedAt:
+      type: string
+      format: date-time
+      description: The date and time when the access was granted.
     Error_2:
       type: object
       properties:
@@ -649,14 +657,6 @@ components:
                   type: string
                   description: The HTTP method to use.
       additionalProperties: false
-    UpdatedAt:
-      type: string
-      format: date-time
-      description: The date and time when the resource was last updated.
-    GrantedAt:
-      type: string
-      format: date-time
-      description: The date and time when the access was granted.
   parameters:
     UserID:
       name: user_id
@@ -674,18 +674,6 @@ components:
       description: The ID of the project.
       schema:
         type: string
-    PageAfter:
-      in: query
-      name: page[after]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
-    PageBefore:
-      in: query
-      name: page[before]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
     PageSizeAccess:
       in: query
       name: page[size]
@@ -695,9 +683,21 @@ components:
         minimum: 1
         maximum: 200
         default: null
+    PageBefore:
+      in: query
+      name: page[before]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
+    PageAfter:
+      in: query
+      name: page[after]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
   responses:
-    Conflict:
-      description: Conflict
+    NotFound:
+      description: Not Found
       content:
         application/problem+json:
           schema:
@@ -708,16 +708,16 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
-    NoContent:
-      description: No Content
-    NotFound:
-      description: Not Found
+    Forbidden:
+      description: Forbidden
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
-    Forbidden:
-      description: Forbidden
+    NoContent:
+      description: No Content
+    Conflict:
+      description: Conflict
       content:
         application/problem+json:
           schema:

@@ -230,6 +230,100 @@ paths:
           default: https
 components:
   schemas:
+    EnvironmentVariable:
+      type: object
+      properties:
+        id:
+          type: string
+          title: EnvironmentVariable Identifier
+          description: The identifier of EnvironmentVariable
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        name:
+          type: string
+          title: Name
+          description: Name of the variable
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        value:
+          type: string
+          title: Value
+          description: Value of the variable
+        is_json:
+          type: boolean
+          title: Is JSON
+          description: The variable is a JSON string
+        is_sensitive:
+          type: boolean
+          title: Is Sensitive
+          description: The variable is sensitive
+        visible_build:
+          type: boolean
+          title: Is visible during build
+          description: The variable is visible during build
+        visible_runtime:
+          type: boolean
+          title: Visible at runtime
+          description: The variable is visible at runtime
+        application_scope:
+          type: array
+          items:
+            type: string
+          title: Application Scope
+          description: Applications that have access to this variable
+        project:
+          type: string
+          title: Project name
+          description: The name of the project
+        environment:
+          type: string
+          title: Environment name
+          description: The name of the environment
+        inherited:
+          type: boolean
+          title: Is inherited
+          description: The variable is inherited from a parent environment
+        is_enabled:
+          type: boolean
+          title: Is enabled
+          description: The variable is enabled on this environment
+        is_inheritable:
+          type: boolean
+          title: Is inheritable
+          description: The variable is inheritable to child environments
+      required:
+      - id
+      - created_at
+      - updated_at
+      - name
+      - attributes
+      - is_json
+      - is_sensitive
+      - visible_build
+      - visible_runtime
+      - application_scope
+      - project
+      - environment
+      - inherited
+      - is_enabled
+      - is_inheritable
+      additionalProperties: false
     AcceptedResponse:
       type: object
       properties:
@@ -348,100 +442,6 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/EnvironmentVariable'
-    EnvironmentVariable:
-      type: object
-      properties:
-        id:
-          type: string
-          title: EnvironmentVariable Identifier
-          description: The identifier of EnvironmentVariable
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Creation date
-          description: The creation date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Update date
-          description: The update date
-        name:
-          type: string
-          title: Name
-          description: Name of the variable
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        value:
-          type: string
-          title: Value
-          description: Value of the variable
-        is_json:
-          type: boolean
-          title: Is JSON
-          description: The variable is a JSON string
-        is_sensitive:
-          type: boolean
-          title: Is Sensitive
-          description: The variable is sensitive
-        visible_build:
-          type: boolean
-          title: Is visible during build
-          description: The variable is visible during build
-        visible_runtime:
-          type: boolean
-          title: Visible at runtime
-          description: The variable is visible at runtime
-        application_scope:
-          type: array
-          items:
-            type: string
-          title: Application Scope
-          description: Applications that have access to this variable
-        project:
-          type: string
-          title: Project name
-          description: The name of the project
-        environment:
-          type: string
-          title: Environment name
-          description: The name of the environment
-        inherited:
-          type: boolean
-          title: Is inherited
-          description: The variable is inherited from a parent environment
-        is_enabled:
-          type: boolean
-          title: Is enabled
-          description: The variable is enabled on this environment
-        is_inheritable:
-          type: boolean
-          title: Is inheritable
-          description: The variable is inheritable to child environments
-      required:
-      - id
-      - created_at
-      - updated_at
-      - name
-      - attributes
-      - is_json
-      - is_sensitive
-      - visible_build
-      - visible_runtime
-      - application_scope
-      - project
-      - environment
-      - inherited
-      - is_enabled
-      - is_inheritable
-      additionalProperties: false
   securitySchemes:
     OAuth2:
       type: oauth2

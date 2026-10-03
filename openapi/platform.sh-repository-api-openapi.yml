@@ -253,134 +253,6 @@ paths:
           default: https
 components:
   schemas:
-    Ref:
-      type: object
-      properties:
-        id:
-          type: string
-          title: Ref Identifier
-          description: The identifier of Ref
-        ref:
-          type: string
-          title: Name
-          description: The name of the reference
-        object:
-          type: object
-          properties:
-            type:
-              type: string
-              title: Type
-              description: The type of object pointed to
-            sha:
-              type: string
-              title: The SHA of the object pointed to
-              description: ''
-          required:
-          - type
-          - sha
-          additionalProperties: false
-          title: Object
-          description: The object the reference points to
-        sha:
-          type: string
-          title: SHA
-          description: The commit sha of the ref
-      required:
-      - id
-      - ref
-      - object
-      - sha
-      additionalProperties: false
-    Tree:
-      type: object
-      properties:
-        id:
-          type: string
-          title: Tree Identifier
-          description: The identifier of Tree
-        sha:
-          type: string
-          title: SHA
-          description: The identifier of the tree
-        tree:
-          type: array
-          items:
-            type: object
-            properties:
-              path:
-                type: string
-                title: Item path
-                description: The path of the item
-              mode:
-                type: string
-                enum:
-                - '040000'
-                - '100644'
-                - '100755'
-                - '120000'
-                - '160000'
-                title: Item mode
-                description: The mode of the item
-              type:
-                type: string
-                title: Item type
-                description: The type of the item (blob or tree)
-              sha:
-                type:
-                - string
-                - 'null'
-                title: Item SHA
-                description: The sha of the item
-            required:
-            - path
-            - mode
-            - type
-            - sha
-            additionalProperties: false
-          title: Tree items
-          description: The tree items
-      required:
-      - id
-      - sha
-      - tree
-      additionalProperties: false
-    RefCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Ref'
-    Blob:
-      type: object
-      properties:
-        id:
-          type: string
-          title: Blob Identifier
-          description: The identifier of Blob
-        sha:
-          type: string
-          title: SHA
-          description: The identifier of the tag
-        size:
-          type: integer
-          title: Size
-          description: The size of the blob
-        encoding:
-          type: string
-          enum:
-          - base64
-          - utf-8
-          title: Encoding
-          description: The encoding of the contents
-        content:
-          type: string
-          title: Content
-          description: The contents
-      required:
-      - id
-      - sha
-      - size
-      - encoding
-      - content
-      additionalProperties: false
     Commit:
       type: object
       properties:
@@ -461,6 +333,134 @@ components:
       - tree
       - parents
       additionalProperties: false
+    Ref:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Ref Identifier
+          description: The identifier of Ref
+        ref:
+          type: string
+          title: Name
+          description: The name of the reference
+        object:
+          type: object
+          properties:
+            type:
+              type: string
+              title: Type
+              description: The type of object pointed to
+            sha:
+              type: string
+              title: The SHA of the object pointed to
+              description: ''
+          required:
+          - type
+          - sha
+          additionalProperties: false
+          title: Object
+          description: The object the reference points to
+        sha:
+          type: string
+          title: SHA
+          description: The commit sha of the ref
+      required:
+      - id
+      - ref
+      - object
+      - sha
+      additionalProperties: false
+    Blob:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Blob Identifier
+          description: The identifier of Blob
+        sha:
+          type: string
+          title: SHA
+          description: The identifier of the tag
+        size:
+          type: integer
+          title: Size
+          description: The size of the blob
+        encoding:
+          type: string
+          enum:
+          - base64
+          - utf-8
+          title: Encoding
+          description: The encoding of the contents
+        content:
+          type: string
+          title: Content
+          description: The contents
+      required:
+      - id
+      - sha
+      - size
+      - encoding
+      - content
+      additionalProperties: false
+    Tree:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Tree Identifier
+          description: The identifier of Tree
+        sha:
+          type: string
+          title: SHA
+          description: The identifier of the tree
+        tree:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+                title: Item path
+                description: The path of the item
+              mode:
+                type: string
+                enum:
+                - '040000'
+                - '100644'
+                - '100755'
+                - '120000'
+                - '160000'
+                title: Item mode
+                description: The mode of the item
+              type:
+                type: string
+                title: Item type
+                description: The type of the item (blob or tree)
+              sha:
+                type:
+                - string
+                - 'null'
+                title: Item SHA
+                description: The sha of the item
+            required:
+            - path
+            - mode
+            - type
+            - sha
+            additionalProperties: false
+          title: Tree items
+          description: The tree items
+      required:
+      - id
+      - sha
+      - tree
+      additionalProperties: false
+    RefCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Ref'
   securitySchemes:
     OAuth2:
       type: oauth2

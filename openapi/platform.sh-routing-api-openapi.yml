@@ -111,11 +111,117 @@ paths:
           default: https
 components:
   schemas:
-    Route:
-      oneOf:
-      - $ref: '#/components/schemas/ProxyRoute'
-      - $ref: '#/components/schemas/RedirectRoute'
-      - $ref: '#/components/schemas/UpstreamRoute'
+    ProxyRoute:
+      type: object
+      properties:
+        id:
+          type: string
+          title: ProxyRoute Identifier
+          description: The identifier of ProxyRoute
+        primary:
+          type:
+          - boolean
+          - 'null'
+          title: Is primary
+          description: This route is the primary route of the environment
+        production_url:
+          type:
+          - string
+          - 'null'
+          title: Production URL
+          description: How this URL route would look on production environment
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        type:
+          type: string
+          enum:
+          - proxy
+          - redirect
+          - upstream
+          title: Route type
+          description: Route type.
+        tls:
+          type: object
+          properties:
+            strict_transport_security:
+              type: object
+              properties:
+                enabled:
+                  type:
+                  - boolean
+                  - 'null'
+                  title: Is enabled
+                  description: Whether strict transport security is enabled or not.
+                include_subdomains:
+                  type:
+                  - boolean
+                  - 'null'
+                  title: Is subdomains included
+                  description: Whether the strict transport security policy should include all subdomains.
+                preload:
+                  type:
+                  - boolean
+                  - 'null'
+                  title: Is strict transport security preloaded
+                  description: Whether the strict transport security policy should be preloaded in browsers.
+              required:
+              - enabled
+              - include_subdomains
+              - preload
+              additionalProperties: false
+              title: Strict-Transport-Security options.
+              description: ''
+            min_version:
+              type:
+              - string
+              - 'null'
+              enum:
+              - TLSv1.0
+              - TLSv1.1
+              - TLSv1.2
+              - TLSv1.3
+              title: Minimum TLS version
+              description: The minimum TLS version to support.
+            client_authentication:
+              type:
+              - string
+              - 'null'
+              enum:
+              - request
+              - require
+              title: Client authentication
+              description: The type of client authentication to request.
+            client_certificate_authorities:
+              type: array
+              items:
+                type: string
+              title: Client certificate authorities
+              description: Certificate authorities to validate the client certificate against. If not specified, a default set of trusted CAs will be used.
+          required:
+          - strict_transport_security
+          - min_version
+          - client_authentication
+          - client_certificate_authorities
+          additionalProperties: false
+          title: TLS settings
+          description: TLS settings for the route.
+        to:
+          type: string
+          title: Proxy destination
+          description: ''
+      required:
+      - primary
+      - id
+      - production_url
+      - attributes
+      - type
+      - tls
+      - to
+      additionalProperties: false
     RouteCollection:
       type: array
       items:
@@ -295,117 +401,11 @@ components:
       - to
       - redirects
       additionalProperties: false
-    ProxyRoute:
-      type: object
-      properties:
-        id:
-          type: string
-          title: ProxyRoute Identifier
-          description: The identifier of ProxyRoute
-        primary:
-          type:
-          - boolean
-          - 'null'
-          title: Is primary
-          description: This route is the primary route of the environment
-        production_url:
-          type:
-          - string
-          - 'null'
-          title: Production URL
-          description: How this URL route would look on production environment
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        type:
-          type: string
-          enum:
-          - proxy
-          - redirect
-          - upstream
-          title: Route type
-          description: Route type.
-        tls:
-          type: object
-          properties:
-            strict_transport_security:
-              type: object
-              properties:
-                enabled:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is enabled
-                  description: Whether strict transport security is enabled or not.
-                include_subdomains:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is subdomains included
-                  description: Whether the strict transport security policy should include all subdomains.
-                preload:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is strict transport security preloaded
-                  description: Whether the strict transport security policy should be preloaded in browsers.
-              required:
-              - enabled
-              - include_subdomains
-              - preload
-              additionalProperties: false
-              title: Strict-Transport-Security options.
-              description: ''
-            min_version:
-              type:
-              - string
-              - 'null'
-              enum:
-              - TLSv1.0
-              - TLSv1.1
-              - TLSv1.2
-              - TLSv1.3
-              title: Minimum TLS version
-              description: The minimum TLS version to support.
-            client_authentication:
-              type:
-              - string
-              - 'null'
-              enum:
-              - request
-              - require
-              title: Client authentication
-              description: The type of client authentication to request.
-            client_certificate_authorities:
-              type: array
-              items:
-                type: string
-              title: Client certificate authorities
-              description: Certificate authorities to validate the client certificate against. If not specified, a default set of trusted CAs will be used.
-          required:
-          - strict_transport_security
-          - min_version
-          - client_authentication
-          - client_certificate_authorities
-          additionalProperties: false
-          title: TLS settings
-          description: TLS settings for the route.
-        to:
-          type: string
-          title: Proxy destination
-          description: ''
-      required:
-      - primary
-      - id
-      - production_url
-      - attributes
-      - type
-      - tls
-      - to
-      additionalProperties: false
+    Route:
+      oneOf:
+      - $ref: '#/components/schemas/ProxyRoute'
+      - $ref: '#/components/schemas/RedirectRoute'
+      - $ref: '#/components/schemas/UpstreamRoute'
     UpstreamRoute:
       type: object
       properties:
@@ -639,6 +639,117 @@ components:
       - redirects
       - sticky
       additionalProperties: false
+    ProxyRoute_2:
+      type: object
+      properties:
+        id:
+          type: string
+          title: ProxyRoute Identifier
+          description: The identifier of ProxyRoute
+        primary:
+          type:
+          - boolean
+          - 'null'
+          title: Is primary
+          description: This route is the primary route of the environment
+        production_url:
+          type:
+          - string
+          - 'null'
+          title: Production URL
+          description: How this URL route would look on production environment
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        type:
+          type: string
+          enum:
+          - proxy
+          - redirect
+          - upstream
+          title: Route type
+          description: Route type
+        tls:
+          type: object
+          properties:
+            strict_transport_security:
+              type: object
+              properties:
+                enabled:
+                  type:
+                  - boolean
+                  - 'null'
+                  title: Is enabled
+                  description: Whether strict transport security is enabled or not
+                include_subdomains:
+                  type:
+                  - boolean
+                  - 'null'
+                  title: Is subdomains included
+                  description: Whether the strict transport security policy should include all subdomains
+                preload:
+                  type:
+                  - boolean
+                  - 'null'
+                  title: Is strict transport security preloaded
+                  description: Whether the strict transport security policy should be preloaded in browsers
+              required:
+              - enabled
+              - include_subdomains
+              - preload
+              additionalProperties: false
+              title: Strict-Transport-Security options.
+              description: ''
+            min_version:
+              type:
+              - string
+              - 'null'
+              enum:
+              - TLSv1.0
+              - TLSv1.1
+              - TLSv1.2
+              - TLSv1.3
+              title: Minimum TLS version
+              description: The minimum TLS version to support.
+            client_authentication:
+              type:
+              - string
+              - 'null'
+              enum:
+              - request
+              - require
+              title: Client authentication
+              description: The type of client authentication to request.
+            client_certificate_authorities:
+              type: array
+              items:
+                type: string
+              title: Client certificate authorities
+              description: Certificate authorities to validate the client certificate against. If not specified, a default set of trusted CAs will be used.
+          required:
+          - strict_transport_security
+          - min_version
+          - client_authentication
+          - client_certificate_authorities
+          additionalProperties: false
+          title: TLS settings
+          description: TLS settings for the route
+        to:
+          type: string
+          title: Proxy destination
+          description: The destination of the proxy
+      required:
+      - primary
+      - id
+      - production_url
+      - attributes
+      - type
+      - tls
+      - to
+      additionalProperties: false
     RedirectRoute_2:
       type: object
       properties:
@@ -813,117 +924,6 @@ components:
       - tls
       - to
       - redirects
-      additionalProperties: false
-    ProxyRoute_2:
-      type: object
-      properties:
-        id:
-          type: string
-          title: ProxyRoute Identifier
-          description: The identifier of ProxyRoute
-        primary:
-          type:
-          - boolean
-          - 'null'
-          title: Is primary
-          description: This route is the primary route of the environment
-        production_url:
-          type:
-          - string
-          - 'null'
-          title: Production URL
-          description: How this URL route would look on production environment
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        type:
-          type: string
-          enum:
-          - proxy
-          - redirect
-          - upstream
-          title: Route type
-          description: Route type
-        tls:
-          type: object
-          properties:
-            strict_transport_security:
-              type: object
-              properties:
-                enabled:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is enabled
-                  description: Whether strict transport security is enabled or not
-                include_subdomains:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is subdomains included
-                  description: Whether the strict transport security policy should include all subdomains
-                preload:
-                  type:
-                  - boolean
-                  - 'null'
-                  title: Is strict transport security preloaded
-                  description: Whether the strict transport security policy should be preloaded in browsers
-              required:
-              - enabled
-              - include_subdomains
-              - preload
-              additionalProperties: false
-              title: Strict-Transport-Security options.
-              description: ''
-            min_version:
-              type:
-              - string
-              - 'null'
-              enum:
-              - TLSv1.0
-              - TLSv1.1
-              - TLSv1.2
-              - TLSv1.3
-              title: Minimum TLS version
-              description: The minimum TLS version to support.
-            client_authentication:
-              type:
-              - string
-              - 'null'
-              enum:
-              - request
-              - require
-              title: Client authentication
-              description: The type of client authentication to request.
-            client_certificate_authorities:
-              type: array
-              items:
-                type: string
-              title: Client certificate authorities
-              description: Certificate authorities to validate the client certificate against. If not specified, a default set of trusted CAs will be used.
-          required:
-          - strict_transport_security
-          - min_version
-          - client_authentication
-          - client_certificate_authorities
-          additionalProperties: false
-          title: TLS settings
-          description: TLS settings for the route
-        to:
-          type: string
-          title: Proxy destination
-          description: The destination of the proxy
-      required:
-      - primary
-      - id
-      - production_url
-      - attributes
-      - type
-      - tls
-      - to
       additionalProperties: false
     UpstreamRoute_2:
       type: object

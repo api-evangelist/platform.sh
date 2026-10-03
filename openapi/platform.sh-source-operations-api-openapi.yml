@@ -112,10 +112,6 @@ paths:
           default: https
 components:
   schemas:
-    EnvironmentSourceOperationCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/EnvironmentSourceOperation'
     AcceptedResponse:
       type: object
       properties:
@@ -131,6 +127,10 @@ components:
       - status
       - code
       additionalProperties: false
+    EnvironmentSourceOperationCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/EnvironmentSourceOperation'
     EnvironmentSourceOperationInput:
       type: object
       properties:

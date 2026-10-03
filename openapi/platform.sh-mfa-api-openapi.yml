@@ -333,14 +333,6 @@ components:
       required: true
       schema:
         type: string
-    OrganizationID:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the organization.
-      schema:
-        type: string
-        format: ulid
     UserID:
       name: user_id
       in: path
@@ -350,6 +342,14 @@ components:
         type: string
         example: d81c8ee2-44b3-429f-b944-a33ad7437690
         format: uuid
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
   schemas:
     Error:
       description: ''

@@ -72,45 +72,17 @@ paths:
           default: https
 components:
   parameters:
-    filter_has_incidents:
-      name: filter[has_incidents]
+    filter_priority:
+      name: filter[priority]
       in: query
-      description: Whether or not this ticket has incidents.
-      schema:
-        type: boolean
-    page:
-      name: page
-      in: query
-      description: Page to be displayed. Defaults to 1.
-      required: false
-      schema:
-        type: integer
-        format: int32
-    filter_updated:
-      name: filter[updated]
-      in: query
-      description: ISO dateformat expected. The time when the support ticket was updated.
-      schema:
-        type: string
-        format: date-time
-    filter_submitter_id:
-      name: filter[submitter_id]
-      in: query
-      description: UUID of the ticket submitter. Converted from the ZID value.
-      schema:
-        type: string
-        format: uuid
-    filter_type:
-      name: filter[type]
-      in: query
-      description: The type of the support ticket.
+      description: The priority of the support ticket.
       schema:
         type: string
         enum:
-        - problem
-        - task
-        - incident
-        - question
+        - low
+        - normal
+        - high
+        - urgent
     filter_assignee_id:
       name: filter[assignee_id]
       in: query
@@ -132,6 +104,13 @@ components:
         - open
         - pending
         - solved
+    filter_submitter_id:
+      name: filter[submitter_id]
+      in: query
+      description: UUID of the ticket submitter. Converted from the ZID value.
+      schema:
+        type: string
+        format: uuid
     filter_created:
       name: filter[created]
       in: query
@@ -139,6 +118,37 @@ components:
       schema:
         type: string
         format: date-time
+    filter_updated:
+      name: filter[updated]
+      in: query
+      description: ISO dateformat expected. The time when the support ticket was updated.
+      schema:
+        type: string
+        format: date-time
+    filter_type:
+      name: filter[type]
+      in: query
+      description: The type of the support ticket.
+      schema:
+        type: string
+        enum:
+        - problem
+        - task
+        - incident
+        - question
+    filter_requester_id:
+      name: filter[requester_id]
+      in: query
+      description: UUID of the ticket requester. Converted from the ZID value.
+      schema:
+        type: string
+        format: uuid
+    filter_has_incidents:
+      name: filter[has_incidents]
+      in: query
+      description: Whether or not this ticket has incidents.
+      schema:
+        type: boolean
     filter_due:
       name: filter[due]
       in: query
@@ -152,24 +162,14 @@ components:
       description: The ID of the ticket.
       schema:
         type: integer
-    filter_requester_id:
-      name: filter[requester_id]
+    page:
+      name: page
       in: query
-      description: UUID of the ticket requester. Converted from the ZID value.
+      description: Page to be displayed. Defaults to 1.
+      required: false
       schema:
-        type: string
-        format: uuid
-    filter_priority:
-      name: filter[priority]
-      in: query
-      description: The priority of the support ticket.
-      schema:
-        type: string
-        enum:
-        - low
-        - normal
-        - high
-        - urgent
+        type: integer
+        format: int32
   schemas:
     Ticket:
       description: The support ticket object.

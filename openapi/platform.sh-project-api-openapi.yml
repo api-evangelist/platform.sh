@@ -203,6 +203,356 @@ paths:
           default: https
 components:
   schemas:
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
+    ProjectPatch:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        title:
+          type: string
+          title: Title
+          description: The title of the project
+        description:
+          type: string
+          title: Description
+          description: The description of the project
+        default_branch:
+          type:
+          - string
+          - 'null'
+          title: Default branch
+          description: The default branch of the project
+        timezone:
+          type: string
+          title: Timezone
+          description: Timezone of the project
+        region:
+          type: string
+          title: Region
+          description: The region of the project
+        default_domain:
+          type:
+          - string
+          - 'null'
+          title: Default domain
+          description: The default domain of the project
+      additionalProperties: false
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Project Identifier
+          description: The identifier of Project
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        title:
+          type: string
+          title: Title
+          description: The title of the project
+        description:
+          type: string
+          title: Description
+          description: The description of the project
+        owner:
+          type: string
+          title: Owner
+          description: The owner of the project
+          deprecated: true
+          x-stability: DEPRECATED
+        namespace:
+          type:
+          - string
+          - 'null'
+          title: Namespace
+          description: The namespace the project belongs in
+          x-stability: EXPERIMENTAL
+        organization:
+          type:
+          - string
+          - 'null'
+          title: Organization
+          description: The organization the project belongs in
+          x-stability: EXPERIMENTAL
+        default_branch:
+          type:
+          - string
+          - 'null'
+          title: Default branch
+          description: The default branch of the project
+        status:
+          type: object
+          properties:
+            code:
+              type: string
+              title: Status code
+              description: ''
+            message:
+              type: string
+              title: Status text
+              description: ''
+          required:
+          - code
+          - message
+          additionalProperties: false
+          title: Status
+          description: The status of the project
+        timezone:
+          type: string
+          title: Timezone
+          description: Timezone of the project
+        region:
+          type: string
+          title: Region
+          description: The region of the project
+        repository:
+          type: object
+          properties:
+            url:
+              type: string
+              title: Git URL
+              description: ''
+            client_ssh_key:
+              type:
+              - string
+              - 'null'
+              title: SSH Key
+              description: SSH Key used to access external private repositories.
+          required:
+          - url
+          - client_ssh_key
+          additionalProperties: false
+          title: Repository information
+          description: The repository information of the project
+        default_domain:
+          type:
+          - string
+          - 'null'
+          title: Default domain
+          description: The default domain of the project
+        subscription:
+          type: object
+          properties:
+            license_uri:
+              type: string
+              title: Subscription URI
+              description: URI of the subscription
+            plan:
+              type: string
+              enum:
+              - 2xlarge
+              - 2xlarge-high-memory
+              - 4xlarge
+              - 8xlarge
+              - development
+              - large
+              - large-high-memory
+              - medium
+              - medium-high-memory
+              - standard
+              - standard-high-memory
+              - xlarge
+              - xlarge-high-memory
+              title: Plan level
+              description: ''
+            environments:
+              type: integer
+              title: Environments number
+              description: Number of environments
+            storage:
+              type: integer
+              title: Storage
+              description: Size of storage (in MB)
+            included_users:
+              type: integer
+              title: Included users
+              description: Number of users
+            subscription_management_uri:
+              type: string
+              title: Subscription management URI
+              description: URI for managing the subscription
+            restricted:
+              type: boolean
+              title: Is subscription attributes frozen
+              description: True if subscription attributes, like number of users, are frozen
+            suspended:
+              type: boolean
+              title: Is subscription suspended
+              description: Whether or not the subscription is suspended
+            user_licenses:
+              type: integer
+              title: Current number of users
+              description: Current number of users
+            resources:
+              type: object
+              properties:
+                container_profiles:
+                  type: boolean
+                  title: Is Container profiles enabled
+                  description: Enable support for customizable container profiles.
+                production:
+                  type: object
+                  properties:
+                    legacy_development:
+                      type: boolean
+                      title: Legacy development sizing
+                      description: Enable legacy development sizing for this environment type.
+                    max_cpu:
+                      type:
+                      - number
+                      - 'null'
+                      format: float
+                      title: Maximum CPU units
+                      description: Maximum number of allocated CPU units.
+                    max_memory:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Maximum RAM
+                      description: Maximum amount of allocated RAM.
+                    max_environments:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Maximum environments
+                      description: Maximum number of environments
+                  required:
+                  - legacy_development
+                  - max_cpu
+                  - max_memory
+                  - max_environments
+                  additionalProperties: false
+                  title: Production resources
+                  description: Resources for production environments
+                development:
+                  type: object
+                  properties:
+                    legacy_development:
+                      type: boolean
+                      title: Legacy development sizing
+                      description: Enable legacy development sizing for this environment type.
+                    max_cpu:
+                      type:
+                      - number
+                      - 'null'
+                      format: float
+                      title: Maximum CPU units
+                      description: Maximum number of allocated CPU units.
+                    max_memory:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Maximum RAM
+                      description: Maximum amount of allocated RAM.
+                    max_environments:
+                      type:
+                      - integer
+                      - 'null'
+                      title: Maximum environments
+                      description: Maximum number of environments
+                  required:
+                  - legacy_development
+                  - max_cpu
+                  - max_memory
+                  - max_environments
+                  additionalProperties: false
+                  title: Development resources
+                  description: Resources for development environments
+              required:
+              - container_profiles
+              - production
+              - development
+              additionalProperties: false
+              title: Resources limits
+              description: Resources limits
+            resource_validation_url:
+              type: string
+              title: Resource validation URL
+              description: URL for resources validation
+            image_types:
+              type: object
+              properties:
+                only:
+                  type: array
+                  items:
+                    type: string
+                  title: Allowed image types
+                  description: Image types to be allowed use.
+                exclude:
+                  type: array
+                  items:
+                    type: string
+                  title: Denied image types
+                  description: Image types to be denied use.
+              additionalProperties: false
+              title: Image type restrictions
+              description: Restricted and denied image types
+          required:
+          - license_uri
+          - storage
+          - included_users
+          - subscription_management_uri
+          - restricted
+          - suspended
+          - user_licenses
+          additionalProperties: false
+          title: Subscription information
+          description: The subscription information of the project
+      required:
+      - id
+      - created_at
+      - updated_at
+      - attributes
+      - title
+      - description
+      - owner
+      - namespace
+      - organization
+      - default_branch
+      - status
+      - timezone
+      - region
+      - repository
+      - default_domain
+      - subscription
+      additionalProperties: false
     ProjectCapabilities:
       type: object
       properties:
@@ -653,60 +1003,7 @@ components:
       - data_retention
       - autoscaling
       additionalProperties: false
-    AcceptedResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
-      additionalProperties: false
-    ProjectPatch:
-      type: object
-      properties:
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        title:
-          type: string
-          title: Title
-          description: The title of the project
-        description:
-          type: string
-          title: Description
-          description: The description of the project
-        default_branch:
-          type:
-          - string
-          - 'null'
-          title: Default branch
-          description: The default branch of the project
-        timezone:
-          type: string
-          title: Timezone
-          description: Timezone of the project
-        region:
-          type: string
-          title: Region
-          description: The region of the project
-        default_domain:
-          type:
-          - string
-          - 'null'
-          title: Default domain
-          description: The default domain of the project
-      additionalProperties: false
-    Project:
+    Project_2:
       type: object
       properties:
         id:
@@ -798,13 +1095,13 @@ components:
             url:
               type: string
               title: Git URL
-              description: ''
+              description: The Git URL
             client_ssh_key:
               type:
               - string
               - 'null'
               title: SSH Key
-              description: SSH Key used to access external private repositories.
+              description: SSH Key used to access external private repositories
           required:
           - url
           - client_ssh_key
@@ -876,27 +1173,27 @@ components:
                 container_profiles:
                   type: boolean
                   title: Is Container profiles enabled
-                  description: Enable support for customizable container profiles.
+                  description: Enable support for customizable container profiles
                 production:
                   type: object
                   properties:
                     legacy_development:
                       type: boolean
                       title: Legacy development sizing
-                      description: Enable legacy development sizing for this environment type.
+                      description: Enable legacy development sizing for this environment type
                     max_cpu:
                       type:
                       - number
                       - 'null'
                       format: float
                       title: Maximum CPU units
-                      description: Maximum number of allocated CPU units.
+                      description: Maximum number of allocated CPU units
                     max_memory:
                       type:
                       - integer
                       - 'null'
                       title: Maximum RAM
-                      description: Maximum amount of allocated RAM.
+                      description: Maximum amount of allocated RAM
                     max_environments:
                       type:
                       - integer
@@ -917,20 +1214,20 @@ components:
                     legacy_development:
                       type: boolean
                       title: Legacy development sizing
-                      description: Enable legacy development sizing for this environment type.
+                      description: Enable legacy development sizing for this environment type
                     max_cpu:
                       type:
                       - number
                       - 'null'
                       format: float
                       title: Maximum CPU units
-                      description: Maximum number of allocated CPU units.
+                      description: Maximum number of allocated CPU units
                     max_memory:
                       type:
                       - integer
                       - 'null'
                       title: Maximum RAM
-                      description: Maximum amount of allocated RAM.
+                      description: Maximum amount of allocated RAM
                     max_environments:
                       type:
                       - integer
@@ -985,6 +1282,21 @@ components:
           additionalProperties: false
           title: Subscription information
           description: The subscription information of the project
+        maintenance:
+          type:
+          - object
+          - 'null'
+          properties:
+            next_maintenance:
+              type: string
+              format: date-time
+              title: Next maintenance date and time
+              description: Estimated date and time of the next maintenance activity
+          required:
+          - next_maintenance
+          additionalProperties: false
+          title: Maintenance
+          description: The maintenance information of the project
       required:
       - id
       - created_at
@@ -1002,6 +1314,7 @@ components:
       - repository
       - default_domain
       - subscription
+      - maintenance
       additionalProperties: false
     ProjectCapabilities_2:
       type: object
@@ -1532,319 +1845,6 @@ components:
       - object_storage
       - data_retention
       - autoscaling
-      additionalProperties: false
-    Project_2:
-      type: object
-      properties:
-        id:
-          type: string
-          title: Project Identifier
-          description: The identifier of Project
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Creation date
-          description: The creation date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Update date
-          description: The update date
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        title:
-          type: string
-          title: Title
-          description: The title of the project
-        description:
-          type: string
-          title: Description
-          description: The description of the project
-        owner:
-          type: string
-          title: Owner
-          description: The owner of the project
-          deprecated: true
-          x-stability: DEPRECATED
-        namespace:
-          type:
-          - string
-          - 'null'
-          title: Namespace
-          description: The namespace the project belongs in
-          x-stability: EXPERIMENTAL
-        organization:
-          type:
-          - string
-          - 'null'
-          title: Organization
-          description: The organization the project belongs in
-          x-stability: EXPERIMENTAL
-        default_branch:
-          type:
-          - string
-          - 'null'
-          title: Default branch
-          description: The default branch of the project
-        status:
-          type: object
-          properties:
-            code:
-              type: string
-              title: Status code
-              description: ''
-            message:
-              type: string
-              title: Status text
-              description: ''
-          required:
-          - code
-          - message
-          additionalProperties: false
-          title: Status
-          description: The status of the project
-        timezone:
-          type: string
-          title: Timezone
-          description: Timezone of the project
-        region:
-          type: string
-          title: Region
-          description: The region of the project
-        repository:
-          type: object
-          properties:
-            url:
-              type: string
-              title: Git URL
-              description: The Git URL
-            client_ssh_key:
-              type:
-              - string
-              - 'null'
-              title: SSH Key
-              description: SSH Key used to access external private repositories
-          required:
-          - url
-          - client_ssh_key
-          additionalProperties: false
-          title: Repository information
-          description: The repository information of the project
-        default_domain:
-          type:
-          - string
-          - 'null'
-          title: Default domain
-          description: The default domain of the project
-        subscription:
-          type: object
-          properties:
-            license_uri:
-              type: string
-              title: Subscription URI
-              description: URI of the subscription
-            plan:
-              type: string
-              enum:
-              - 2xlarge
-              - 2xlarge-high-memory
-              - 4xlarge
-              - 8xlarge
-              - development
-              - large
-              - large-high-memory
-              - medium
-              - medium-high-memory
-              - standard
-              - standard-high-memory
-              - xlarge
-              - xlarge-high-memory
-              title: Plan level
-              description: ''
-            environments:
-              type: integer
-              title: Environments number
-              description: Number of environments
-            storage:
-              type: integer
-              title: Storage
-              description: Size of storage (in MB)
-            included_users:
-              type: integer
-              title: Included users
-              description: Number of users
-            subscription_management_uri:
-              type: string
-              title: Subscription management URI
-              description: URI for managing the subscription
-            restricted:
-              type: boolean
-              title: Is subscription attributes frozen
-              description: True if subscription attributes, like number of users, are frozen
-            suspended:
-              type: boolean
-              title: Is subscription suspended
-              description: Whether or not the subscription is suspended
-            user_licenses:
-              type: integer
-              title: Current number of users
-              description: Current number of users
-            resources:
-              type: object
-              properties:
-                container_profiles:
-                  type: boolean
-                  title: Is Container profiles enabled
-                  description: Enable support for customizable container profiles
-                production:
-                  type: object
-                  properties:
-                    legacy_development:
-                      type: boolean
-                      title: Legacy development sizing
-                      description: Enable legacy development sizing for this environment type
-                    max_cpu:
-                      type:
-                      - number
-                      - 'null'
-                      format: float
-                      title: Maximum CPU units
-                      description: Maximum number of allocated CPU units
-                    max_memory:
-                      type:
-                      - integer
-                      - 'null'
-                      title: Maximum RAM
-                      description: Maximum amount of allocated RAM
-                    max_environments:
-                      type:
-                      - integer
-                      - 'null'
-                      title: Maximum environments
-                      description: Maximum number of environments
-                  required:
-                  - legacy_development
-                  - max_cpu
-                  - max_memory
-                  - max_environments
-                  additionalProperties: false
-                  title: Production resources
-                  description: Resources for production environments
-                development:
-                  type: object
-                  properties:
-                    legacy_development:
-                      type: boolean
-                      title: Legacy development sizing
-                      description: Enable legacy development sizing for this environment type
-                    max_cpu:
-                      type:
-                      - number
-                      - 'null'
-                      format: float
-                      title: Maximum CPU units
-                      description: Maximum number of allocated CPU units
-                    max_memory:
-                      type:
-                      - integer
-                      - 'null'
-                      title: Maximum RAM
-                      description: Maximum amount of allocated RAM
-                    max_environments:
-                      type:
-                      - integer
-                      - 'null'
-                      title: Maximum environments
-                      description: Maximum number of environments
-                  required:
-                  - legacy_development
-                  - max_cpu
-                  - max_memory
-                  - max_environments
-                  additionalProperties: false
-                  title: Development resources
-                  description: Resources for development environments
-              required:
-              - container_profiles
-              - production
-              - development
-              additionalProperties: false
-              title: Resources limits
-              description: Resources limits
-            resource_validation_url:
-              type: string
-              title: Resource validation URL
-              description: URL for resources validation
-            image_types:
-              type: object
-              properties:
-                only:
-                  type: array
-                  items:
-                    type: string
-                  title: Allowed image types
-                  description: Image types to be allowed use.
-                exclude:
-                  type: array
-                  items:
-                    type: string
-                  title: Denied image types
-                  description: Image types to be denied use.
-              additionalProperties: false
-              title: Image type restrictions
-              description: Restricted and denied image types
-          required:
-          - license_uri
-          - storage
-          - included_users
-          - subscription_management_uri
-          - restricted
-          - suspended
-          - user_licenses
-          additionalProperties: false
-          title: Subscription information
-          description: The subscription information of the project
-        maintenance:
-          type:
-          - object
-          - 'null'
-          properties:
-            next_maintenance:
-              type: string
-              format: date-time
-              title: Next maintenance date and time
-              description: Estimated date and time of the next maintenance activity
-          required:
-          - next_maintenance
-          additionalProperties: false
-          title: Maintenance
-          description: The maintenance information of the project
-      required:
-      - id
-      - created_at
-      - updated_at
-      - attributes
-      - title
-      - description
-      - owner
-      - namespace
-      - organization
-      - default_branch
-      - status
-      - timezone
-      - region
-      - repository
-      - default_domain
-      - subscription
-      - maintenance
       additionalProperties: false
   securitySchemes:
     OAuth2:

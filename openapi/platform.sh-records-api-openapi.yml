@@ -124,38 +124,26 @@ paths:
           default: https
 components:
   schemas:
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
+    Usage:
+      description: The usage object.
       properties:
-        href:
+        id:
+          description: The unique ID of the usage record.
           type: string
-          description: URL of the link
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
+        subscription_id:
+          description: The ID of the subscription.
           type: string
-        message:
+        usage_group:
+          description: The type of usage that this record represents.
           type: string
-        code:
+        quantity:
+          description: The quantity used.
           type: number
-        detail:
-          type: object
-        title:
+        start:
+          description: The start timestamp of this usage record (ISO 8601).
           type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
+          format: date-time
+      type: object
     PlanRecords:
       description: The plan record object.
       properties:
@@ -194,6 +182,30 @@ components:
           description: 'The status of the subscription during this record: active or suspended.'
           type: string
       type: object
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
     ListLinks:
       type: object
       properties:
@@ -203,26 +215,14 @@ components:
           $ref: '#/components/schemas/Link'
         next:
           $ref: '#/components/schemas/Link'
-    Usage:
-      description: The usage object.
-      properties:
-        id:
-          description: The unique ID of the usage record.
-          type: string
-        subscription_id:
-          description: The ID of the subscription.
-          type: string
-        usage_group:
-          description: The type of usage that this record represents.
-          type: string
-        quantity:
-          description: The quantity used.
-          type: number
-        start:
-          description: The start timestamp of this usage record (ISO 8601).
-          type: string
-          format: date-time
+    Link:
       type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
     Error_2:
       type: object
       properties:
@@ -243,21 +243,16 @@ components:
       required: true
       schema:
         type: string
-    page:
-      name: page
+    record_usage_group:
+      name: filter[usage_group]
       in: query
-      description: Page to be displayed. Defaults to 1.
-      required: false
-      schema:
-        type: integer
-        format: int32
-    filter_subscription_id:
-      name: filter[subscription_id]
-      in: query
-      description: The ID of the subscription
-      required: false
+      description: Filter records by the type of usage.
       schema:
         type: string
+        enum:
+        - storage
+        - environments
+        - user_licenses
     record_status:
       name: filter[status]
       in: query
@@ -267,6 +262,20 @@ components:
         enum:
         - active
         - suspended
+    record_ended_at:
+      name: filter[ended_at]
+      in: query
+      description: The record's end timestamp. You can use this filter to list records ended after, or before a certain time. E.g. filter[ended_at][value]=2020-01-01&filter[ended_at][operator]=>
+      schema:
+        type: string
+        format: date-time
+    filter_subscription_id:
+      name: filter[subscription_id]
+      in: query
+      description: The ID of the subscription
+      required: false
+      schema:
+        type: string
     record_started_at:
       name: filter[started_at]
       in: query
@@ -294,13 +303,6 @@ components:
       schema:
         type: string
         format: date-time
-    record_ended_at:
-      name: filter[ended_at]
-      in: query
-      description: The record's end timestamp. You can use this filter to list records ended after, or before a certain time. E.g. filter[ended_at][value]=2020-01-01&filter[ended_at][operator]=>
-      schema:
-        type: string
-        format: date-time
     record_start:
       name: filter[start]
       in: query
@@ -308,16 +310,14 @@ components:
       schema:
         type: string
         format: date-time
-    record_usage_group:
-      name: filter[usage_group]
+    page:
+      name: page
       in: query
-      description: Filter records by the type of usage.
+      description: Page to be displayed. Defaults to 1.
+      required: false
       schema:
-        type: string
-        enum:
-        - storage
-        - environments
-        - user_licenses
+        type: integer
+        format: int32
   securitySchemes:
     OAuth2:
       type: oauth2

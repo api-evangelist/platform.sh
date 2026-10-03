@@ -384,162 +384,6 @@ paths:
           default: https
 components:
   schemas:
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
-    User:
-      description: ''
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The ID of the user.
-        deactivated:
-          type: boolean
-          description: Whether the user has been deactivated.
-        namespace:
-          type: string
-          description: The namespace in which the user's username is unique.
-        username:
-          type: string
-          description: The user's username.
-        email:
-          type: string
-          format: email
-          description: The user's email address.
-        email_verified:
-          type: boolean
-          description: Whether the user's email address has been verified.
-        first_name:
-          type: string
-          description: The user's first name.
-        last_name:
-          type: string
-          description: The user's last name.
-        picture:
-          type: string
-          format: uri
-          description: The user's picture.
-        company:
-          type: string
-          description: The user's company.
-        website:
-          type: string
-          format: uri
-          description: The user's website.
-        country:
-          type: string
-          maxLength: 2
-          minLength: 2
-          description: The user's ISO 3166-1 alpha-2 country code.
-        created_at:
-          type: string
-          format: date-time
-          description: The date and time when the user was created.
-        updated_at:
-          type: string
-          format: date-time
-          description: The date and time when the user was last updated.
-        consented_at:
-          type: string
-          format: date-time
-          description: The date and time when the user consented to the Terms of Service.
-        consent_method:
-          type: string
-          description: The method by which the user consented to the Terms of Service.
-          enum:
-          - opt-in
-          - text-ref
-      required:
-      - id
-      - deactivated
-      - namespace
-      - username
-      - email
-      - email_verified
-      - first_name
-      - last_name
-      - picture
-      - company
-      - website
-      - country
-      - created_at
-      - updated_at
-      x-examples:
-        example-1:
-          company: Platform.sh SAS
-          country: FR
-          created_at: '2010-04-19T10:00:00Z'
-          deactivated: false
-          email: hello@platform.sh
-          email_verified: true
-          first_name: Hello
-          id: d81c8ee2-44b3-429f-b944-a33ad7437690
-          last_name: World
-          namespace: platformsh
-          picture: https://accounts.platform.sh/profiles/blimp_profile/themes/platformsh_theme/images/mail/logo.png
-          updated_at: '2021-01-27T13:58:38.06968Z'
-          username: platform-sh
-          website: https://platform.sh
-          consented_at: '2010-04-19T10:00:00Z'
-          consent_method: opt-in
-    OwnerInfo:
-      description: Project owner information that can be exposed to collaborators.
-      properties:
-        type:
-          description: Type of the owner, usually 'user'.
-          type: string
-        username:
-          description: The username of the owner.
-          type: string
-        display_name:
-          description: The full name of the owner.
-          type: string
-      type: object
-    SSHKey:
-      description: The ssh key object.
-      properties:
-        key_id:
-          description: The ID of the public key.
-          type: integer
-        uid:
-          description: The internal user ID.
-          type: integer
-        fingerprint:
-          description: The fingerprint of the public key.
-          type: string
-        title:
-          description: The title of the public key.
-          type: string
-        value:
-          description: The actual value of the public key.
-          type: string
-        changed:
-          description: The time of the last key modification (ISO 8601)
-          type: string
-      type: object
     CurrentUser:
       description: The user object.
       properties:
@@ -677,14 +521,162 @@ components:
                 format: date-time
             type: object
       type: object
-    Error_2:
+    SSHKey:
+      description: The ssh key object.
+      properties:
+        key_id:
+          description: The ID of the public key.
+          type: integer
+        uid:
+          description: The internal user ID.
+          type: integer
+        fingerprint:
+          description: The fingerprint of the public key.
+          type: string
+        title:
+          description: The title of the public key.
+          type: string
+        value:
+          description: The actual value of the public key.
+          type: string
+        changed:
+          description: The time of the last key modification (ISO 8601)
+          type: string
+      type: object
+    Error:
+      description: ''
       type: object
       properties:
-        error:
+        status:
           type: string
-          description: Error message
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    OwnerInfo:
+      description: Project owner information that can be exposed to collaborators.
+      properties:
+        type:
+          description: Type of the owner, usually 'user'.
+          type: string
+        username:
+          description: The username of the owner.
+          type: string
+        display_name:
+          description: The full name of the owner.
+          type: string
+      type: object
+    User:
+      description: ''
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of the user.
+        deactivated:
+          type: boolean
+          description: Whether the user has been deactivated.
+        namespace:
+          type: string
+          description: The namespace in which the user's username is unique.
+        username:
+          type: string
+          description: The user's username.
+        email:
+          type: string
+          format: email
+          description: The user's email address.
+        email_verified:
+          type: boolean
+          description: Whether the user's email address has been verified.
+        first_name:
+          type: string
+          description: The user's first name.
+        last_name:
+          type: string
+          description: The user's last name.
+        picture:
+          type: string
+          format: uri
+          description: The user's picture.
+        company:
+          type: string
+          description: The user's company.
+        website:
+          type: string
+          format: uri
+          description: The user's website.
+        country:
+          type: string
+          maxLength: 2
+          minLength: 2
+          description: The user's ISO 3166-1 alpha-2 country code.
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the user was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the user was last updated.
+        consented_at:
+          type: string
+          format: date-time
+          description: The date and time when the user consented to the Terms of Service.
+        consent_method:
+          type: string
+          description: The method by which the user consented to the Terms of Service.
+          enum:
+          - opt-in
+          - text-ref
       required:
-      - error
+      - id
+      - deactivated
+      - namespace
+      - username
+      - email
+      - email_verified
+      - first_name
+      - last_name
+      - picture
+      - company
+      - website
+      - country
+      - created_at
+      - updated_at
+      x-examples:
+        example-1:
+          company: Platform.sh SAS
+          country: FR
+          created_at: '2010-04-19T10:00:00Z'
+          deactivated: false
+          email: hello@platform.sh
+          email_verified: true
+          first_name: Hello
+          id: d81c8ee2-44b3-429f-b944-a33ad7437690
+          last_name: World
+          namespace: platformsh
+          picture: https://accounts.platform.sh/profiles/blimp_profile/themes/platformsh_theme/images/mail/logo.png
+          updated_at: '2021-01-27T13:58:38.06968Z'
+          username: platform-sh
+          website: https://platform.sh
+          consented_at: '2010-04-19T10:00:00Z'
+          consent_method: opt-in
     CurrentUser_2:
       description: The user object.
       properties:
@@ -800,6 +792,14 @@ components:
           description: Number of support tickets by status.
           type: object
       type: object
+    Error_2:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
   parameters:
     UserID:
       name: user_id

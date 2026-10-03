@@ -175,10 +175,14 @@ components:
       - status
       - code
       additionalProperties: false
-    DomainClaimPatch:
+    DomainClaimCreateInput:
       type: object
       additionalProperties: false
-    DomainClaimCreateInput:
+    DomainClaimCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/DomainClaim'
+    DomainClaimPatch:
       type: object
       additionalProperties: false
     DomainClaim:
@@ -217,10 +221,6 @@ components:
       - name
       - count
       additionalProperties: false
-    DomainClaimCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/DomainClaim'
   securitySchemes:
     BearerAuth:
       type: http

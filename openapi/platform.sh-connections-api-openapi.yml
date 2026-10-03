@@ -111,6 +111,30 @@ paths:
           default: https
 components:
   schemas:
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
     Connection:
       description: ''
       type: object
@@ -146,30 +170,6 @@ components:
           subject: '1621840835647277693'
           email_address: name@example.com
           updated_at: '2021-05-24T07:20:35.683264Z'
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
     Error_2:
       type: object
       properties:

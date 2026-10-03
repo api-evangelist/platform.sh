@@ -128,21 +128,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    TaskCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Task'
-    TaskTriggerInput:
-      type: object
-      properties:
-        variables:
-          type: object
-          additionalProperties:
-            type: object
-            additionalProperties: {}
-          title: Variables
-          description: Environment variables for the task
-      additionalProperties: false
     AcceptedResponse:
       type: object
       properties:
@@ -380,6 +365,21 @@ components:
       - runtime
       - run
       - name
+      additionalProperties: false
+    TaskCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Task'
+    TaskTriggerInput:
+      type: object
+      properties:
+        variables:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties: {}
+          title: Variables
+          description: Environment variables for the task
       additionalProperties: false
   securitySchemes:
     BearerAuth:

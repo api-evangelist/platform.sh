@@ -231,57 +231,6 @@ paths:
           default: https
 components:
   schemas:
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
-    StringFilter:
-      type: object
-      properties:
-        eq:
-          type: string
-          description: Equal
-        ne:
-          type: string
-          description: Not equal
-        in:
-          type: string
-          description: In (comma-separated list)
-        nin:
-          type: string
-          description: Not in (comma-separated list)
-        between:
-          type: string
-          description: Between (comma-separated list)
-        contains:
-          type: string
-          description: Contains
-        starts:
-          type: string
-          description: Starts with
-        ends:
-          type: string
-          description: Ends with
     ProjectInvitation:
       title: ''
       type: object
@@ -372,6 +321,57 @@ components:
           updated_at: '2019-08-24T14:15:22Z'
           finished_at: null
           environments: []
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    StringFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
+        between:
+          type: string
+          description: Between (comma-separated list)
+        contains:
+          type: string
+          description: Contains
+        starts:
+          type: string
+          description: Starts with
+        ends:
+          type: string
+          description: Ends with
     Error_2:
       type: object
       properties:

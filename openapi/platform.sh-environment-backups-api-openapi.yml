@@ -266,6 +266,16 @@ components:
       - status
       - code
       additionalProperties: false
+    EnvironmentBackupInput:
+      type: object
+      properties:
+        safe:
+          type: boolean
+          title: Safe or live backup
+          description: Take a safe or a live backup
+      required:
+      - safe
+      additionalProperties: false
     BackupCollection:
       type: array
       items:
@@ -423,15 +433,13 @@ components:
       - restorable
       - automated
       additionalProperties: false
-    EnvironmentBackupInput:
+    EnvironmentBackupInput_2:
       type: object
       properties:
         safe:
           type: boolean
           title: Safe or live backup
           description: Take a safe or a live backup
-      required:
-      - safe
       additionalProperties: false
     EnvironmentRestoreInput_2:
       type: object
@@ -584,14 +592,6 @@ components:
       - deployment
       - restorable
       - automated
-      additionalProperties: false
-    EnvironmentBackupInput_2:
-      type: object
-      properties:
-        safe:
-          type: boolean
-          title: Safe or live backup
-          description: Take a safe or a live backup
       additionalProperties: false
   securitySchemes:
     OAuth2:

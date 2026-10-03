@@ -261,6 +261,18 @@ components:
             field:
             - This field is required.
           title: Bad Request
+    OrganizationPermissions:
+      type: array
+      description: The permissions the invitee should be given on the organization.
+      items:
+        type: string
+        enum:
+        - admin
+        - billing
+        - plans
+        - members
+        - project:create
+        - projects:list
     StringFilter:
       type: object
       properties:
@@ -288,18 +300,6 @@ components:
         ends:
           type: string
           description: Ends with
-    OrganizationPermissions:
-      type: array
-      description: The permissions the invitee should be given on the organization.
-      items:
-        type: string
-        enum:
-        - admin
-        - billing
-        - plans
-        - members
-        - project:create
-        - projects:list
     Error_2:
       type: object
       properties:

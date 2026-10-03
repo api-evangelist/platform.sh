@@ -538,14 +538,49 @@ paths:
           default: https
 components:
   schemas:
-    Link:
+    DateTimeFilter:
       type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
       properties:
-        href:
+        eq:
           type: string
-          description: URL of the link
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        between:
+          type: string
+          description: Between (comma-separated list)
+        gt:
+          type: string
+          description: Greater than
+        gte:
+          type: string
+          description: Greater than or equal
+        lt:
+          type: string
+          description: Less than
+        lte:
+          type: string
+          description: Less than or equal
+    TeamMember:
+      type: object
+      properties:
+        team_id:
+          type: string
+          format: ulid
+          description: The ID of the team.
+        user_id:
+          type: string
+          format: uuid
+          description: The ID of the user.
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the team member was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the team member was last updated.
     Error:
       description: ''
       type: object
@@ -570,52 +605,6 @@ components:
             field:
             - This field is required.
           title: Bad Request
-    StringFilter:
-      type: object
-      properties:
-        eq:
-          type: string
-          description: Equal
-        ne:
-          type: string
-          description: Not equal
-        in:
-          type: string
-          description: In (comma-separated list)
-        nin:
-          type: string
-          description: Not in (comma-separated list)
-        between:
-          type: string
-          description: Between (comma-separated list)
-        contains:
-          type: string
-          description: Contains
-        starts:
-          type: string
-          description: Starts with
-        ends:
-          type: string
-          description: Ends with
-    TeamMember:
-      type: object
-      properties:
-        team_id:
-          type: string
-          format: ulid
-          description: The ID of the team.
-        user_id:
-          type: string
-          format: uuid
-          description: The ID of the user.
-        created_at:
-          type: string
-          format: date-time
-          description: The date and time when the team member was created.
-        updated_at:
-          type: string
-          format: date-time
-          description: The date and time when the team member was last updated.
     ListLinks:
       type: object
       properties:
@@ -688,7 +677,15 @@ components:
           - viewer
           - staging:contributor
           - development:admin
-    DateTimeFilter:
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
+    StringFilter:
       type: object
       properties:
         eq:
@@ -697,21 +694,24 @@ components:
         ne:
           type: string
           description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
         between:
           type: string
           description: Between (comma-separated list)
-        gt:
+        contains:
           type: string
-          description: Greater than
-        gte:
+          description: Contains
+        starts:
           type: string
-          description: Greater than or equal
-        lt:
+          description: Starts with
+        ends:
           type: string
-          description: Less than
-        lte:
-          type: string
-          description: Less than or equal
+          description: Ends with
     Error_2:
       type: object
       properties:
@@ -721,6 +721,13 @@ components:
       required:
       - error
   parameters:
+    TeamID:
+      name: team_id
+      in: path
+      required: true
+      description: The ID of the team.
+      schema:
+        type: string
     UserID:
       name: user_id
       in: path
@@ -730,13 +737,6 @@ components:
         type: string
         example: d81c8ee2-44b3-429f-b944-a33ad7437690
         format: uuid
-    TeamID:
-      name: team_id
-      in: path
-      required: true
-      description: The ID of the team.
-      schema:
-        type: string
   securitySchemes:
     OAuth2:
       type: oauth2

@@ -268,74 +268,6 @@ paths:
           default: https
 components:
   schemas:
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
-    ArrayFilter:
-      type: object
-      properties:
-        eq:
-          type: string
-          description: Equal
-        ne:
-          type: string
-          description: Not equal
-        in:
-          type: string
-          description: In (comma-separated list)
-        nin:
-          type: string
-          description: Not in (comma-separated list)
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
-    Permissions:
-      type: array
-      description: The organization member permissions.
-      items:
-        type: string
-        enum:
-        - admin
-        - billing
-        - members
-        - plans
-        - projects:create
-        - projects:list
-    ListLinks:
-      type: object
-      properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
     OrganizationMember:
       type: object
       properties:
@@ -401,6 +333,74 @@ components:
                 method:
                   type: string
                   description: The HTTP method to use.
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
+    Permissions:
+      type: array
+      description: The organization member permissions.
+      items:
+        type: string
+        enum:
+        - admin
+        - billing
+        - members
+        - plans
+        - projects:create
+        - projects:list
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
+    ArrayFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
     Error_2:
       type: object
       properties:
@@ -421,14 +421,6 @@ components:
       required: true
       schema:
         type: string
-    OrganizationID:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the organization.
-      schema:
-        type: string
-        format: ulid
     UserID:
       name: user_id
       in: path
@@ -438,6 +430,14 @@ components:
         type: string
         example: d81c8ee2-44b3-429f-b944-a33ad7437690
         format: uuid
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
   securitySchemes:
     OAuth2:
       type: oauth2

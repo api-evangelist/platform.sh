@@ -414,251 +414,42 @@ paths:
         schemes:
           default: https
 components:
-  parameters:
-    from:
-      in: query
-      name: from
-      description: The start of the time frame for the query. Inclusive.
-      schema:
-        $ref: '#/components/schemas/DateTimeFilter'
-    to:
-      in: query
-      name: to
-      description: The end of the time frame for the query. Exclusive.
-      schema:
-        $ref: '#/components/schemas/DateTimeFilter'
-    interval:
-      in: query
-      name: interval
-      description: The interval by which the query groups the results. of the time frame for the query. Exclusive.
-      schema:
-        type: string
-        enum:
-        - day
-        - month
-        - year
-    ProjectID:
-      name: project_id
-      in: path
-      required: true
-      description: The ID of the project.
-      schema:
-        type: string
-    OrganizationID:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the organization.
-      schema:
-        type: string
-        format: ulid
-    FilterProjectTitle:
-      in: query
-      name: filter[title]
-      description: Allows filtering by project `title` using one or more operators.
-      style: deepObject
-      explode: true
-      schema:
-        $ref: '#/components/schemas/StringFilter'
-    TimeRangeTo:
-      in: query
-      name: to
-      description: The end of the time frame for the query. Exclusive.
-      schema:
-        $ref: '#/components/schemas/DateTimeFilter'
-    PageBefore:
-      in: query
-      name: page[before]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
-    FilterProjectStatus:
-      in: query
-      name: filter[status]
-      description: Allows filtering by project `status` using one or more operators.
-      style: deepObject
-      explode: true
-      schema:
-        $ref: '#/components/schemas/StringFilter'
-    PageSize:
-      in: query
-      name: page[size]
-      description: Determines the number of items to show.
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: null
-    TimeRangeInterval:
-      in: query
-      name: interval
-      description: The interval by which the query groups the results. of the time frame for the query. Exclusive.
-      schema:
-        type: string
-        enum:
-        - day
-        - month
-        - year
-    PageAfter:
-      in: query
-      name: page[after]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
-    TimeRangeFrom:
-      in: query
-      name: from
-      description: The start of the time frame for the query. Inclusive.
-      schema:
-        $ref: '#/components/schemas/DateTimeFilter'
-    FilterUpdatedAt:
-      in: query
-      name: filter[updated_at]
-      description: Allows filtering by `updated_at` using one or more operators.
-      style: deepObject
-      explode: true
-      schema:
-        $ref: '#/components/schemas/DateTimeFilter'
-    FilterCreatedAt:
-      in: query
-      name: filter[created_at]
-      description: Allows filtering by `created_at` using one or more operators.
-      style: deepObject
-      explode: true
-      schema:
-        $ref: '#/components/schemas/DateTimeFilter'
   schemas:
-    ProjectLocked:
-      type: boolean
-      description: Locked
+    ProjectUI:
+      description: The URL for the project's user interface.
+      type: string
+    ProjectCSENotes:
+      type: string
+      description: CSE notes.
     UpdatedAt:
       type: string
       format: date-time
       description: The date and time when the resource was last updated.
-    ProjectUI:
-      description: The URL for the project's user interface.
+    RegionID:
       type: string
-    SubscriptionID:
+      description: The machine name of the region where the project is located.
+    ProjectTimeZone:
       type: string
-      description: The ID of the subscription.
-    ProjectPlan:
-      type: string
-      description: The project plan.
-    CreatedAt:
-      type: string
-      format: date-time
-      description: The date and time when the resource was created.
-    ProjectCSENotes:
-      type: string
-      description: CSE notes.
-    MetricsValues:
-      type: array
-      items:
-        $ref: '#/components/schemas/MetricsValue'
-    ProjectTitle:
-      type: string
-      description: The title of the project.
-    CarbonTotal:
-      type: number
-      description: The calculated total of the metric for the given interval.
-    ProjectTrialPlan:
-      description: Whether the project is currently on a trial plan.
-      type: boolean
-    ProjectStatus:
-      type: string
-      description: The status of the project.
-      enum:
-      - requested
-      - active
-      - failed
-      - suspended
-      - deleted
-    StringFilter:
+      description: Timezone of the project.
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
+    MetricsMetadata:
       type: object
       properties:
-        eq:
-          type: string
-          description: Equal
-        ne:
-          type: string
-          description: Not equal
-        in:
-          type: string
-          description: In (comma-separated list)
-        nin:
-          type: string
-          description: Not in (comma-separated list)
-        between:
-          type: string
-          description: Between (comma-separated list)
-        contains:
-          type: string
-          description: Contains
-        starts:
-          type: string
-          description: Starts with
-        ends:
-          type: string
-          description: Ends with
-    ProjectDefaultBranch:
-      type: string
-      description: Default branch.
-    ProjectDedicatedTag:
-      type: string
-      description: Dedicated tag.
-    ProjectCarbon:
-      type: object
-      properties:
-        project_id:
-          $ref: '#/components/schemas/ProjectID'
-        project_title:
-          $ref: '#/components/schemas/ProjectTitle'
-        meta:
-          $ref: '#/components/schemas/MetricsMetadata'
-        values:
-          $ref: '#/components/schemas/MetricsValues'
-        total:
-          $ref: '#/components/schemas/CarbonTotal'
-    ProjectType:
-      type: string
-      description: The type of projects.
-      enum:
-      - grid
-      - dedicated
-    ProjectID:
-      type: string
-      description: The ID of the project.
-    MetricsValue:
-      type: object
-      properties:
-        value:
-          description: The measured value of the metric for the given time interval.
-        start_time:
-          description: The timestamp at which the time interval began.
-    DateTimeFilter:
-      type: object
-      properties:
-        eq:
-          type: string
-          description: Equal
-        ne:
-          type: string
-          description: Not equal
-        between:
-          type: string
-          description: Between (comma-separated list)
-        gt:
-          type: string
-          description: Greater than
-        gte:
-          type: string
-          description: Greater than or equal
-        lt:
-          type: string
-          description: Less than
-        lte:
-          type: string
-          description: Less than or equal
+        from:
+          description: The value used to calculate the lower bound of the temporal query. Inclusive.
+        to:
+          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
+        interval:
+          description: The interval used to group the metric values.
+        units:
+          description: The units associated with the provided values.
     OrganizationProject:
       type: object
       properties:
@@ -743,14 +534,99 @@ components:
                 href:
                   type: string
                   description: URL of the link.
-    Link:
+    SubscriptionID:
+      type: string
+      description: The ID of the subscription.
+    ProjectCarbon:
       type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
       properties:
-        href:
+        project_id:
+          $ref: '#/components/schemas/ProjectID'
+        project_title:
+          $ref: '#/components/schemas/ProjectTitle'
+        meta:
+          $ref: '#/components/schemas/MetricsMetadata'
+        values:
+          $ref: '#/components/schemas/MetricsValues'
+        total:
+          $ref: '#/components/schemas/CarbonTotal'
+    ProjectLocked:
+      type: boolean
+      description: Locked
+    ProjectDedicatedTag:
+      type: string
+      description: Dedicated tag.
+    ProjectPlan:
+      type: string
+      description: The project plan.
+    ProjectID:
+      type: string
+      description: The ID of the project.
+    CarbonTotal:
+      type: number
+      description: The calculated total of the metric for the given interval.
+    CreatedAt:
+      type: string
+      format: date-time
+      description: The date and time when the resource was created.
+    StringFilter:
+      type: object
+      properties:
+        eq:
           type: string
-          description: URL of the link
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
+        between:
+          type: string
+          description: Between (comma-separated list)
+        contains:
+          type: string
+          description: Contains
+        starts:
+          type: string
+          description: Starts with
+        ends:
+          type: string
+          description: Ends with
+    MetricsValue:
+      type: object
+      properties:
+        value:
+          description: The measured value of the metric for the given time interval.
+        start_time:
+          description: The timestamp at which the time interval began.
+    DateTimeFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        between:
+          type: string
+          description: Between (comma-separated list)
+        gt:
+          type: string
+          description: Greater than
+        gte:
+          type: string
+          description: Greater than or equal
+        lt:
+          type: string
+          description: Less than
+        lte:
+          type: string
+          description: Less than or equal
     Error:
       description: ''
       type: object
@@ -784,82 +660,37 @@ components:
           $ref: '#/components/schemas/Link'
         next:
           $ref: '#/components/schemas/Link'
-    MetricsMetadata:
-      type: object
-      properties:
-        from:
-          description: The value used to calculate the lower bound of the temporal query. Inclusive.
-        to:
-          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
-        interval:
-          description: The interval used to group the metric values.
-        units:
-          description: The units associated with the provided values.
+    ProjectStatus:
+      type: string
+      description: The status of the project.
+      enum:
+      - requested
+      - active
+      - failed
+      - suspended
+      - deleted
+    MetricsValues:
+      type: array
+      items:
+        $ref: '#/components/schemas/MetricsValue'
     OrganizationID:
       type: string
       description: The ID of the organization.
-    RegionID:
+    ProjectTrialPlan:
+      description: Whether the project is currently on a trial plan.
+      type: boolean
+    ProjectDefaultBranch:
       type: string
-      description: The machine name of the region where the project is located.
-    ProjectTimeZone:
+      description: Default branch.
+    ProjectTitle:
       type: string
-      description: Timezone of the project.
-    AggregatedFeatures:
-      type: object
-      properties:
-        backups:
-          type:
-          - object
-          - 'null'
-          description: Backup features configuration.
-    ProjectFacets:
-      type: object
-      description: Facets for filtering options.
-      properties:
-        plans:
-          type:
-          - object
-          - 'null'
-          description: Map of plan IDs to plan names.
-          additionalProperties:
-            type: string
-      additionalProperties: false
-    ProvisionEvent:
-      type: object
-      description: A single event in the provisioning progress stream.
-      required:
-      - type
-      properties:
-        type:
-          type: string
-          description: The event type.
-          enum:
-          - data
-          - done
-          - error
-          - keep_alive
-        project_id:
-          type: string
-          description: The ID of the project being provisioned.
-        stage:
-          type: string
-          description: The current provisioning stage.
-        label:
-          type: string
-          description: A human-readable label for the current stage.
-        reason:
-          type: string
-          description: The reason for failure (only present on error events).
-        timestamp:
-          type: string
-          format: date-time
-          description: The time the event was emitted.
-        steps:
-          type: array
-          description: Ordered list of provisioning steps.
-          items:
-            $ref: '#/components/schemas/ProvisionStep'
-      additionalProperties: false
+      description: The title of the project.
+    ProjectType:
+      type: string
+      description: The type of projects.
+      enum:
+      - grid
+      - dedicated
     ProjectOptionsAggregated:
       type: object
       properties:
@@ -921,6 +752,229 @@ components:
           - object
           - 'null'
           description: Debug configuration.
+      additionalProperties: false
+    ProvisionEvent:
+      type: object
+      description: A single event in the provisioning progress stream.
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: The event type.
+          enum:
+          - data
+          - done
+          - error
+          - keep_alive
+        project_id:
+          type: string
+          description: The ID of the project being provisioned.
+        stage:
+          type: string
+          description: The current provisioning stage.
+        label:
+          type: string
+          description: A human-readable label for the current stage.
+        reason:
+          type: string
+          description: The reason for failure (only present on error events).
+        timestamp:
+          type: string
+          format: date-time
+          description: The time the event was emitted.
+        steps:
+          type: array
+          description: Ordered list of provisioning steps.
+          items:
+            $ref: '#/components/schemas/ProvisionStep'
+      additionalProperties: false
+    MetricsMetadata_2:
+      type: object
+      properties:
+        from:
+          description: The value used to calculate the lower bound of the temporal query. Inclusive.
+        to:
+          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
+        interval:
+          description: The interval used to group the metric values.
+        units:
+          description: The units associated with the provided values.
+      additionalProperties: false
+    OrganizationProject_2:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ProjectID'
+        organization_id:
+          $ref: '#/components/schemas/OrganizationID'
+        subscription_id:
+          $ref: '#/components/schemas/SubscriptionID'
+        vendor:
+          type: string
+          description: Vendor of the project.
+        region:
+          $ref: '#/components/schemas/RegionID'
+        title:
+          $ref: '#/components/schemas/ProjectTitle'
+        type:
+          $ref: '#/components/schemas/ProjectType'
+        plan:
+          $ref: '#/components/schemas/ProjectPlan'
+        timezone:
+          $ref: '#/components/schemas/ProjectTimeZone'
+        default_branch:
+          $ref: '#/components/schemas/ProjectDefaultBranch'
+        status:
+          $ref: '#/components/schemas/ProjectStatus'
+        trial_plan:
+          $ref: '#/components/schemas/ProjectTrialPlan'
+        project_ui:
+          $ref: '#/components/schemas/ProjectUI'
+        dedicated_tag:
+          type:
+          - string
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/ProjectDedicatedTag'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        activities:
+          description: Activities information for the project.
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Activity'
+        fastly_service_ids:
+          description: Fastly service IDs for the project.
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        project_options:
+          type:
+          - object
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/ProjectOptionsAggregated'
+        _links:
+          type: object
+          properties:
+            self:
+              type: object
+              description: Link to the current project.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            api:
+              type:
+              - object
+              - 'null'
+              description: Link to the regional API endpoint. Only present if user has project-level access.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            subscription:
+              type:
+              - object
+              - 'null'
+              description: Link to the subscription. Only present if project has a subscription.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            view_usage_alerts:
+              type:
+              - object
+              - 'null'
+              description: Link to view usage alerts. Only present if user has view permission.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            update:
+              type:
+              - object
+              - 'null'
+              description: Link for updating the current project. Only present if user has update permission.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+                method:
+                  type: string
+                  description: The HTTP method to use.
+            plan_uri:
+              type:
+              - object
+              - 'null'
+              description: Link to the billing plan page. Only present if user has manage permission.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            delete:
+              type:
+              - object
+              - 'null'
+              description: Link for deleting the current project. Only present if user has delete permission.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+                method:
+                  type: string
+                  description: The HTTP method to use.
+            update_usage_alerts:
+              type:
+              - object
+              - 'null'
+              description: Link to update usage alerts. Only present if user has billing permission.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+                method:
+                  type: string
+                  description: The HTTP method to use.
+            activities:
+              type:
+              - object
+              - 'null'
+              description: Link to the project's activities. Only present if user has view permission.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+            addons:
+              type:
+              - object
+              - 'null'
+              description: Link to the project's add-ons. Only present if user has view permission.
+              properties:
+                href:
+                  type: string
+                  description: URL of the link.
+      additionalProperties: false
+    ProjectCarbon_2:
+      type: object
+      properties:
+        project_id:
+          $ref: '#/components/schemas/ProjectID'
+        project_title:
+          $ref: '#/components/schemas/ProjectTitle'
+        meta:
+          $ref: '#/components/schemas/MetricsMetadata_2'
+        values:
+          $ref: '#/components/schemas/MetricsValues'
+        total:
+          $ref: '#/components/schemas/CarbonTotal'
       additionalProperties: false
     Activity:
       type: object
@@ -1101,31 +1155,20 @@ components:
       - expires_at
       - commands
       additionalProperties: false
-    ProjectCarbon_2:
-      type: object
-      properties:
-        project_id:
-          $ref: '#/components/schemas/ProjectID'
-        project_title:
-          $ref: '#/components/schemas/ProjectTitle'
-        meta:
-          $ref: '#/components/schemas/MetricsMetadata_2'
-        values:
-          $ref: '#/components/schemas/MetricsValues'
-        total:
-          $ref: '#/components/schemas/CarbonTotal'
-      additionalProperties: false
-    PlanTitles:
-      type: object
-      description: Map of plan IDs to their human-readable titles.
-      additionalProperties:
-        type: string
     AggregatedSellables:
       type: object
       description: Map of sellable names to their configuration.
       additionalProperties:
         type: object
         description: Sellable product configuration.
+    MetricsValue_2:
+      type: object
+      properties:
+        value:
+          description: The measured value of the metric for the given time interval.
+        start_time:
+          description: The timestamp at which the time interval began.
+      additionalProperties: false
     ProvisionStep:
       type: object
       description: A single step in the provisioning plan.
@@ -1140,175 +1183,6 @@ components:
           type: string
           description: A human-readable label for the step.
       additionalProperties: false
-    MetricsValue_2:
-      type: object
-      properties:
-        value:
-          description: The measured value of the metric for the given time interval.
-        start_time:
-          description: The timestamp at which the time interval began.
-      additionalProperties: false
-    OrganizationProject_2:
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/ProjectID'
-        organization_id:
-          $ref: '#/components/schemas/OrganizationID'
-        subscription_id:
-          $ref: '#/components/schemas/SubscriptionID'
-        vendor:
-          type: string
-          description: Vendor of the project.
-        region:
-          $ref: '#/components/schemas/RegionID'
-        title:
-          $ref: '#/components/schemas/ProjectTitle'
-        type:
-          $ref: '#/components/schemas/ProjectType'
-        plan:
-          $ref: '#/components/schemas/ProjectPlan'
-        timezone:
-          $ref: '#/components/schemas/ProjectTimeZone'
-        default_branch:
-          $ref: '#/components/schemas/ProjectDefaultBranch'
-        status:
-          $ref: '#/components/schemas/ProjectStatus'
-        trial_plan:
-          $ref: '#/components/schemas/ProjectTrialPlan'
-        project_ui:
-          $ref: '#/components/schemas/ProjectUI'
-        dedicated_tag:
-          type:
-          - string
-          - 'null'
-          allOf:
-          - $ref: '#/components/schemas/ProjectDedicatedTag'
-        created_at:
-          $ref: '#/components/schemas/CreatedAt'
-        updated_at:
-          $ref: '#/components/schemas/UpdatedAt'
-        activities:
-          description: Activities information for the project.
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Activity'
-        fastly_service_ids:
-          description: Fastly service IDs for the project.
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        project_options:
-          type:
-          - object
-          - 'null'
-          allOf:
-          - $ref: '#/components/schemas/ProjectOptionsAggregated'
-        _links:
-          type: object
-          properties:
-            self:
-              type: object
-              description: Link to the current project.
-              properties:
-                href:
-                  type: string
-                  description: URL of the link.
-            api:
-              type:
-              - object
-              - 'null'
-              description: Link to the regional API endpoint. Only present if user has project-level access.
-              properties:
-                href:
-                  type: string
-                  description: URL of the link.
-            subscription:
-              type:
-              - object
-              - 'null'
-              description: Link to the subscription. Only present if project has a subscription.
-              properties:
-                href:
-                  type: string
-                  description: URL of the link.
-            view_usage_alerts:
-              type:
-              - object
-              - 'null'
-              description: Link to view usage alerts. Only present if user has view permission.
-              properties:
-                href:
-                  type: string
-                  description: URL of the link.
-            update:
-              type:
-              - object
-              - 'null'
-              description: Link for updating the current project. Only present if user has update permission.
-              properties:
-                href:
-                  type: string
-                  description: URL of the link.
-                method:
-                  type: string
-                  description: The HTTP method to use.
-            plan_uri:
-              type:
-              - object
-              - 'null'
-              description: Link to the billing plan page. Only present if user has manage permission.
-              properties:
-                href:
-                  type: string
-                  description: URL of the link.
-            delete:
-              type:
-              - object
-              - 'null'
-              description: Link for deleting the current project. Only present if user has delete permission.
-              properties:
-                href:
-                  type: string
-                  description: URL of the link.
-                method:
-                  type: string
-                  description: The HTTP method to use.
-            update_usage_alerts:
-              type:
-              - object
-              - 'null'
-              description: Link to update usage alerts. Only present if user has billing permission.
-              properties:
-                href:
-                  type: string
-                  description: URL of the link.
-                method:
-                  type: string
-                  description: The HTTP method to use.
-            activities:
-              type:
-              - object
-              - 'null'
-              description: Link to the project's activities. Only present if user has view permission.
-              properties:
-                href:
-                  type: string
-                  description: URL of the link.
-            addons:
-              type:
-              - object
-              - 'null'
-              description: Link to the project's add-ons. Only present if user has view permission.
-              properties:
-                href:
-                  type: string
-                  description: URL of the link.
-      additionalProperties: false
     Error_2:
       type: object
       properties:
@@ -1317,21 +1191,159 @@ components:
           description: Error message
       required:
       - error
-    MetricsMetadata_2:
+    AggregatedFeatures:
       type: object
       properties:
-        from:
-          description: The value used to calculate the lower bound of the temporal query. Inclusive.
-        to:
-          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
-        interval:
-          description: The interval used to group the metric values.
-        units:
-          description: The units associated with the provided values.
+        backups:
+          type:
+          - object
+          - 'null'
+          description: Backup features configuration.
+    PlanTitles:
+      type: object
+      description: Map of plan IDs to their human-readable titles.
+      additionalProperties:
+        type: string
+    ProjectFacets:
+      type: object
+      description: Facets for filtering options.
+      properties:
+        plans:
+          type:
+          - object
+          - 'null'
+          description: Map of plan IDs to plan names.
+          additionalProperties:
+            type: string
       additionalProperties: false
+  parameters:
+    interval:
+      in: query
+      name: interval
+      description: The interval by which the query groups the results. of the time frame for the query. Exclusive.
+      schema:
+        type: string
+        enum:
+        - day
+        - month
+        - year
+    to:
+      in: query
+      name: to
+      description: The end of the time frame for the query. Exclusive.
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    ProjectID:
+      name: project_id
+      in: path
+      required: true
+      description: The ID of the project.
+      schema:
+        type: string
+    from:
+      in: query
+      name: from
+      description: The start of the time frame for the query. Inclusive.
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
+    TimeRangeFrom:
+      in: query
+      name: from
+      description: The start of the time frame for the query. Inclusive.
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    FilterUpdatedAt:
+      in: query
+      name: filter[updated_at]
+      description: Allows filtering by `updated_at` using one or more operators.
+      style: deepObject
+      explode: true
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    FilterProjectStatus:
+      in: query
+      name: filter[status]
+      description: Allows filtering by project `status` using one or more operators.
+      style: deepObject
+      explode: true
+      schema:
+        $ref: '#/components/schemas/StringFilter'
+    TimeRangeTo:
+      in: query
+      name: to
+      description: The end of the time frame for the query. Exclusive.
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    PageBefore:
+      in: query
+      name: page[before]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
+    PageSize:
+      in: query
+      name: page[size]
+      description: Determines the number of items to show.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: null
+    TimeRangeInterval:
+      in: query
+      name: interval
+      description: The interval by which the query groups the results. of the time frame for the query. Exclusive.
+      schema:
+        type: string
+        enum:
+        - day
+        - month
+        - year
+    PageAfter:
+      in: query
+      name: page[after]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
+    FilterProjectTitle:
+      in: query
+      name: filter[title]
+      description: Allows filtering by project `title` using one or more operators.
+      style: deepObject
+      explode: true
+      schema:
+        $ref: '#/components/schemas/StringFilter'
+    FilterCreatedAt:
+      in: query
+      name: filter[created_at]
+      description: Allows filtering by `created_at` using one or more operators.
+      style: deepObject
+      explode: true
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
   responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error_2'
     NoContent:
       description: No Content
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error_2'
     ServiceUnavailable:
       description: Service Unavailable
       content:
@@ -1344,26 +1356,14 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
-    NotFound:
-      description: Not Found
+    UnprocessableEntity:
+      description: Unprocessable Entity
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
     Conflict:
       description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error_2'
-    BadRequest:
-      description: Bad Request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error_2'
-    UnprocessableEntity:
-      description: Unprocessable Entity
       content:
         application/problem+json:
           schema:

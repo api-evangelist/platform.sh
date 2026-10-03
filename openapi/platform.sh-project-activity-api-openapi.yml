@@ -181,6 +181,21 @@ paths:
           default: https
 components:
   schemas:
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
     Activity:
       type: object
       properties:
@@ -354,21 +369,6 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/Activity'
-    AcceptedResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
-      additionalProperties: false
     Activity_2:
       type: object
       properties:
