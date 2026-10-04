@@ -249,14 +249,6 @@ paths:
         schemes:
           default: https
 components:
-  parameters:
-    user_id:
-      name: userId
-      in: path
-      description: The UUID of the user
-      required: true
-      schema:
-        type: string
   schemas:
     AddressMetadata:
       description: Information about fields required to express an address.
@@ -275,6 +267,40 @@ components:
             show_vat:
               description: Whether this country supports a VAT number.
               type: boolean
+          type: object
+      type: object
+    HalLinks:
+      description: Links to _self, and previous or next page, given that they exist.
+      properties:
+        self:
+          description: The cardinal link to the self resource.
+          properties:
+            title:
+              description: Title of the link
+              type: string
+            href:
+              description: URL of the link
+              type: string
+          type: object
+        previous:
+          description: The link to the previous resource page, given that it exists.
+          properties:
+            title:
+              description: Title of the link
+              type: string
+            href:
+              description: URL of the link
+              type: string
+          type: object
+        next:
+          description: The link to the next resource page, given that it exists.
+          properties:
+            title:
+              description: Title of the link
+              type: string
+            href:
+              description: URL of the link
+              type: string
           type: object
       type: object
     Address:
@@ -312,40 +338,6 @@ components:
         postal_code:
           description: The postal code area of the user address
           type: string
-      type: object
-    HalLinks:
-      description: Links to _self, and previous or next page, given that they exist.
-      properties:
-        self:
-          description: The cardinal link to the self resource.
-          properties:
-            title:
-              description: Title of the link
-              type: string
-            href:
-              description: URL of the link
-              type: string
-          type: object
-        previous:
-          description: The link to the previous resource page, given that it exists.
-          properties:
-            title:
-              description: Title of the link
-              type: string
-            href:
-              description: URL of the link
-              type: string
-          type: object
-        next:
-          description: The link to the next resource page, given that it exists.
-          properties:
-            title:
-              description: Title of the link
-              type: string
-            href:
-              description: URL of the link
-              type: string
-          type: object
       type: object
     Profile:
       description: The user profile.
@@ -617,6 +609,14 @@ components:
           description: The legal entity name of the customer.
           type: string
       type: object
+  parameters:
+    user_id:
+      name: userId
+      in: path
+      description: The UUID of the user
+      required: true
+      schema:
+        type: string
   securitySchemes:
     OAuth2:
       type: oauth2

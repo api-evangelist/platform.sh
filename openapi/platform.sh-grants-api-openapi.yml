@@ -157,30 +157,14 @@ paths:
           default: https
 components:
   schemas:
-    Error:
-      description: ''
+    Link:
       type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
       properties:
-        status:
+        href:
           type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
+          description: URL of the link
     ListLinks:
       type: object
       properties:
@@ -190,14 +174,6 @@ components:
           $ref: '#/components/schemas/Link'
         next:
           $ref: '#/components/schemas/Link'
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
     StringFilter:
       type: object
       properties:
@@ -225,6 +201,30 @@ components:
         ends:
           type: string
           description: Ends with
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
     Error_2:
       type: object
       properties:

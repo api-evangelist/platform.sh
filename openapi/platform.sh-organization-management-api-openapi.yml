@@ -298,30 +298,46 @@ components:
         type: string
         format: ulid
   schemas:
-    Error:
-      description: ''
+    PrepaymentObject:
       type: object
+      description: Prepayment information for an organization.
       properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
+        prepayment:
           type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
+          description: Prepayment information for an organization.
+          properties:
+            organization_id:
+              type: string
+              description: Organization ID
+            balance:
+              type: object
+              description: The prepayment balance in complex format.
+              properties:
+                formatted:
+                  type: string
+                  description: Formatted balance.
+                amount:
+                  type: number
+                  description: The balance amount.
+                currency_code:
+                  type: string
+                  description: The balance currency code.
+                currency_symbol:
+                  type: string
+                  description: The balance currency symbol.
+            last_updated_at:
+              type:
+              - string
+              - 'null'
+              description: The date the prepayment balance was last updated.
+            sufficient:
+              type: boolean
+              description: Whether the prepayment balance is enough to cover the upcoming order.
+            fallback:
+              type:
+              - string
+              - 'null'
+              description: The fallback payment method, if any, to be used in case prepayment balance is not enough to cover an order.
     OrganizationEstimationObject:
       type: object
       description: An estimation of all organization spend.
@@ -448,48 +464,30 @@ components:
                       environments:
                         type: integer
                         description: The total environments for this subsciption.
-    PrepaymentTransactionObject:
+    Error:
+      description: ''
       type: object
-      description: Prepayment transaction for an organization.
       properties:
-        order_id:
-          type: string
-          description: Order ID
-        message:
-          type: string
-          description: The message associated with transaction.
         status:
           type: string
-          description: Whether the transactions was successful or a failure.
-        amount:
-          type: object
-          description: The prepayment balance in complex format.
-          properties:
-            formatted:
-              type: string
-              description: Formatted balance.
-            amount:
-              type: number
-              description: The balance amount.
-            currency_code:
-              type: string
-              description: The balance currency code.
-            currency_symbol:
-              type: string
-              description: The balance currency symbol.
-        created:
+        message:
           type: string
-          description: Time the transaction was created.
-        updated:
-          type:
-          - string
-          - 'null'
-          description: Time the transaction was last updated.
-        expire_date:
-          type:
-          - string
-          - 'null'
-          description: The expiration date of the transaction (deposits only).
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
     OrganizationAlertConfig:
       type: object
       description: The alert configuration for an organization.
@@ -538,46 +536,48 @@ components:
             mode:
               type: string
               description: The mode of alert.
-    PrepaymentObject:
+    PrepaymentTransactionObject:
       type: object
-      description: Prepayment information for an organization.
+      description: Prepayment transaction for an organization.
       properties:
-        prepayment:
+        order_id:
+          type: string
+          description: Order ID
+        message:
+          type: string
+          description: The message associated with transaction.
+        status:
+          type: string
+          description: Whether the transactions was successful or a failure.
+        amount:
           type: object
-          description: Prepayment information for an organization.
+          description: The prepayment balance in complex format.
           properties:
-            organization_id:
+            formatted:
               type: string
-              description: Organization ID
-            balance:
-              type: object
-              description: The prepayment balance in complex format.
-              properties:
-                formatted:
-                  type: string
-                  description: Formatted balance.
-                amount:
-                  type: number
-                  description: The balance amount.
-                currency_code:
-                  type: string
-                  description: The balance currency code.
-                currency_symbol:
-                  type: string
-                  description: The balance currency symbol.
-            last_updated_at:
-              type:
-              - string
-              - 'null'
-              description: The date the prepayment balance was last updated.
-            sufficient:
-              type: boolean
-              description: Whether the prepayment balance is enough to cover the upcoming order.
-            fallback:
-              type:
-              - string
-              - 'null'
-              description: The fallback payment method, if any, to be used in case prepayment balance is not enough to cover an order.
+              description: Formatted balance.
+            amount:
+              type: number
+              description: The balance amount.
+            currency_code:
+              type: string
+              description: The balance currency code.
+            currency_symbol:
+              type: string
+              description: The balance currency symbol.
+        created:
+          type: string
+          description: Time the transaction was created.
+        updated:
+          type:
+          - string
+          - 'null'
+          description: Time the transaction was last updated.
+        expire_date:
+          type:
+          - string
+          - 'null'
+          description: The expiration date of the transaction (deposits only).
     Error_2:
       type: object
       properties:

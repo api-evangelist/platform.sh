@@ -93,14 +93,6 @@ paths:
         schemes:
           default: https
 components:
-  parameters:
-    subscription_id:
-      name: subscriptionId
-      in: path
-      description: The ID of the subscription
-      required: true
-      schema:
-        type: string
   schemas:
     Alert:
       description: The alert object.
@@ -126,6 +118,14 @@ components:
           description: The alert type specific configuration.
           type: object
       type: object
+  parameters:
+    subscription_id:
+      name: subscriptionId
+      in: path
+      description: The ID of the subscription
+      required: true
+      schema:
+        type: string
   securitySchemes:
     OAuth2:
       type: oauth2

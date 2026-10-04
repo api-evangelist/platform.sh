@@ -112,6 +112,31 @@ paths:
           default: https
 components:
   schemas:
+    EnvironmentSourceOperation:
+      type: object
+      properties:
+        id:
+          type: string
+          title: EnvironmentSourceOperation Identifier
+          description: The identifier of EnvironmentSourceOperation
+        app:
+          type: string
+          title: Application name
+          description: The name of the application
+        operation:
+          type: string
+          title: Source operation name
+          description: The name of the source operation
+        command:
+          type: string
+          title: Command
+          description: The command that will be triggered
+      required:
+      - id
+      - app
+      - operation
+      - command
+      additionalProperties: false
     AcceptedResponse:
       type: object
       properties:
@@ -148,31 +173,6 @@ components:
       required:
       - operation
       - variables
-      additionalProperties: false
-    EnvironmentSourceOperation:
-      type: object
-      properties:
-        id:
-          type: string
-          title: EnvironmentSourceOperation Identifier
-          description: The identifier of EnvironmentSourceOperation
-        app:
-          type: string
-          title: Application name
-          description: The name of the application
-        operation:
-          type: string
-          title: Source operation name
-          description: The name of the source operation
-        command:
-          type: string
-          title: Command
-          description: The command that will be triggered
-      required:
-      - id
-      - app
-      - operation
-      - command
       additionalProperties: false
     EnvironmentSourceOperationInput_2:
       type: object

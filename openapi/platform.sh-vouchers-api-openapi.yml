@@ -104,26 +104,6 @@ paths:
         schemes:
           default: https
 components:
-  parameters:
-    OrganizationIDName:
-      in: path
-      name: organization_id
-      description: 'The ID of the organization.<br>
-
-        Prefix with name= to retrieve the organization by name instead.
-
-        '
-      required: true
-      schema:
-        type: string
-    OrganizationID:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the organization.
-      schema:
-        type: string
-        format: ulid
   schemas:
     Error:
       description: ''
@@ -228,6 +208,26 @@ components:
           description: Error message
       required:
       - error
+  parameters:
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
+      schema:
+        type: string
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
   securitySchemes:
     OAuth2:
       type: oauth2

@@ -321,36 +321,17 @@ paths:
         schemes:
           default: https
 components:
-  parameters:
-    OrganizationIDName:
-      in: path
-      name: organization_id
-      description: 'The ID of the organization.<br>
-
-        Prefix with name= to retrieve the organization by name instead.
-
-        '
-      required: true
-      schema:
-        type: string
-    UserID:
-      name: user_id
-      in: path
-      required: true
-      description: The ID of the user.
-      schema:
-        type: string
-        example: d81c8ee2-44b3-429f-b944-a33ad7437690
-        format: uuid
-    OrganizationID:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the organization.
-      schema:
-        type: string
-        format: ulid
   schemas:
+    OrganizationMFAEnforcement:
+      description: The MFA enforcement for the organization.
+      type: object
+      properties:
+        enforce_mfa:
+          type: boolean
+          description: Whether the MFA enforcement is enabled.
+      x-examples:
+        example-1:
+          enforce_mfa: true
     Error:
       description: ''
       type: object
@@ -375,16 +356,6 @@ components:
             field:
             - This field is required.
           title: Bad Request
-    OrganizationMFAEnforcement:
-      description: The MFA enforcement for the organization.
-      type: object
-      properties:
-        enforce_mfa:
-          type: boolean
-          description: Whether the MFA enforcement is enabled.
-      x-examples:
-        example-1:
-          enforce_mfa: true
     Error_2:
       type: object
       properties:
@@ -393,6 +364,35 @@ components:
           description: Error message
       required:
       - error
+  parameters:
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
+      schema:
+        type: string
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
+    UserID:
+      name: user_id
+      in: path
+      required: true
+      description: The ID of the user.
+      schema:
+        type: string
+        example: d81c8ee2-44b3-429f-b944-a33ad7437690
+        format: uuid
   securitySchemes:
     OAuth2:
       type: oauth2

@@ -128,21 +128,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    AcceptedResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
-      additionalProperties: false
     Task:
       type: object
       properties:
@@ -365,6 +350,21 @@ components:
       - runtime
       - run
       - name
+      additionalProperties: false
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
       additionalProperties: false
     TaskCollection:
       type: array

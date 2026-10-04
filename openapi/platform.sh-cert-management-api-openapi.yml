@@ -283,6 +283,40 @@ paths:
           default: https
 components:
   schemas:
+    CertificateProvisioner:
+      type: object
+      properties:
+        id:
+          type: string
+          title: CertificateProvisioner Identifier
+          description: The identifier of CertificateProvisioner
+        directory_url:
+          type: string
+          title: ACME directory url
+          description: The URL to the ACME directory
+        email:
+          type: string
+          title: Contacted email address
+          description: The email address for contact information
+        eab_kid:
+          type:
+          - string
+          - 'null'
+          title: EAB Key identifier
+          description: The key identifier for Entity Attestation Binding
+        eab_hmac_key:
+          type:
+          - string
+          - 'null'
+          title: EAB HMAC Key
+          description: The Keyed-'Hashing Message Authentication Code' for Entity Attestation Binding
+      required:
+      - id
+      - directory_url
+      - email
+      - eab_kid
+      - eab_hmac_key
+      additionalProperties: false
     Certificate:
       type: object
       properties:
@@ -383,24 +417,47 @@ components:
       - issuer
       - expires_at
       additionalProperties: false
-    CertificateProvisionerCollection:
+    CertificateCollection:
       type: array
       items:
-        $ref: '#/components/schemas/CertificateProvisioner'
-    AcceptedResponse:
+        $ref: '#/components/schemas/Certificate'
+    CertificatePatch:
       type: object
       properties:
-        status:
+        chain:
+          type: array
+          items:
+            type: string
+          title: Certificate chain
+          description: The certificate chain
+        is_invalid:
+          type: boolean
+          title: Is Invalid
+          description: Whether this certificate should be skipped during provisioning
+      additionalProperties: false
+    CertificateProvisionerPatch:
+      type: object
+      properties:
+        directory_url:
           type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
+          title: ACME directory url
+          description: The URL to the ACME directory
+        email:
+          type: string
+          title: Contacted email address
+          description: The email address for contact information
+        eab_kid:
+          type:
+          - string
+          - 'null'
+          title: EAB Key identifier
+          description: The key identifier for Entity Attestation Binding
+        eab_hmac_key:
+          type:
+          - string
+          - 'null'
+          title: EAB HMAC Key
+          description: The Keyed-'Hashing Message Authentication Code' for Entity Attestation Binding
       additionalProperties: false
     CertificateCreateInput:
       type: object
@@ -427,82 +484,25 @@ components:
       - certificate
       - key
       additionalProperties: false
-    CertificateProvisioner:
+    AcceptedResponse:
       type: object
       properties:
-        id:
+        status:
           type: string
-          title: CertificateProvisioner Identifier
-          description: The identifier of CertificateProvisioner
-        directory_url:
-          type: string
-          title: ACME directory url
-          description: The URL to the ACME directory
-        email:
-          type: string
-          title: Contacted email address
-          description: The email address for contact information
-        eab_kid:
-          type:
-          - string
-          - 'null'
-          title: EAB Key identifier
-          description: The key identifier for Entity Attestation Binding
-        eab_hmac_key:
-          type:
-          - string
-          - 'null'
-          title: EAB HMAC Key
-          description: The Keyed-'Hashing Message Authentication Code' for Entity Attestation Binding
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
       required:
-      - id
-      - directory_url
-      - email
-      - eab_kid
-      - eab_hmac_key
+      - status
+      - code
       additionalProperties: false
-    CertificatePatch:
-      type: object
-      properties:
-        chain:
-          type: array
-          items:
-            type: string
-          title: Certificate chain
-          description: The certificate chain
-        is_invalid:
-          type: boolean
-          title: Is Invalid
-          description: Whether this certificate should be skipped during provisioning
-      additionalProperties: false
-    CertificateCollection:
+    CertificateProvisionerCollection:
       type: array
       items:
-        $ref: '#/components/schemas/Certificate'
-    CertificateProvisionerPatch:
-      type: object
-      properties:
-        directory_url:
-          type: string
-          title: ACME directory url
-          description: The URL to the ACME directory
-        email:
-          type: string
-          title: Contacted email address
-          description: The email address for contact information
-        eab_kid:
-          type:
-          - string
-          - 'null'
-          title: EAB Key identifier
-          description: The key identifier for Entity Attestation Binding
-        eab_hmac_key:
-          type:
-          - string
-          - 'null'
-          title: EAB HMAC Key
-          description: The Keyed-'Hashing Message Authentication Code' for Entity Attestation Binding
-      additionalProperties: false
+        $ref: '#/components/schemas/CertificateProvisioner'
   securitySchemes:
     OAuth2:
       type: oauth2

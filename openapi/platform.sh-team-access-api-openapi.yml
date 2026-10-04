@@ -375,6 +375,42 @@ paths:
         schemes:
           default: https
 components:
+  parameters:
+    ProjectID:
+      name: project_id
+      in: path
+      required: true
+      description: The ID of the project.
+      schema:
+        type: string
+    TeamID:
+      name: team_id
+      in: path
+      required: true
+      description: The ID of the team.
+      schema:
+        type: string
+    PageAfter:
+      in: query
+      name: page[after]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
+    PageBefore:
+      in: query
+      name: page[before]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
+    PageSizeAccess:
+      in: query
+      name: page[size]
+      description: Determines the number of items to show.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+        default: null
   schemas:
     TeamProjectAccess:
       type: object
@@ -431,6 +467,23 @@ components:
                 method:
                   type: string
                   description: The HTTP method to use.
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
     Error:
       description: ''
       type: object
@@ -455,31 +508,10 @@ components:
             field:
             - This field is required.
           title: Bad Request
-    ListLinks:
-      type: object
-      properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
     UpdatedAt:
       type: string
       format: date-time
       description: The date and time when the resource was last updated.
-    GrantedAt:
-      type: string
-      format: date-time
-      description: The date and time when the access was granted.
     TeamProjectAccess_2:
       type: object
       properties:
@@ -536,6 +568,10 @@ components:
                   type: string
                   description: The HTTP method to use.
       additionalProperties: false
+    GrantedAt:
+      type: string
+      format: date-time
+      description: The date and time when the access was granted.
     Error_2:
       type: object
       properties:
@@ -544,45 +580,23 @@ components:
           description: Error message
       required:
       - error
-  parameters:
-    TeamID:
-      name: team_id
-      in: path
-      required: true
-      description: The ID of the team.
-      schema:
-        type: string
-    ProjectID:
-      name: project_id
-      in: path
-      required: true
-      description: The ID of the project.
-      schema:
-        type: string
-    PageSizeAccess:
-      in: query
-      name: page[size]
-      description: Determines the number of items to show.
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 200
-        default: null
-    PageBefore:
-      in: query
-      name: page[before]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
-    PageAfter:
-      in: query
-      name: page[after]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
   responses:
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error_2'
     NotFound:
       description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error_2'
+    NoContent:
+      description: No Content
+    Conflict:
+      description: Conflict
       content:
         application/problem+json:
           schema:
@@ -593,20 +607,6 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error_2'
-    Conflict:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error_2'
-    NoContent:
-      description: No Content
   securitySchemes:
     OAuth2:
       type: oauth2

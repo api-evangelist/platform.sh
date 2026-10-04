@@ -171,7 +171,50 @@ paths:
         schemes:
           default: https
 components:
+  parameters:
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
+    InvitationID:
+      name: invitation_id
+      in: path
+      required: true
+      description: The ID of the invitation.
+      schema:
+        type: string
   schemas:
+    StringFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
+        between:
+          type: string
+          description: Between (comma-separated list)
+        contains:
+          type: string
+          description: Contains
+        starts:
+          type: string
+          description: Starts with
+        ends:
+          type: string
+          description: Ends with
     OrganizationInvitation:
       title: OrganizationInvitation
       type: object
@@ -273,33 +316,6 @@ components:
         - members
         - project:create
         - projects:list
-    StringFilter:
-      type: object
-      properties:
-        eq:
-          type: string
-          description: Equal
-        ne:
-          type: string
-          description: Not equal
-        in:
-          type: string
-          description: In (comma-separated list)
-        nin:
-          type: string
-          description: Not in (comma-separated list)
-        between:
-          type: string
-          description: Between (comma-separated list)
-        contains:
-          type: string
-          description: Contains
-        starts:
-          type: string
-          description: Starts with
-        ends:
-          type: string
-          description: Ends with
     Error_2:
       type: object
       properties:
@@ -308,22 +324,6 @@ components:
           description: Error message
       required:
       - error
-  parameters:
-    OrganizationID:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the organization.
-      schema:
-        type: string
-        format: ulid
-    InvitationID:
-      name: invitation_id
-      in: path
-      required: true
-      description: The ID of the invitation.
-      schema:
-        type: string
   securitySchemes:
     OAuth2:
       type: oauth2

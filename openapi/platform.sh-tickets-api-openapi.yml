@@ -72,6 +72,47 @@ paths:
           default: https
 components:
   parameters:
+    page:
+      name: page
+      in: query
+      description: Page to be displayed. Defaults to 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+    filter_ticket_id:
+      name: filter[ticket_id]
+      in: query
+      description: The ID of the ticket.
+      schema:
+        type: integer
+    filter_due:
+      name: filter[due]
+      in: query
+      description: ISO dateformat expected. A time that the ticket is due at.
+      schema:
+        type: string
+        format: date-time
+    filter_submitter_id:
+      name: filter[submitter_id]
+      in: query
+      description: UUID of the ticket submitter. Converted from the ZID value.
+      schema:
+        type: string
+        format: uuid
+    filter_created:
+      name: filter[created]
+      in: query
+      description: ISO dateformat expected. The time when the support ticket was created.
+      schema:
+        type: string
+        format: date-time
+    filter_has_incidents:
+      name: filter[has_incidents]
+      in: query
+      description: Whether or not this ticket has incidents.
+      schema:
+        type: boolean
     filter_priority:
       name: filter[priority]
       in: query
@@ -90,6 +131,13 @@ components:
       schema:
         type: string
         format: uuid
+    filter_updated:
+      name: filter[updated]
+      in: query
+      description: ISO dateformat expected. The time when the support ticket was updated.
+      schema:
+        type: string
+        format: date-time
     filter_ticket_status:
       name: filter[status]
       in: query
@@ -104,27 +152,13 @@ components:
         - open
         - pending
         - solved
-    filter_submitter_id:
-      name: filter[submitter_id]
+    filter_requester_id:
+      name: filter[requester_id]
       in: query
-      description: UUID of the ticket submitter. Converted from the ZID value.
+      description: UUID of the ticket requester. Converted from the ZID value.
       schema:
         type: string
         format: uuid
-    filter_created:
-      name: filter[created]
-      in: query
-      description: ISO dateformat expected. The time when the support ticket was created.
-      schema:
-        type: string
-        format: date-time
-    filter_updated:
-      name: filter[updated]
-      in: query
-      description: ISO dateformat expected. The time when the support ticket was updated.
-      schema:
-        type: string
-        format: date-time
     filter_type:
       name: filter[type]
       in: query
@@ -136,41 +170,41 @@ components:
         - task
         - incident
         - question
-    filter_requester_id:
-      name: filter[requester_id]
-      in: query
-      description: UUID of the ticket requester. Converted from the ZID value.
-      schema:
-        type: string
-        format: uuid
-    filter_has_incidents:
-      name: filter[has_incidents]
-      in: query
-      description: Whether or not this ticket has incidents.
-      schema:
-        type: boolean
-    filter_due:
-      name: filter[due]
-      in: query
-      description: ISO dateformat expected. A time that the ticket is due at.
-      schema:
-        type: string
-        format: date-time
-    filter_ticket_id:
-      name: filter[ticket_id]
-      in: query
-      description: The ID of the ticket.
-      schema:
-        type: integer
-    page:
-      name: page
-      in: query
-      description: Page to be displayed. Defaults to 1.
-      required: false
-      schema:
-        type: integer
-        format: int32
   schemas:
+    HalLinks:
+      description: Links to _self, and previous or next page, given that they exist.
+      properties:
+        self:
+          description: The cardinal link to the self resource.
+          properties:
+            title:
+              description: Title of the link
+              type: string
+            href:
+              description: URL of the link
+              type: string
+          type: object
+        previous:
+          description: The link to the previous resource page, given that it exists.
+          properties:
+            title:
+              description: Title of the link
+              type: string
+            href:
+              description: URL of the link
+              type: string
+          type: object
+        next:
+          description: The link to the next resource page, given that it exists.
+          properties:
+            title:
+              description: Title of the link
+              type: string
+            href:
+              description: URL of the link
+              type: string
+          type: object
+      type: object
     Ticket:
       description: The support ticket object.
       properties:
@@ -359,40 +393,6 @@ components:
           description: URL to the customer-facing ticket in Zendesk.
           type: string
           format: url
-      type: object
-    HalLinks:
-      description: Links to _self, and previous or next page, given that they exist.
-      properties:
-        self:
-          description: The cardinal link to the self resource.
-          properties:
-            title:
-              description: Title of the link
-              type: string
-            href:
-              description: URL of the link
-              type: string
-          type: object
-        previous:
-          description: The link to the previous resource page, given that it exists.
-          properties:
-            title:
-              description: Title of the link
-              type: string
-            href:
-              description: URL of the link
-              type: string
-          type: object
-        next:
-          description: The link to the next resource page, given that it exists.
-          properties:
-            title:
-              description: Title of the link
-              type: string
-            href:
-              description: URL of the link
-              type: string
-          type: object
       type: object
   securitySchemes:
     OAuth2:

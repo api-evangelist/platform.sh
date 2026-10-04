@@ -212,30 +212,6 @@ components:
         type: string
         format: ulid
   schemas:
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
     Address:
       description: The address of the user.
       properties:
@@ -456,14 +432,30 @@ components:
           description: The customer is invoiced.
           type: boolean
       type: object
-    Error_2:
+    Error:
+      description: ''
       type: object
       properties:
-        error:
+        status:
           type: string
-          description: Error message
-      required:
-      - error
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
     Profile_2:
       description: The user profile.
       properties:
@@ -550,6 +542,14 @@ components:
           description: The legal entity name of the customer.
           type: string
       type: object
+    Error_2:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
   securitySchemes:
     OAuth2:
       type: oauth2

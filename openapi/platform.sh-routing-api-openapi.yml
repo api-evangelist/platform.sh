@@ -111,6 +111,15 @@ paths:
           default: https
 components:
   schemas:
+    Route:
+      oneOf:
+      - $ref: '#/components/schemas/ProxyRoute'
+      - $ref: '#/components/schemas/RedirectRoute'
+      - $ref: '#/components/schemas/UpstreamRoute'
+    RouteCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Route'
     ProxyRoute:
       type: object
       properties:
@@ -222,10 +231,6 @@ components:
       - tls
       - to
       additionalProperties: false
-    RouteCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Route'
     RedirectRoute:
       type: object
       properties:
@@ -401,11 +406,6 @@ components:
       - to
       - redirects
       additionalProperties: false
-    Route:
-      oneOf:
-      - $ref: '#/components/schemas/ProxyRoute'
-      - $ref: '#/components/schemas/RedirectRoute'
-      - $ref: '#/components/schemas/UpstreamRoute'
     UpstreamRoute:
       type: object
       properties:

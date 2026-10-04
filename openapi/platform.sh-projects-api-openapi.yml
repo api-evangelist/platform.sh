@@ -62,6 +62,35 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    ProjectID:
+      name: project_id
+      in: path
+      required: true
+      description: The ID of the project.
+      schema:
+        type: string
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
   schemas:
     History:
       type: object
@@ -95,6 +124,14 @@ components:
           type: string
           description: The ID of the user who triggered the event.
       additionalProperties: false
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
     ListLinks:
       type: object
       properties:
@@ -112,43 +149,6 @@ components:
           description: Error message
       required:
       - error
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
-  responses:
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error'
-  parameters:
-    ProjectID:
-      name: project_id
-      in: path
-      required: true
-      description: The ID of the project.
-      schema:
-        type: string
-    OrganizationID:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the organization.
-      schema:
-        type: string
-        format: ulid
   securitySchemes:
     BearerAuth:
       type: http

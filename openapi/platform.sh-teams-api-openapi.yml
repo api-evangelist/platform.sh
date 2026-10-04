@@ -538,7 +538,24 @@ paths:
           default: https
 components:
   schemas:
-    DateTimeFilter:
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
+    StringFilter:
       type: object
       properties:
         eq:
@@ -547,21 +564,24 @@ components:
         ne:
           type: string
           description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
         between:
           type: string
           description: Between (comma-separated list)
-        gt:
+        contains:
           type: string
-          description: Greater than
-        gte:
+          description: Contains
+        starts:
           type: string
-          description: Greater than or equal
-        lt:
+          description: Starts with
+        ends:
           type: string
-          description: Less than
-        lte:
-          type: string
-          description: Less than or equal
+          description: Ends with
     TeamMember:
       type: object
       properties:
@@ -605,15 +625,6 @@ components:
             field:
             - This field is required.
           title: Bad Request
-    ListLinks:
-      type: object
-      properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
     Team:
       description: ''
       type: object
@@ -677,15 +688,7 @@ components:
           - viewer
           - staging:contributor
           - development:admin
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
-    StringFilter:
+    DateTimeFilter:
       type: object
       properties:
         eq:
@@ -694,24 +697,21 @@ components:
         ne:
           type: string
           description: Not equal
-        in:
-          type: string
-          description: In (comma-separated list)
-        nin:
-          type: string
-          description: Not in (comma-separated list)
         between:
           type: string
           description: Between (comma-separated list)
-        contains:
+        gt:
           type: string
-          description: Contains
-        starts:
+          description: Greater than
+        gte:
           type: string
-          description: Starts with
-        ends:
+          description: Greater than or equal
+        lt:
           type: string
-          description: Ends with
+          description: Less than
+        lte:
+          type: string
+          description: Less than or equal
     Error_2:
       type: object
       properties:
@@ -721,13 +721,6 @@ components:
       required:
       - error
   parameters:
-    TeamID:
-      name: team_id
-      in: path
-      required: true
-      description: The ID of the team.
-      schema:
-        type: string
     UserID:
       name: user_id
       in: path
@@ -737,6 +730,13 @@ components:
         type: string
         example: d81c8ee2-44b3-429f-b944-a33ad7437690
         format: uuid
+    TeamID:
+      name: team_id
+      in: path
+      required: true
+      description: The ID of the team.
+      schema:
+        type: string
   securitySchemes:
     OAuth2:
       type: oauth2

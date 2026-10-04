@@ -1293,6 +1293,11 @@ paths:
           description: Forbidden - Access denied due to insufficient permissions, or the requested project/environment does not exist (to prevent information disclosure)
 components:
   schemas:
+    Mode:
+      type: string
+      enum:
+      - '1'
+      - '-1'
     FilterSelect:
       properties:
         mode:
@@ -1311,11 +1316,6 @@ components:
               - 'null'
           default: null
       type: object
-    Mode:
-      type: string
-      enum:
-      - '1'
-      - '-1'
   securitySchemes:
     BearerAuth:
       type: http

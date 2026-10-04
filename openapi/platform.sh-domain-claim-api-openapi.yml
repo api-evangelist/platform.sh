@@ -160,31 +160,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    AcceptedResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
-      additionalProperties: false
-    DomainClaimCreateInput:
-      type: object
-      additionalProperties: false
-    DomainClaimCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/DomainClaim'
-    DomainClaimPatch:
-      type: object
-      additionalProperties: false
     DomainClaim:
       type: object
       properties:
@@ -220,6 +195,31 @@ components:
       - updated_at
       - name
       - count
+      additionalProperties: false
+    DomainClaimPatch:
+      type: object
+      additionalProperties: false
+    DomainClaimCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/DomainClaim'
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
+    DomainClaimCreateInput:
+      type: object
       additionalProperties: false
   securitySchemes:
     BearerAuth:

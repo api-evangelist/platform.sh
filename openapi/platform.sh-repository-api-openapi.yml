@@ -253,6 +253,43 @@ paths:
           default: https
 components:
   schemas:
+    Blob:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Blob Identifier
+          description: The identifier of Blob
+        sha:
+          type: string
+          title: SHA
+          description: The identifier of the tag
+        size:
+          type: integer
+          title: Size
+          description: The size of the blob
+        encoding:
+          type: string
+          enum:
+          - base64
+          - utf-8
+          title: Encoding
+          description: The encoding of the contents
+        content:
+          type: string
+          title: Content
+          description: The contents
+      required:
+      - id
+      - sha
+      - size
+      - encoding
+      - content
+      additionalProperties: false
+    RefCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Ref'
     Commit:
       type: object
       properties:
@@ -333,77 +370,6 @@ components:
       - tree
       - parents
       additionalProperties: false
-    Ref:
-      type: object
-      properties:
-        id:
-          type: string
-          title: Ref Identifier
-          description: The identifier of Ref
-        ref:
-          type: string
-          title: Name
-          description: The name of the reference
-        object:
-          type: object
-          properties:
-            type:
-              type: string
-              title: Type
-              description: The type of object pointed to
-            sha:
-              type: string
-              title: The SHA of the object pointed to
-              description: ''
-          required:
-          - type
-          - sha
-          additionalProperties: false
-          title: Object
-          description: The object the reference points to
-        sha:
-          type: string
-          title: SHA
-          description: The commit sha of the ref
-      required:
-      - id
-      - ref
-      - object
-      - sha
-      additionalProperties: false
-    Blob:
-      type: object
-      properties:
-        id:
-          type: string
-          title: Blob Identifier
-          description: The identifier of Blob
-        sha:
-          type: string
-          title: SHA
-          description: The identifier of the tag
-        size:
-          type: integer
-          title: Size
-          description: The size of the blob
-        encoding:
-          type: string
-          enum:
-          - base64
-          - utf-8
-          title: Encoding
-          description: The encoding of the contents
-        content:
-          type: string
-          title: Content
-          description: The contents
-      required:
-      - id
-      - sha
-      - size
-      - encoding
-      - content
-      additionalProperties: false
     Tree:
       type: object
       properties:
@@ -457,10 +423,44 @@ components:
       - sha
       - tree
       additionalProperties: false
-    RefCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Ref'
+    Ref:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Ref Identifier
+          description: The identifier of Ref
+        ref:
+          type: string
+          title: Name
+          description: The name of the reference
+        object:
+          type: object
+          properties:
+            type:
+              type: string
+              title: Type
+              description: The type of object pointed to
+            sha:
+              type: string
+              title: The SHA of the object pointed to
+              description: ''
+          required:
+          - type
+          - sha
+          additionalProperties: false
+          title: Object
+          description: The object the reference points to
+        sha:
+          type: string
+          title: SHA
+          description: The commit sha of the ref
+      required:
+      - id
+      - ref
+      - object
+      - sha
+      additionalProperties: false
   securitySchemes:
     OAuth2:
       type: oauth2
