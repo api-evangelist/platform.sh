@@ -104,3 +104,18 @@ write_posture:
   default: read-only
   enable: send the `enable-write` header set to "true"
   source: https://github.com/upsun/upsun-mcp-server README "Enabling Write Operations"
+rfc9728:
+  endpoint: https://mcp.upsun.com/mcp
+  metadata_url: https://mcp.upsun.com/.well-known/oauth-protected-resource
+  discovered_via: WWW-Authenticate resource_metadata on an anonymous POST initialize
+  fetched: '2026-09-25'
+  http_status: 200
+  content_type: application/json
+  document:
+    resource: https://mcp.upsun.com/mcp
+    authorization_servers:
+    - https://auth.upsun.com
+    scopes_supported:
+    - offline_access
+    resource_name: Upsun MCP Server
+    resource_documentation: https://docs.upsun.com/
