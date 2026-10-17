@@ -122,42 +122,6 @@ components:
           - ready
           - pending
       type: object
-    Address:
-      description: The address of the user.
-      properties:
-        country:
-          description: Two-letter country codes are used to represent countries and states
-          type: string
-          format: ISO ALPHA-2
-        name_line:
-          description: The full name of the user
-          type: string
-        premise:
-          description: Premise (i.e. Apt, Suite, Bldg.)
-          type: string
-        sub_premise:
-          description: Sub Premise (i.e. Suite, Apartment, Floor, Unknown.
-          type: string
-        thoroughfare:
-          description: The address of the user
-          type: string
-        administrative_area:
-          description: The administrative area of the user address
-          type: string
-          format: ISO ALPHA-2
-        sub_administrative_area:
-          description: The sub-administrative area of the user address
-          type: string
-        locality:
-          description: The locality of the user address
-          type: string
-        dependent_locality:
-          description: The dependant_locality area of the user address
-          type: string
-        postal_code:
-          description: The postal code area of the user address
-          type: string
-      type: object
     Invoice:
       type: object
       description: The invoice object.
@@ -234,6 +198,42 @@ components:
           type: string
         invoice_pdf:
           $ref: '#/components/schemas/InvoicePDF'
+    Address:
+      description: The address of the user.
+      properties:
+        country:
+          description: Two-letter country codes are used to represent countries and states
+          type: string
+          format: ISO ALPHA-2
+        name_line:
+          description: The full name of the user
+          type: string
+        premise:
+          description: Premise (i.e. Apt, Suite, Bldg.)
+          type: string
+        sub_premise:
+          description: Sub Premise (i.e. Suite, Apartment, Floor, Unknown.
+          type: string
+        thoroughfare:
+          description: The address of the user
+          type: string
+        administrative_area:
+          description: The administrative area of the user address
+          type: string
+          format: ISO ALPHA-2
+        sub_administrative_area:
+          description: The sub-administrative area of the user address
+          type: string
+        locality:
+          description: The locality of the user address
+          type: string
+        dependent_locality:
+          description: The dependant_locality area of the user address
+          type: string
+        postal_code:
+          description: The postal code area of the user address
+          type: string
+      type: object
     Error:
       description: ''
       type: object
@@ -267,32 +267,6 @@ components:
       required:
       - error
   parameters:
-    page:
-      name: page
-      in: query
-      description: Page to be displayed. Defaults to 1.
-      required: false
-      schema:
-        type: integer
-        format: int32
-    OrganizationIDName:
-      in: path
-      name: organization_id
-      description: 'The ID of the organization.<br>
-
-        Prefix with name= to retrieve the organization by name instead.
-
-        '
-      required: true
-      schema:
-        type: string
-    InvoiceID:
-      in: path
-      name: invoice_id
-      description: The ID of the invoice.
-      required: true
-      schema:
-        type: string
     filter_invoice_status:
       name: filter[status]
       in: query
@@ -306,6 +280,31 @@ components:
         - refunded
         - canceled
         - refund_pending
+    filter_order_id:
+      name: filter[order_id]
+      in: query
+      description: The order id of Invoice.
+      schema:
+        type: string
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
+      schema:
+        type: string
+    page:
+      name: page
+      in: query
+      description: Page to be displayed. Defaults to 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
     filter_invoice_type:
       name: filter[type]
       in: query
@@ -315,10 +314,11 @@ components:
         enum:
         - credit_memo
         - invoice
-    filter_order_id:
-      name: filter[order_id]
-      in: query
-      description: The order id of Invoice.
+    InvoiceID:
+      in: path
+      name: invoice_id
+      description: The ID of the invoice.
+      required: true
       schema:
         type: string
   securitySchemes:

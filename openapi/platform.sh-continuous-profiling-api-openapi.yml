@@ -964,81 +964,6 @@ paths:
                     example: Timeout while querying data
 components:
   parameters:
-    RuntimeArchValues:
-      name: runtime_arch[]
-      in: query
-      description: Filter by runtime architecture. Can be specified multiple times for multiple values (e.g., ?runtime_arch[]=amd64&runtime_arch[]=arm64). Use runtime_arch_mode to control inclusion/exclusion behavior.
-      style: form
-      explode: true
-      schema:
-        type: array
-        items:
-          type: string
-          example: amd64
-    RuntimeValues:
-      name: runtime[]
-      in: query
-      description: Filter by runtime language. Can be specified multiple times for multiple values (e.g., ?runtime[]=go&runtime[]=python). Use runtime_mode to control inclusion/exclusion behavior.
-      style: form
-      explode: true
-      schema:
-        type: array
-        items:
-          type: string
-          example: go
-    ProbeVersionValues:
-      name: probe_version[]
-      in: query
-      description: Filter by probe version. Can be specified multiple times for multiple values (e.g., ?probe_version[]=2.28.2&probe_version[]=2.28.1). Use probe_version_mode to control inclusion/exclusion behavior.
-      style: form
-      explode: true
-      schema:
-        type: array
-        items:
-          type: string
-          example: 2.28.2
-    RuntimeVersionValues:
-      name: runtime_version[]
-      in: query
-      description: Filter by runtime version. Can be specified multiple times for multiple values (e.g., ?runtime_version[]=1.21&runtime_version[]=1.22). Use runtime_version_mode to control inclusion/exclusion behavior.
-      style: form
-      explode: true
-      schema:
-        type: array
-        items:
-          type: string
-          example: '1.21'
-    RuntimeOsValues:
-      name: runtime_os[]
-      in: query
-      description: Filter by runtime operating system. Can be specified multiple times for multiple values (e.g., ?runtime_os[]=linux&runtime_os[]=darwin). Use runtime_os_mode to control inclusion/exclusion behavior.
-      style: form
-      explode: true
-      schema:
-        type: array
-        items:
-          type: string
-          example: linux
-    RuntimeArchMode:
-      name: runtime_arch_mode
-      in: query
-      description: Filter mode for runtime_arch parameter. "1" (additive) includes only specified architectures. "-1" (subtractive) excludes specified architectures and includes all others. When omitted while runtime_arch[] is supplied, defaults to "1" (additive).
-      schema:
-        type: integer
-        enum:
-        - 1
-        - -1
-        example: 1
-    RuntimeMode:
-      name: runtime_mode
-      in: query
-      description: Filter mode for runtime parameter. "1" (additive) includes only specified runtimes. "-1" (subtractive) excludes specified runtimes and includes all others. When omitted while runtime[] is supplied, defaults to "1" (additive).
-      schema:
-        type: integer
-        enum:
-        - 1
-        - -1
-        example: 1
     ProbeVersionMode:
       name: probe_version_mode
       in: query
@@ -1059,6 +984,28 @@ components:
         - 1
         - -1
         example: 1
+    RuntimeArchValues:
+      name: runtime_arch[]
+      in: query
+      description: Filter by runtime architecture. Can be specified multiple times for multiple values (e.g., ?runtime_arch[]=amd64&runtime_arch[]=arm64). Use runtime_arch_mode to control inclusion/exclusion behavior.
+      style: form
+      explode: true
+      schema:
+        type: array
+        items:
+          type: string
+          example: amd64
+    ProbeVersionValues:
+      name: probe_version[]
+      in: query
+      description: Filter by probe version. Can be specified multiple times for multiple values (e.g., ?probe_version[]=2.28.2&probe_version[]=2.28.1). Use probe_version_mode to control inclusion/exclusion behavior.
+      style: form
+      explode: true
+      schema:
+        type: array
+        items:
+          type: string
+          example: 2.28.2
     RuntimeOsMode:
       name: runtime_os_mode
       in: query
@@ -1069,6 +1016,59 @@ components:
         - 1
         - -1
         example: 1
+    RuntimeOsValues:
+      name: runtime_os[]
+      in: query
+      description: Filter by runtime operating system. Can be specified multiple times for multiple values (e.g., ?runtime_os[]=linux&runtime_os[]=darwin). Use runtime_os_mode to control inclusion/exclusion behavior.
+      style: form
+      explode: true
+      schema:
+        type: array
+        items:
+          type: string
+          example: linux
+    RuntimeMode:
+      name: runtime_mode
+      in: query
+      description: Filter mode for runtime parameter. "1" (additive) includes only specified runtimes. "-1" (subtractive) excludes specified runtimes and includes all others. When omitted while runtime[] is supplied, defaults to "1" (additive).
+      schema:
+        type: integer
+        enum:
+        - 1
+        - -1
+        example: 1
+    RuntimeVersionValues:
+      name: runtime_version[]
+      in: query
+      description: Filter by runtime version. Can be specified multiple times for multiple values (e.g., ?runtime_version[]=1.21&runtime_version[]=1.22). Use runtime_version_mode to control inclusion/exclusion behavior.
+      style: form
+      explode: true
+      schema:
+        type: array
+        items:
+          type: string
+          example: '1.21'
+    RuntimeArchMode:
+      name: runtime_arch_mode
+      in: query
+      description: Filter mode for runtime_arch parameter. "1" (additive) includes only specified architectures. "-1" (subtractive) excludes specified architectures and includes all others. When omitted while runtime_arch[] is supplied, defaults to "1" (additive).
+      schema:
+        type: integer
+        enum:
+        - 1
+        - -1
+        example: 1
+    RuntimeValues:
+      name: runtime[]
+      in: query
+      description: Filter by runtime language. Can be specified multiple times for multiple values (e.g., ?runtime[]=go&runtime[]=python). Use runtime_mode to control inclusion/exclusion behavior.
+      style: form
+      explode: true
+      schema:
+        type: array
+        items:
+          type: string
+          example: go
   securitySchemes:
     BearerAuth:
       type: http

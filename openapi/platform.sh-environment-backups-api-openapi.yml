@@ -251,57 +251,25 @@ paths:
           default: https
 components:
   schemas:
-    EnvironmentRestoreInput:
+    AcceptedResponse:
       type: object
       properties:
-        environment_name:
-          type:
-          - string
-          - 'null'
-          title: Environment name
-          description: ''
-        branch_from:
-          type:
-          - string
-          - 'null'
-          title: Branch from
-          description: ''
-        restore_code:
-          type: boolean
-          title: Is code or data restored
-          description: Whether we should restore the code or only the data
-        restore_resources:
-          type: boolean
-          title: Is resources restored
-          description: Whether we should restore resources configuration from the backup
-        resources:
-          type:
-          - object
-          - 'null'
-          properties:
-            init:
-              type:
-              - string
-              - 'null'
-              enum:
-              - backup
-              - default
-              - minimum
-              - parent
-              title: Init Resources
-              description: The resources used when initializing services of the environment
-          required:
-          - init
-          additionalProperties: false
-          title: Resources
-          description: ''
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
       required:
-      - environment_name
-      - branch_from
-      - restore_code
-      - restore_resources
-      - resources
+      - status
+      - code
       additionalProperties: false
+    BackupCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Backup'
     EnvironmentBackupInput:
       type: object
       properties:
@@ -414,26 +382,7 @@ components:
       - restorable
       - automated
       additionalProperties: false
-    BackupCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Backup'
-    AcceptedResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
-      additionalProperties: false
-    EnvironmentRestoreInput_2:
+    EnvironmentRestoreInput:
       type: object
       properties:
         environment_name:
@@ -472,9 +421,17 @@ components:
               - parent
               title: Init Resources
               description: The resources used when initializing services of the environment
+          required:
+          - init
           additionalProperties: false
           title: Resources
           description: ''
+      required:
+      - environment_name
+      - branch_from
+      - restore_code
+      - restore_resources
+      - resources
       additionalProperties: false
     EnvironmentBackupInput_2:
       type: object
@@ -592,6 +549,49 @@ components:
       - deployment
       - restorable
       - automated
+      additionalProperties: false
+    EnvironmentRestoreInput_2:
+      type: object
+      properties:
+        environment_name:
+          type:
+          - string
+          - 'null'
+          title: Environment name
+          description: ''
+        branch_from:
+          type:
+          - string
+          - 'null'
+          title: Branch from
+          description: ''
+        restore_code:
+          type: boolean
+          title: Is code or data restored
+          description: Whether we should restore the code or only the data
+        restore_resources:
+          type: boolean
+          title: Is resources restored
+          description: Whether we should restore resources configuration from the backup
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - backup
+              - default
+              - minimum
+              - parent
+              title: Init Resources
+              description: The resources used when initializing services of the environment
+          additionalProperties: false
+          title: Resources
+          description: ''
       additionalProperties: false
   securitySchemes:
     OAuth2:

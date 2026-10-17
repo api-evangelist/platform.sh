@@ -375,42 +375,6 @@ paths:
         schemes:
           default: https
 components:
-  parameters:
-    ProjectID:
-      name: project_id
-      in: path
-      required: true
-      description: The ID of the project.
-      schema:
-        type: string
-    TeamID:
-      name: team_id
-      in: path
-      required: true
-      description: The ID of the team.
-      schema:
-        type: string
-    PageAfter:
-      in: query
-      name: page[after]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
-    PageBefore:
-      in: query
-      name: page[before]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
-    PageSizeAccess:
-      in: query
-      name: page[size]
-      description: Determines the number of items to show.
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 200
-        default: null
   schemas:
     TeamProjectAccess:
       type: object
@@ -508,10 +472,6 @@ components:
             field:
             - This field is required.
           title: Bad Request
-    UpdatedAt:
-      type: string
-      format: date-time
-      description: The date and time when the resource was last updated.
     TeamProjectAccess_2:
       type: object
       properties:
@@ -568,6 +528,10 @@ components:
                   type: string
                   description: The HTTP method to use.
       additionalProperties: false
+    UpdatedAt:
+      type: string
+      format: date-time
+      description: The date and time when the resource was last updated.
     GrantedAt:
       type: string
       format: date-time
@@ -580,15 +544,51 @@ components:
           description: Error message
       required:
       - error
+  parameters:
+    ProjectID:
+      name: project_id
+      in: path
+      required: true
+      description: The ID of the project.
+      schema:
+        type: string
+    TeamID:
+      name: team_id
+      in: path
+      required: true
+      description: The ID of the team.
+      schema:
+        type: string
+    PageSizeAccess:
+      in: query
+      name: page[size]
+      description: Determines the number of items to show.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+        default: null
+    PageBefore:
+      in: query
+      name: page[before]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
+    PageAfter:
+      in: query
+      name: page[after]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
   responses:
-    Forbidden:
-      description: Forbidden
+    NotFound:
+      description: Not Found
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
-    NotFound:
-      description: Not Found
+    Forbidden:
+      description: Forbidden
       content:
         application/problem+json:
           schema:

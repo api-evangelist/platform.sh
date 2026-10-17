@@ -202,6 +202,59 @@ paths:
           default: https
 components:
   schemas:
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
+    CurrencyAmount:
+      description: Currency amount with detailed components.
+      properties:
+        formatted:
+          description: Formatted currency value.
+          type: string
+        amount:
+          description: Plain amount.
+          type: number
+          format: float
+        currency_code:
+          description: Currency code.
+          type: string
+        currency_symbol:
+          description: Currency symbol.
+          type: string
+      type: object
+    CurrencyAmountNullable:
+      description: Currency amount with detailed components.
+      properties:
+        formatted:
+          description: Formatted currency value.
+          type: string
+        amount:
+          description: Plain amount.
+          type: number
+          format: float
+        currency_code:
+          description: Currency code.
+          type: string
+        currency_symbol:
+          description: Currency symbol.
+          type: string
+      type:
+      - object
+      - 'null'
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
     Discount:
       description: The discount object.
       properties:
@@ -287,40 +340,6 @@ components:
           - 'null'
           format: date-time
       type: object
-    CurrencyAmount:
-      description: Currency amount with detailed components.
-      properties:
-        formatted:
-          description: Formatted currency value.
-          type: string
-        amount:
-          description: Plain amount.
-          type: number
-          format: float
-        currency_code:
-          description: Currency code.
-          type: string
-        currency_symbol:
-          description: Currency symbol.
-          type: string
-      type: object
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
-    ListLinks:
-      type: object
-      properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
     Error:
       description: ''
       type: object
@@ -345,25 +364,6 @@ components:
             field:
             - This field is required.
           title: Bad Request
-    CurrencyAmountNullable:
-      description: Currency amount with detailed components.
-      properties:
-        formatted:
-          description: Formatted currency value.
-          type: string
-        amount:
-          description: Plain amount.
-          type: number
-          format: float
-        currency_code:
-          description: Currency code.
-          type: string
-        currency_symbol:
-          description: Currency symbol.
-          type: string
-      type:
-      - object
-      - 'null'
     Error_2:
       type: object
       properties:

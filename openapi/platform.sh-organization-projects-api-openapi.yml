@@ -415,59 +415,15 @@ paths:
           default: https
 components:
   schemas:
+    ProjectCSENotes:
+      type: string
+      description: CSE notes.
+    CarbonTotal:
+      type: number
+      description: The calculated total of the metric for the given interval.
     OrganizationID:
       type: string
       description: The ID of the organization.
-    UpdatedAt:
-      type: string
-      format: date-time
-      description: The date and time when the resource was last updated.
-    ProjectCarbon:
-      type: object
-      properties:
-        project_id:
-          $ref: '#/components/schemas/ProjectID'
-        project_title:
-          $ref: '#/components/schemas/ProjectTitle'
-        meta:
-          $ref: '#/components/schemas/MetricsMetadata'
-        values:
-          $ref: '#/components/schemas/MetricsValues'
-        total:
-          $ref: '#/components/schemas/CarbonTotal'
-    MetricsMetadata:
-      type: object
-      properties:
-        from:
-          description: The value used to calculate the lower bound of the temporal query. Inclusive.
-        to:
-          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
-        interval:
-          description: The interval used to group the metric values.
-        units:
-          description: The units associated with the provided values.
-    ProjectPlan:
-      type: string
-      description: The project plan.
-    MetricsValue:
-      type: object
-      properties:
-        value:
-          description: The measured value of the metric for the given time interval.
-        start_time:
-          description: The timestamp at which the time interval began.
-    ProjectType:
-      type: string
-      description: The type of projects.
-      enum:
-      - grid
-      - dedicated
-    ProjectUI:
-      description: The URL for the project's user interface.
-      type: string
-    ProjectID:
-      type: string
-      description: The ID of the project.
     StringFilter:
       type: object
       properties:
@@ -504,39 +460,13 @@ components:
       - failed
       - suspended
       - deleted
-    CarbonTotal:
-      type: number
-      description: The calculated total of the metric for the given interval.
-    ProjectDedicatedTag:
+    ProjectUI:
+      description: The URL for the project's user interface.
       type: string
-      description: Dedicated tag.
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
-    ProjectCSENotes:
-      type: string
-      description: CSE notes.
+    MetricsValues:
+      type: array
+      items:
+        $ref: '#/components/schemas/MetricsValue'
     DateTimeFilter:
       type: object
       properties:
@@ -561,16 +491,25 @@ components:
         lte:
           type: string
           description: Less than or equal
-    MetricsValues:
-      type: array
-      items:
-        $ref: '#/components/schemas/MetricsValue'
-    ProjectDefaultBranch:
+    ProjectType:
       type: string
-      description: Default branch.
+      description: The type of projects.
+      enum:
+      - grid
+      - dedicated
+    MetricsValue:
+      type: object
+      properties:
+        value:
+          description: The measured value of the metric for the given time interval.
+        start_time:
+          description: The timestamp at which the time interval began.
     SubscriptionID:
       type: string
       description: The ID of the subscription.
+    ProjectTimeZone:
+      type: string
+      description: Timezone of the project.
     Link:
       type: object
       title: Link
@@ -579,12 +518,9 @@ components:
         href:
           type: string
           description: URL of the link
-    ProjectTimeZone:
+    ProjectPlan:
       type: string
-      description: Timezone of the project.
-    RegionID:
-      type: string
-      description: The machine name of the region where the project is located.
+      description: The project plan.
     ListLinks:
       type: object
       properties:
@@ -594,6 +530,33 @@ components:
           $ref: '#/components/schemas/Link'
         next:
           $ref: '#/components/schemas/Link'
+    ProjectDefaultBranch:
+      type: string
+      description: Default branch.
+    MetricsMetadata:
+      type: object
+      properties:
+        from:
+          description: The value used to calculate the lower bound of the temporal query. Inclusive.
+        to:
+          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
+        interval:
+          description: The interval used to group the metric values.
+        units:
+          description: The units associated with the provided values.
+    UpdatedAt:
+      type: string
+      format: date-time
+      description: The date and time when the resource was last updated.
+    ProjectDedicatedTag:
+      type: string
+      description: Dedicated tag.
+    ProjectID:
+      type: string
+      description: The ID of the project.
+    ProjectTitle:
+      type: string
+      description: The title of the project.
     OrganizationProject:
       type: object
       properties:
@@ -678,19 +641,219 @@ components:
                 href:
                   type: string
                   description: URL of the link.
+    ProjectTrialPlan:
+      description: Whether the project is currently on a trial plan.
+      type: boolean
+    ProjectCarbon:
+      type: object
+      properties:
+        project_id:
+          $ref: '#/components/schemas/ProjectID'
+        project_title:
+          $ref: '#/components/schemas/ProjectTitle'
+        meta:
+          $ref: '#/components/schemas/MetricsMetadata'
+        values:
+          $ref: '#/components/schemas/MetricsValues'
+        total:
+          $ref: '#/components/schemas/CarbonTotal'
+    RegionID:
+      type: string
+      description: The machine name of the region where the project is located.
+    ProjectLocked:
+      type: boolean
+      description: Locked
     CreatedAt:
       type: string
       format: date-time
       description: The date and time when the resource was created.
-    ProjectTrialPlan:
-      description: Whether the project is currently on a trial plan.
-      type: boolean
-    ProjectTitle:
-      type: string
-      description: The title of the project.
-    ProjectLocked:
-      type: boolean
-      description: Locked
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    ProvisionEvent:
+      type: object
+      description: A single event in the provisioning progress stream.
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: The event type.
+          enum:
+          - data
+          - done
+          - error
+          - keep_alive
+        project_id:
+          type: string
+          description: The ID of the project being provisioned.
+        stage:
+          type: string
+          description: The current provisioning stage.
+        label:
+          type: string
+          description: A human-readable label for the current stage.
+        reason:
+          type: string
+          description: The reason for failure (only present on error events).
+        timestamp:
+          type: string
+          format: date-time
+          description: The time the event was emitted.
+        steps:
+          type: array
+          description: Ordered list of provisioning steps.
+          items:
+            $ref: '#/components/schemas/ProvisionStep'
+      additionalProperties: false
+    ProvisionStep:
+      type: object
+      description: A single step in the provisioning plan.
+      required:
+      - stage
+      - label
+      properties:
+        stage:
+          type: string
+          description: The step identifier.
+        label:
+          type: string
+          description: A human-readable label for the step.
+      additionalProperties: false
+    AggregatedSellables:
+      type: object
+      description: Map of sellable names to their configuration.
+      additionalProperties:
+        type: object
+        description: Sellable product configuration.
+    ProjectFacets:
+      type: object
+      description: Facets for filtering options.
+      properties:
+        plans:
+          type:
+          - object
+          - 'null'
+          description: Map of plan IDs to plan names.
+          additionalProperties:
+            type: string
+      additionalProperties: false
+    AggregatedFeatures:
+      type: object
+      properties:
+        backups:
+          type:
+          - object
+          - 'null'
+          description: Backup features configuration.
+    MetricsValue_2:
+      type: object
+      properties:
+        value:
+          description: The measured value of the metric for the given time interval.
+        start_time:
+          description: The timestamp at which the time interval began.
+      additionalProperties: false
+    PlanTitles:
+      type: object
+      description: Map of plan IDs to their human-readable titles.
+      additionalProperties:
+        type: string
+    ProjectOptionsAggregated:
+      type: object
+      properties:
+        billing:
+          type:
+          - object
+          - 'null'
+        defaults:
+          type:
+          - object
+          - 'null'
+        enforced:
+          type:
+          - object
+          - 'null'
+        initialize:
+          type:
+          - object
+          - 'null'
+        plans:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        regions:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        plan_titles:
+          type:
+          - object
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/PlanTitles'
+        sellables:
+          type:
+          - object
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/AggregatedSellables'
+        features:
+          type:
+          - object
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/AggregatedFeatures'
+        container_sizes:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Container sizes configuration.
+        debug:
+          type:
+          - object
+          - 'null'
+          description: Debug configuration.
+      additionalProperties: false
+    MetricsMetadata_2:
+      type: object
+      properties:
+        from:
+          description: The value used to calculate the lower bound of the temporal query. Inclusive.
+        to:
+          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
+        interval:
+          description: The interval used to group the metric values.
+        units:
+          description: The units associated with the provided values.
+      additionalProperties: false
     Activity:
       type: object
       properties:
@@ -870,186 +1033,6 @@ components:
       - expires_at
       - commands
       additionalProperties: false
-    ProjectCarbon_2:
-      type: object
-      properties:
-        project_id:
-          $ref: '#/components/schemas/ProjectID'
-        project_title:
-          $ref: '#/components/schemas/ProjectTitle'
-        meta:
-          $ref: '#/components/schemas/MetricsMetadata_2'
-        values:
-          $ref: '#/components/schemas/MetricsValues'
-        total:
-          $ref: '#/components/schemas/CarbonTotal'
-      additionalProperties: false
-    MetricsMetadata_2:
-      type: object
-      properties:
-        from:
-          description: The value used to calculate the lower bound of the temporal query. Inclusive.
-        to:
-          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
-        interval:
-          description: The interval used to group the metric values.
-        units:
-          description: The units associated with the provided values.
-      additionalProperties: false
-    MetricsValue_2:
-      type: object
-      properties:
-        value:
-          description: The measured value of the metric for the given time interval.
-        start_time:
-          description: The timestamp at which the time interval began.
-      additionalProperties: false
-    ProvisionStep:
-      type: object
-      description: A single step in the provisioning plan.
-      required:
-      - stage
-      - label
-      properties:
-        stage:
-          type: string
-          description: The step identifier.
-        label:
-          type: string
-          description: A human-readable label for the step.
-      additionalProperties: false
-    AggregatedFeatures:
-      type: object
-      properties:
-        backups:
-          type:
-          - object
-          - 'null'
-          description: Backup features configuration.
-    AggregatedSellables:
-      type: object
-      description: Map of sellable names to their configuration.
-      additionalProperties:
-        type: object
-        description: Sellable product configuration.
-    ProjectOptionsAggregated:
-      type: object
-      properties:
-        billing:
-          type:
-          - object
-          - 'null'
-        defaults:
-          type:
-          - object
-          - 'null'
-        enforced:
-          type:
-          - object
-          - 'null'
-        initialize:
-          type:
-          - object
-          - 'null'
-        plans:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        regions:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        plan_titles:
-          type:
-          - object
-          - 'null'
-          allOf:
-          - $ref: '#/components/schemas/PlanTitles'
-        sellables:
-          type:
-          - object
-          - 'null'
-          allOf:
-          - $ref: '#/components/schemas/AggregatedSellables'
-        features:
-          type:
-          - object
-          - 'null'
-          allOf:
-          - $ref: '#/components/schemas/AggregatedFeatures'
-        container_sizes:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: Container sizes configuration.
-        debug:
-          type:
-          - object
-          - 'null'
-          description: Debug configuration.
-      additionalProperties: false
-    Error_2:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-      required:
-      - error
-    ProvisionEvent:
-      type: object
-      description: A single event in the provisioning progress stream.
-      required:
-      - type
-      properties:
-        type:
-          type: string
-          description: The event type.
-          enum:
-          - data
-          - done
-          - error
-          - keep_alive
-        project_id:
-          type: string
-          description: The ID of the project being provisioned.
-        stage:
-          type: string
-          description: The current provisioning stage.
-        label:
-          type: string
-          description: A human-readable label for the current stage.
-        reason:
-          type: string
-          description: The reason for failure (only present on error events).
-        timestamp:
-          type: string
-          format: date-time
-          description: The time the event was emitted.
-        steps:
-          type: array
-          description: Ordered list of provisioning steps.
-          items:
-            $ref: '#/components/schemas/ProvisionStep'
-      additionalProperties: false
-    ProjectFacets:
-      type: object
-      description: Facets for filtering options.
-      properties:
-        plans:
-          type:
-          - object
-          - 'null'
-          description: Map of plan IDs to plan names.
-          additionalProperties:
-            type: string
-      additionalProperties: false
     OrganizationProject_2:
       type: object
       properties:
@@ -1211,18 +1194,36 @@ components:
                   type: string
                   description: URL of the link.
       additionalProperties: false
-    PlanTitles:
+    ProjectCarbon_2:
       type: object
-      description: Map of plan IDs to their human-readable titles.
-      additionalProperties:
-        type: string
+      properties:
+        project_id:
+          $ref: '#/components/schemas/ProjectID'
+        project_title:
+          $ref: '#/components/schemas/ProjectTitle'
+        meta:
+          $ref: '#/components/schemas/MetricsMetadata_2'
+        values:
+          $ref: '#/components/schemas/MetricsValues'
+        total:
+          $ref: '#/components/schemas/CarbonTotal'
+      additionalProperties: false
+    Error_2:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
   parameters:
-    from:
-      in: query
-      name: from
-      description: The start of the time frame for the query. Inclusive.
+    ProjectID:
+      name: project_id
+      in: path
+      required: true
+      description: The ID of the project.
       schema:
-        $ref: '#/components/schemas/DateTimeFilter'
+        type: string
     OrganizationID:
       name: organization_id
       in: path
@@ -1231,12 +1232,6 @@ components:
       schema:
         type: string
         format: ulid
-    to:
-      in: query
-      name: to
-      description: The end of the time frame for the query. Exclusive.
-      schema:
-        $ref: '#/components/schemas/DateTimeFilter'
     interval:
       in: query
       name: interval
@@ -1247,22 +1242,44 @@ components:
         - day
         - month
         - year
-    ProjectID:
-      name: project_id
-      in: path
-      required: true
-      description: The ID of the project.
+    from:
+      in: query
+      name: from
+      description: The start of the time frame for the query. Inclusive.
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    to:
+      in: query
+      name: to
+      description: The end of the time frame for the query. Exclusive.
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    PageBefore:
+      in: query
+      name: page[before]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
       schema:
         type: string
-    PageSize:
+    TimeRangeFrom:
       in: query
-      name: page[size]
-      description: Determines the number of items to show.
+      name: from
+      description: The start of the time frame for the query. Inclusive.
       schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: null
+        $ref: '#/components/schemas/DateTimeFilter'
+    FilterUpdatedAt:
+      in: query
+      name: filter[updated_at]
+      description: Allows filtering by `updated_at` using one or more operators.
+      style: deepObject
+      explode: true
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    PageAfter:
+      in: query
+      name: page[after]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
     FilterProjectTitle:
       in: query
       name: filter[title]
@@ -1271,26 +1288,20 @@ components:
       explode: true
       schema:
         $ref: '#/components/schemas/StringFilter'
-    PageBefore:
+    TimeRangeTo:
       in: query
-      name: page[before]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      name: to
+      description: The end of the time frame for the query. Exclusive.
       schema:
-        type: string
-    FilterCreatedAt:
+        $ref: '#/components/schemas/DateTimeFilter'
+    FilterProjectStatus:
       in: query
-      name: filter[created_at]
-      description: Allows filtering by `created_at` using one or more operators.
+      name: filter[status]
+      description: Allows filtering by project `status` using one or more operators.
       style: deepObject
       explode: true
       schema:
-        $ref: '#/components/schemas/DateTimeFilter'
-    TimeRangeFrom:
-      in: query
-      name: from
-      description: The start of the time frame for the query. Inclusive.
-      schema:
-        $ref: '#/components/schemas/DateTimeFilter'
+        $ref: '#/components/schemas/StringFilter'
     TimeRangeInterval:
       in: query
       name: interval
@@ -1301,37 +1312,26 @@ components:
         - day
         - month
         - year
-    FilterUpdatedAt:
+    PageSize:
       in: query
-      name: filter[updated_at]
-      description: Allows filtering by `updated_at` using one or more operators.
+      name: page[size]
+      description: Determines the number of items to show.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: null
+    FilterCreatedAt:
+      in: query
+      name: filter[created_at]
+      description: Allows filtering by `created_at` using one or more operators.
       style: deepObject
       explode: true
       schema:
         $ref: '#/components/schemas/DateTimeFilter'
-    TimeRangeTo:
-      in: query
-      name: to
-      description: The end of the time frame for the query. Exclusive.
-      schema:
-        $ref: '#/components/schemas/DateTimeFilter'
-    PageAfter:
-      in: query
-      name: page[after]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
-    FilterProjectStatus:
-      in: query
-      name: filter[status]
-      description: Allows filtering by project `status` using one or more operators.
-      style: deepObject
-      explode: true
-      schema:
-        $ref: '#/components/schemas/StringFilter'
   responses:
-    UnprocessableEntity:
-      description: Unprocessable Entity
+    BadRequest:
+      description: Bad Request
       content:
         application/problem+json:
           schema:
@@ -1342,28 +1342,28 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
-    Conflict:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Error_2'
     Forbidden:
       description: Forbidden
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
-    NoContent:
-      description: No Content
-    BadRequest:
-      description: Bad Request
+    UnprocessableEntity:
+      description: Unprocessable Entity
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
     NotFound:
       description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error_2'
+    NoContent:
+      description: No Content
+    Conflict:
+      description: Conflict
       content:
         application/problem+json:
           schema:

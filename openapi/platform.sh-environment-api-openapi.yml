@@ -855,65 +855,6 @@ components:
       - status
       - code
       additionalProperties: false
-    EnvironmentMergeInput:
-      type: object
-      properties:
-        resources:
-          type:
-          - object
-          - 'null'
-          properties:
-            init:
-              type:
-              - string
-              - 'null'
-              enum:
-              - child
-              - default
-              - manual
-              - minimum
-              title: Init Resources
-              description: The resources used when merging an environment
-          required:
-          - init
-          additionalProperties: false
-          title: Resources
-          description: ''
-      required:
-      - resources
-      additionalProperties: false
-    VersionCreateInput:
-      type: object
-      properties:
-        routing:
-          type: object
-          properties:
-            percentage:
-              type: integer
-              title: Traffic percentage
-              description: The percentage of traffic routed to this version
-          additionalProperties: false
-          title: Routing
-          description: Configuration about the traffic routed to this version
-      additionalProperties: false
-    VersionPatch:
-      type: object
-      properties:
-        routing:
-          type: object
-          properties:
-            percentage:
-              type: integer
-              title: Traffic percentage
-              description: The percentage of traffic routed to this version
-          additionalProperties: false
-          title: Routing
-          description: Configuration about the traffic routed to this version
-      additionalProperties: false
-    EnvironmentCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Environment'
     Version:
       type: object
       properties:
@@ -948,6 +889,33 @@ components:
       - commit
       - locked
       - routing
+      additionalProperties: false
+    EnvironmentMergeInput:
+      type: object
+      properties:
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - child
+              - default
+              - manual
+              - minimum
+              title: Init Resources
+              description: The resources used when merging an environment
+          required:
+          - init
+          additionalProperties: false
+          title: Resources
+          description: ''
+      required:
+      - resources
       additionalProperties: false
     Environment:
       type: object
@@ -1482,6 +1450,57 @@ components:
       - has_deployment
       - supports_restrict_robots
       additionalProperties: false
+    EnvironmentSynchronizeInput:
+      type: object
+      properties:
+        synchronize_code:
+          type: boolean
+          title: Is code synchronized
+          description: Synchronize code?
+        rebase:
+          type: boolean
+          title: Is code rebased
+          description: Synchronize code by rebasing instead of merging
+        synchronize_data:
+          type: boolean
+          title: Is data synchronized
+          description: Synchronize data?
+        synchronize_resources:
+          type: boolean
+          title: Are resources synchronized
+          description: Synchronize resources?
+      required:
+      - synchronize_code
+      - rebase
+      - synchronize_data
+      - synchronize_resources
+      additionalProperties: false
+    EnvironmentActivateInput:
+      type: object
+      properties:
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - default
+              - minimum
+              - parent
+              title: Init Resources
+              description: The resources used when activating an environment
+          required:
+          - init
+          additionalProperties: false
+          title: Resources
+          description: ''
+      required:
+      - resources
+      additionalProperties: false
     EnvironmentBranchInput:
       type: object
       properties:
@@ -1531,128 +1550,37 @@ components:
       - type
       - resources
       additionalProperties: false
-    EnvironmentInitializeInput:
+    EnvironmentDeployInput:
       type: object
       properties:
-        profile:
+        strategy:
           type: string
-          title: Profile
-          description: Name of the profile to show in the UI
-        repository:
-          type: string
-          title: Repository
-          description: Repository to clone from
-        config:
-          type:
-          - string
-          - 'null'
-          title: Configuration repository
-          description: Repository to clone the configuration files from
-        files:
-          type: array
-          items:
-            type: object
-            properties:
-              path:
-                type: string
-                title: Path
-                description: The path to the file.
-              mode:
-                type: integer
-                title: Mode
-                description: The octal value of the file protection mode.
-              contents:
-                type: string
-                title: Contents
-                description: The contents of the file (base64 encoded).
-            required:
-            - path
-            - mode
-            - contents
-            additionalProperties: false
-          title: Files
-          description: A list of files to add to the repository during initialization
-        resources:
-          type:
-          - object
-          - 'null'
-          properties:
-            init:
-              type:
-              - string
-              - 'null'
-              enum:
-              - default
-              - minimum
-              title: Init Resources
-              description: The resources used when initializing the environment
-          required:
-          - init
-          additionalProperties: false
-          title: Resources
-          description: ''
+          enum:
+          - rolling
+          - stopstart
+          title: Deployment strategy
+          description: The deployment strategy (`rolling` or `stopstart`)
       required:
-      - profile
-      - repository
-      - config
-      - files
-      - resources
+      - strategy
+      additionalProperties: false
+    VersionPatch:
+      type: object
+      properties:
+        routing:
+          type: object
+          properties:
+            percentage:
+              type: integer
+              title: Traffic percentage
+              description: The percentage of traffic routed to this version
+          additionalProperties: false
+          title: Routing
+          description: Configuration about the traffic routed to this version
       additionalProperties: false
     VersionCollection:
       type: array
       items:
         $ref: '#/components/schemas/Version'
-    EnvironmentActivateInput:
-      type: object
-      properties:
-        resources:
-          type:
-          - object
-          - 'null'
-          properties:
-            init:
-              type:
-              - string
-              - 'null'
-              enum:
-              - default
-              - minimum
-              - parent
-              title: Init Resources
-              description: The resources used when activating an environment
-          required:
-          - init
-          additionalProperties: false
-          title: Resources
-          description: ''
-      required:
-      - resources
-      additionalProperties: false
-    EnvironmentSynchronizeInput:
-      type: object
-      properties:
-        synchronize_code:
-          type: boolean
-          title: Is code synchronized
-          description: Synchronize code?
-        rebase:
-          type: boolean
-          title: Is code rebased
-          description: Synchronize code by rebasing instead of merging
-        synchronize_data:
-          type: boolean
-          title: Is data synchronized
-          description: Synchronize data?
-        synchronize_resources:
-          type: boolean
-          title: Are resources synchronized
-          description: Synchronize resources?
-      required:
-      - synchronize_code
-      - rebase
-      - synchronize_data
-      - synchronize_resources
-      additionalProperties: false
     EnvironmentPatch:
       type: object
       properties:
@@ -1735,19 +1663,91 @@ components:
           title: Restrict robots
           description: Whether to restrict robots for this environment
       additionalProperties: false
-    EnvironmentDeployInput:
+    VersionCreateInput:
       type: object
       properties:
-        strategy:
-          type: string
-          enum:
-          - rolling
-          - stopstart
-          title: Deployment strategy
-          description: The deployment strategy (`rolling` or `stopstart`)
-      required:
-      - strategy
+        routing:
+          type: object
+          properties:
+            percentage:
+              type: integer
+              title: Traffic percentage
+              description: The percentage of traffic routed to this version
+          additionalProperties: false
+          title: Routing
+          description: Configuration about the traffic routed to this version
       additionalProperties: false
+    EnvironmentInitializeInput:
+      type: object
+      properties:
+        profile:
+          type: string
+          title: Profile
+          description: Name of the profile to show in the UI
+        repository:
+          type: string
+          title: Repository
+          description: Repository to clone from
+        config:
+          type:
+          - string
+          - 'null'
+          title: Configuration repository
+          description: Repository to clone the configuration files from
+        files:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+                title: Path
+                description: The path to the file.
+              mode:
+                type: integer
+                title: Mode
+                description: The octal value of the file protection mode.
+              contents:
+                type: string
+                title: Contents
+                description: The contents of the file (base64 encoded).
+            required:
+            - path
+            - mode
+            - contents
+            additionalProperties: false
+          title: Files
+          description: A list of files to add to the repository during initialization
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - default
+              - minimum
+              title: Init Resources
+              description: The resources used when initializing the environment
+          required:
+          - init
+          additionalProperties: false
+          title: Resources
+          description: ''
+      required:
+      - profile
+      - repository
+      - config
+      - files
+      - resources
+      additionalProperties: false
+    EnvironmentCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Environment'
     EnvironmentMergeInput_2:
       type: object
       properties:
@@ -2394,6 +2394,48 @@ components:
       - has_deployment
       - supports_restrict_robots
       additionalProperties: false
+    EnvironmentSynchronizeInput_2:
+      type: object
+      properties:
+        synchronize_code:
+          type: boolean
+          title: Is code synchronized
+          description: Synchronize code?
+        rebase:
+          type: boolean
+          title: Is code rebased
+          description: Synchronize code by rebasing instead of merging
+        synchronize_data:
+          type: boolean
+          title: Is data synchronized
+          description: Synchronize data?
+        synchronize_resources:
+          type: boolean
+          title: Are resources synchronized
+          description: Synchronize resources?
+      additionalProperties: false
+    EnvironmentActivateInput_2:
+      type: object
+      properties:
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - default
+              - minimum
+              - parent
+              title: Init Resources
+              description: The resources used when activating an environment
+          additionalProperties: false
+          title: Resources
+          description: ''
+      additionalProperties: false
     EnvironmentBranchInput_2:
       type: object
       properties:
@@ -2437,6 +2479,17 @@ components:
       required:
       - title
       - name
+      additionalProperties: false
+    EnvironmentDeployInput_2:
+      type: object
+      properties:
+        strategy:
+          type: string
+          enum:
+          - rolling
+          - stopstart
+          title: Deployment strategy
+          description: The deployment strategy (`rolling` or `stopstart`)
       additionalProperties: false
     EnvironmentInitializeInput_2:
       type: object
@@ -2497,59 +2550,6 @@ components:
       required:
       - profile
       - repository
-      additionalProperties: false
-    EnvironmentActivateInput_2:
-      type: object
-      properties:
-        resources:
-          type:
-          - object
-          - 'null'
-          properties:
-            init:
-              type:
-              - string
-              - 'null'
-              enum:
-              - default
-              - minimum
-              - parent
-              title: Init Resources
-              description: The resources used when activating an environment
-          additionalProperties: false
-          title: Resources
-          description: ''
-      additionalProperties: false
-    EnvironmentSynchronizeInput_2:
-      type: object
-      properties:
-        synchronize_code:
-          type: boolean
-          title: Is code synchronized
-          description: Synchronize code?
-        rebase:
-          type: boolean
-          title: Is code rebased
-          description: Synchronize code by rebasing instead of merging
-        synchronize_data:
-          type: boolean
-          title: Is data synchronized
-          description: Synchronize data?
-        synchronize_resources:
-          type: boolean
-          title: Are resources synchronized
-          description: Synchronize resources?
-      additionalProperties: false
-    EnvironmentDeployInput_2:
-      type: object
-      properties:
-        strategy:
-          type: string
-          enum:
-          - rolling
-          - stopstart
-          title: Deployment strategy
-          description: The deployment strategy (`rolling` or `stopstart`)
       additionalProperties: false
   securitySchemes:
     OAuth2:

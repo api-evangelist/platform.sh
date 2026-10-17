@@ -293,28 +293,40 @@ components:
     OrganizationID:
       type: string
       description: The ID of the organization.
-    UpdatedAt:
-      type: string
-      format: date-time
-      description: The date and time when the resource was last updated.
-    ProjectPlan:
-      type: string
-      description: The project plan.
-    ProjectType:
-      type: string
-      description: The type of projects.
-      enum:
-      - grid
-      - dedicated
-    ProjectID:
-      type: string
-      description: The ID of the project.
-    RegionZone:
-      type: string
-      description: The geographical zone of the region.
-    RegionProjectLabel:
-      type: string
-      description: The label to display on existing projects.
+    OrganizationReference:
+      description: The referenced organization, or null if it no longer exists.
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: string
+          format: ulid
+          description: The ID of the organization.
+        type:
+          type: string
+          description: The type of the organization.
+        owner_id:
+          type: string
+          format: uuid
+          description: The ID of the owner.
+        name:
+          type: string
+          description: A unique machine name representing the organization.
+        label:
+          type: string
+          description: The human-readable label of the organization.
+        vendor:
+          type: string
+          description: The vendor.
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the organization was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the organization was last updated.
     ProjectStatus:
       type: string
       description: The status of the project.
@@ -324,6 +336,70 @@ components:
       - failed
       - suspended
       - deleted
+    RegionReference:
+      description: The referenced region, or null if it no longer exists.
+      type:
+      - object
+      - 'null'
+      required:
+      - id
+      - label
+      - zone
+      - selection_label
+      - project_label
+      - timezone
+      - available
+      - endpoint
+      - provider
+      - datacenter
+      - compliance
+      - created_at
+      - updated_at
+      properties:
+        id:
+          $ref: '#/components/schemas/RegionID'
+        label:
+          $ref: '#/components/schemas/RegionLabel'
+        zone:
+          $ref: '#/components/schemas/RegionZone'
+        selection_label:
+          $ref: '#/components/schemas/RegionSelectionLabel'
+        project_label:
+          $ref: '#/components/schemas/RegionProjectLabel'
+        timezone:
+          $ref: '#/components/schemas/RegionTimezone'
+        available:
+          $ref: '#/components/schemas/RegionAvailable'
+        private:
+          $ref: '#/components/schemas/RegionPrivate'
+        endpoint:
+          $ref: '#/components/schemas/RegionEndpoint'
+        code:
+          $ref: '#/components/schemas/RegionCode'
+        provider:
+          $ref: '#/components/schemas/RegionProvider'
+        datacenter:
+          $ref: '#/components/schemas/RegionDataCenter'
+        envimpact:
+          $ref: '#/components/schemas/RegionEnvImpact'
+        compliance:
+          $ref: '#/components/schemas/RegionCompliance'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+    RegionEndpoint:
+      type: string
+      description: Link to the region API endpoint.
+    RegionEnvImpact:
+      type: object
+      description: Information about the region provider's environmental impact.
+    RegionTimezone:
+      type: string
+      description: Default timezone of the region.
+    RegionZone:
+      type: string
+      description: The geographical zone of the region.
     TeamReference:
       description: The referenced team, or null if it no longer exists.
       type: object
@@ -387,79 +463,64 @@ components:
           - development:admin
           created_at: '2021-05-24T07:20:35.683264Z'
           updated_at: '2021-05-24T07:20:35.683264Z'
-    RegionTimezone:
+    ProjectType:
       type: string
-      description: Default timezone of the region.
-    RegionDataCenter:
-      type: object
-      description: Information about the region provider data center.
-    RegionPrivate:
-      type: boolean
-      description: Indicator whether or not this platform is for private use only.
+      description: The type of projects.
+      enum:
+      - grid
+      - dedicated
     RegionCompliance:
       type: object
       description: Information about the region's compliance.
-    RegionCode:
-      type: string
-      description: The code of the region
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
-    OrganizationReference:
-      description: The referenced organization, or null if it no longer exists.
+    ProjectReference:
+      description: The referenced project, or null if it no longer exists.
       type:
       - object
       - 'null'
+      required:
+      - id
+      - organization_id
+      - subscription_id
+      - region
+      - title
+      - type
+      - plan
+      - status
+      - created_at
+      - updated_at
       properties:
         id:
-          type: string
-          format: ulid
-          description: The ID of the organization.
+          $ref: '#/components/schemas/ProjectID'
+        organization_id:
+          $ref: '#/components/schemas/OrganizationID'
+        subscription_id:
+          $ref: '#/components/schemas/SubscriptionID'
+        region:
+          $ref: '#/components/schemas/RegionID'
+        title:
+          $ref: '#/components/schemas/ProjectTitle'
         type:
-          type: string
-          description: The type of the organization.
-        owner_id:
-          type: string
-          format: uuid
-          description: The ID of the owner.
-        name:
-          type: string
-          description: A unique machine name representing the organization.
-        label:
-          type: string
-          description: The human-readable label of the organization.
-        vendor:
-          type: string
-          description: The vendor.
+          $ref: '#/components/schemas/ProjectType'
+        plan:
+          $ref: '#/components/schemas/ProjectPlan'
+        status:
+          $ref: '#/components/schemas/ProjectStatus'
         created_at:
-          type: string
-          format: date-time
-          description: The date and time when the organization was created.
+          $ref: '#/components/schemas/CreatedAt'
         updated_at:
-          type: string
-          format: date-time
-          description: The date and time when the organization was last updated.
+          $ref: '#/components/schemas/UpdatedAt'
+    SubscriptionID:
+      type: string
+      description: The ID of the subscription.
+    RegionDataCenter:
+      type: object
+      description: Information about the region provider data center.
+    RegionProvider:
+      type: object
+      description: Information about the region provider.
+    RegionCode:
+      type: string
+      description: The code of the region
     UserReference:
       description: The referenced user, or null if it no longer exists.
       type:
@@ -503,64 +564,31 @@ components:
           username: platform-sh
           mfa_enabled: true
           sso_enabled: true
-    RegionReference:
-      description: The referenced region, or null if it no longer exists.
-      type:
-      - object
-      - 'null'
-      required:
-      - id
-      - label
-      - zone
-      - selection_label
-      - project_label
-      - timezone
-      - available
-      - endpoint
-      - provider
-      - datacenter
-      - compliance
-      - created_at
-      - updated_at
-      properties:
-        id:
-          $ref: '#/components/schemas/RegionID'
-        label:
-          $ref: '#/components/schemas/RegionLabel'
-        zone:
-          $ref: '#/components/schemas/RegionZone'
-        selection_label:
-          $ref: '#/components/schemas/RegionSelectionLabel'
-        project_label:
-          $ref: '#/components/schemas/RegionProjectLabel'
-        timezone:
-          $ref: '#/components/schemas/RegionTimezone'
-        available:
-          $ref: '#/components/schemas/RegionAvailable'
-        private:
-          $ref: '#/components/schemas/RegionPrivate'
-        endpoint:
-          $ref: '#/components/schemas/RegionEndpoint'
-        code:
-          $ref: '#/components/schemas/RegionCode'
-        provider:
-          $ref: '#/components/schemas/RegionProvider'
-        datacenter:
-          $ref: '#/components/schemas/RegionDataCenter'
-        envimpact:
-          $ref: '#/components/schemas/RegionEnvImpact'
-        compliance:
-          $ref: '#/components/schemas/RegionCompliance'
-        created_at:
-          $ref: '#/components/schemas/CreatedAt'
-        updated_at:
-          $ref: '#/components/schemas/UpdatedAt'
-    SubscriptionID:
+    RegionLabel:
       type: string
-      description: The ID of the subscription.
-    RegionEnvImpact:
-      type: object
-      description: Information about the region provider's environmental impact.
+      description: The human-readable name of the region.
+    RegionSelectionLabel:
+      type: string
+      description: The label to display when choosing between regions for new projects.
+    RegionProjectLabel:
+      type: string
+      description: The label to display on existing projects.
+    RegionPrivate:
+      type: boolean
+      description: Indicator whether or not this platform is for private use only.
+    ProjectPlan:
+      type: string
+      description: The project plan.
+    UpdatedAt:
+      type: string
+      format: date-time
+      description: The date and time when the resource was last updated.
+    ProjectID:
+      type: string
+      description: The ID of the project.
+    ProjectTitle:
+      type: string
+      description: The title of the project.
     RegionID:
       type: string
       description: The machine name of the region where the project is located.
@@ -571,88 +599,30 @@ components:
       type: string
       format: date-time
       description: The date and time when the resource was created.
-    RegionEndpoint:
-      type: string
-      description: Link to the region API endpoint.
-    RegionSelectionLabel:
-      type: string
-      description: The label to display when choosing between regions for new projects.
-    ProjectReference:
-      description: The referenced project, or null if it no longer exists.
-      type:
-      - object
-      - 'null'
-      required:
-      - id
-      - organization_id
-      - subscription_id
-      - region
-      - title
-      - type
-      - plan
-      - status
-      - created_at
-      - updated_at
+    Error:
+      description: ''
+      type: object
       properties:
-        id:
-          $ref: '#/components/schemas/ProjectID'
-        organization_id:
-          $ref: '#/components/schemas/OrganizationID'
-        subscription_id:
-          $ref: '#/components/schemas/SubscriptionID'
-        region:
-          $ref: '#/components/schemas/RegionID'
-        title:
-          $ref: '#/components/schemas/ProjectTitle'
-        type:
-          $ref: '#/components/schemas/ProjectType'
-        plan:
-          $ref: '#/components/schemas/ProjectPlan'
         status:
-          $ref: '#/components/schemas/ProjectStatus'
-        created_at:
-          $ref: '#/components/schemas/CreatedAt'
-        updated_at:
-          $ref: '#/components/schemas/UpdatedAt'
-    RegionProvider:
-      type: object
-      description: Information about the region provider.
-    ProjectTitle:
-      type: string
-      description: The title of the project.
-    RegionLabel:
-      type: string
-      description: The human-readable name of the region.
-    RegionCompliance_2:
-      type: object
-      description: Information about the region's compliance.
-      properties:
-        hipaa:
-          type: boolean
-          description: Indicator whether or not this region is HIPAA compliant.
-      additionalProperties: false
-    Error_2:
-      type: object
-      properties:
-        error:
           type: string
-          description: Error message
-      required:
-      - error
-    RegionDatacenter:
-      type: object
-      description: Information about the region provider data center.
-      properties:
-        name:
+        message:
           type: string
-          description: The name/identifier of the data center.
-        label:
+        code:
+          type: number
+        detail:
+          type: object
+        title:
           type: string
-          description: The human-readable label of the data center.
-        location:
-          type: string
-          description: The physical location of the data center.
-      additionalProperties: false
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
     RegionReference_2:
       description: The referenced region, or null if it no longer exists.
       type:
@@ -707,6 +677,20 @@ components:
           type: object
           description: Environmental impact information for the region.
       additionalProperties: false
+    RegionDatacenter:
+      type: object
+      description: Information about the region provider data center.
+      properties:
+        name:
+          type: string
+          description: The name/identifier of the data center.
+        label:
+          type: string
+          description: The human-readable label of the data center.
+        location:
+          type: string
+          description: The physical location of the data center.
+      additionalProperties: false
     RegionEnvImpact_2:
       type: object
       description: Information about the region provider's environmental impact.
@@ -723,6 +707,14 @@ components:
         green:
           type: boolean
           description: Indicator whether the data center uses green energy.
+      additionalProperties: false
+    RegionCompliance_2:
+      type: object
+      description: Information about the region's compliance.
+      properties:
+        hipaa:
+          type: boolean
+          description: Indicator whether or not this region is HIPAA compliant.
       additionalProperties: false
     ProjectReference_2:
       description: The referenced project, or null if it no longer exists.
@@ -776,15 +768,23 @@ components:
           type: string
           description: The logo of the cloud provider (base64 encoded SVG).
       additionalProperties: false
+    Error_2:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
   responses:
-    Forbidden:
-      description: Forbidden
+    BadRequest:
+      description: Bad Request
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
-    BadRequest:
-      description: Bad Request
+    Forbidden:
+      description: Forbidden
       content:
         application/problem+json:
           schema:

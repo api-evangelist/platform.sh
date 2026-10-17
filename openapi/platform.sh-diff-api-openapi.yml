@@ -57,6 +57,10 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    DiffCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Diff'
     Diff:
       type: object
       properties:
@@ -100,10 +104,6 @@ components:
       - old_path
       - old_id
       additionalProperties: false
-    DiffCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Diff'
   securitySchemes:
     BearerAuth:
       type: http

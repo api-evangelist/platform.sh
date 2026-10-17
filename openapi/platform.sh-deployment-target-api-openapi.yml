@@ -176,6 +176,46 @@ paths:
           default: https
 components:
   schemas:
+    DeploymentTargetCreateInput:
+      oneOf:
+      - $ref: '#/components/schemas/DedicatedDeploymentTargetCreateInput'
+      - $ref: '#/components/schemas/EnterpriseDeploymentTargetCreateInput'
+      - $ref: '#/components/schemas/FoundationDeploymentTargetCreateInput'
+    EnterpriseDeploymentTargetCreateInput:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - dedicated
+          - enterprise
+          - local
+          title: Deployment target type
+          description: The type of the deployment target.
+        name:
+          type: string
+          title: Deployment target name
+          description: The name of the deployment target.
+        site_urls:
+          type: object
+          title: Site URLs
+          description: ''
+        ssh_hosts:
+          type: array
+          items:
+            type: string
+          title: SSH Hosts
+          description: List of SSH Hosts.
+        enterprise_environments_mapping:
+          type: object
+          title: Enterprise Environments Mapping
+          description: Mapping of clusters to Enterprise applications
+          deprecated: true
+          x-stability: DEPRECATED
+      required:
+      - type
+      - name
+      additionalProperties: false
     FoundationDeploymentTargetPatch:
       type: object
       properties:
@@ -244,48 +284,24 @@ components:
       - type
       - name
       additionalProperties: false
-    EnterpriseDeploymentTargetCreateInput:
+    AcceptedResponse:
       type: object
       properties:
-        type:
+        status:
           type: string
-          enum:
-          - dedicated
-          - enterprise
-          - local
-          title: Deployment target type
-          description: The type of the deployment target.
-        name:
-          type: string
-          title: Deployment target name
-          description: The name of the deployment target.
-        site_urls:
-          type: object
-          title: Site URLs
-          description: ''
-        ssh_hosts:
-          type: array
-          items:
-            type: string
-          title: SSH Hosts
-          description: List of SSH Hosts.
-        enterprise_environments_mapping:
-          type: object
-          title: Enterprise Environments Mapping
-          description: Mapping of clusters to Enterprise applications
-          deprecated: true
-          x-stability: DEPRECATED
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
       required:
-      - type
-      - name
+      - status
+      - code
       additionalProperties: false
-    EnterpriseDeploymentTarget:
+    EnterpriseDeploymentTargetPatch:
       type: object
       properties:
-        id:
-          type: string
-          title: EnterpriseDeploymentTarget Identifier
-          description: The identifier of EnterpriseDeploymentTarget
         type:
           type: string
           enum:
@@ -298,37 +314,6 @@ components:
           type: string
           title: Deployment target name
           description: The name of the deployment target.
-        deploy_host:
-          type:
-          - string
-          - 'null'
-          title: Deploy Host
-          description: The host to deploy to.
-        docroots:
-          type: object
-          additionalProperties:
-            type: object
-            properties:
-              active_docroot:
-                type:
-                - string
-                - 'null'
-                title: Active docroot
-                description: The enterprise docroot, that is associated with this application/cluster.
-              docroot_versions:
-                type:
-                - array
-                - 'null'
-                items:
-                  type: string
-                title: Docroot versions
-                description: Versions of the enterprise docroot. When a new environment version is created the active_docroot is updated from these values.
-            required:
-            - active_docroot
-            - docroot_versions
-            additionalProperties: false
-          title: Docroots
-          description: Mapping of clusters to Enterprise applications
         site_urls:
           type: object
           title: Site URLs
@@ -339,10 +324,6 @@ components:
             type: string
           title: SSH Hosts
           description: List of SSH Hosts.
-        maintenance_mode:
-          type: boolean
-          title: Maintenance Mode
-          description: Whether to perform deployments or not
         enterprise_environments_mapping:
           type: object
           title: Enterprise Environments Mapping
@@ -352,11 +333,6 @@ components:
       required:
       - type
       - name
-      - deploy_host
-      - docroots
-      - site_urls
-      - ssh_hosts
-      - maintenance_mode
       additionalProperties: false
     FoundationDeploymentTarget:
       type: object
@@ -439,6 +415,33 @@ components:
       - hosts
       - use_dedicated_grid
       - storage_type
+      additionalProperties: false
+    DeploymentTargetCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/DeploymentTarget'
+    DedicatedDeploymentTargetPatch:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - dedicated
+          - enterprise
+          - local
+          title: Deployment target type
+          description: The type of the deployment target.
+        name:
+          type: string
+          title: Deployment target name
+          description: The name of the deployment target.
+        enforced_mounts:
+          type: object
+          title: Enforced Mounts
+          description: Mounts which are always injected into pushed (e.g. enforce /var/log to be a local mount).
+      required:
+      - type
+      - name
       additionalProperties: false
     DeploymentTarget:
       oneOf:
@@ -635,9 +638,13 @@ components:
       - $ref: '#/components/schemas/DedicatedDeploymentTargetPatch'
       - $ref: '#/components/schemas/EnterpriseDeploymentTargetPatch'
       - $ref: '#/components/schemas/FoundationDeploymentTargetPatch'
-    EnterpriseDeploymentTargetPatch:
+    EnterpriseDeploymentTarget:
       type: object
       properties:
+        id:
+          type: string
+          title: EnterpriseDeploymentTarget Identifier
+          description: The identifier of EnterpriseDeploymentTarget
         type:
           type: string
           enum:
@@ -650,6 +657,37 @@ components:
           type: string
           title: Deployment target name
           description: The name of the deployment target.
+        deploy_host:
+          type:
+          - string
+          - 'null'
+          title: Deploy Host
+          description: The host to deploy to.
+        docroots:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              active_docroot:
+                type:
+                - string
+                - 'null'
+                title: Active docroot
+                description: The enterprise docroot, that is associated with this application/cluster.
+              docroot_versions:
+                type:
+                - array
+                - 'null'
+                items:
+                  type: string
+                title: Docroot versions
+                description: Versions of the enterprise docroot. When a new environment version is created the active_docroot is updated from these values.
+            required:
+            - active_docroot
+            - docroot_versions
+            additionalProperties: false
+          title: Docroots
+          description: Mapping of clusters to Enterprise applications
         site_urls:
           type: object
           title: Site URLs
@@ -660,6 +698,10 @@ components:
             type: string
           title: SSH Hosts
           description: List of SSH Hosts.
+        maintenance_mode:
+          type: boolean
+          title: Maintenance Mode
+          description: Whether to perform deployments or not
         enterprise_environments_mapping:
           type: object
           title: Enterprise Environments Mapping
@@ -669,11 +711,12 @@ components:
       required:
       - type
       - name
+      - deploy_host
+      - docroots
+      - site_urls
+      - ssh_hosts
+      - maintenance_mode
       additionalProperties: false
-    DeploymentTargetCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/DeploymentTarget'
     DedicatedDeploymentTargetCreateInput:
       type: object
       properties:
@@ -697,27 +740,13 @@ components:
       - type
       - name
       additionalProperties: false
-    DeploymentTargetCreateInput:
+    DeploymentTargetCreateInput_2:
       oneOf:
-      - $ref: '#/components/schemas/DedicatedDeploymentTargetCreateInput'
-      - $ref: '#/components/schemas/EnterpriseDeploymentTargetCreateInput'
-      - $ref: '#/components/schemas/FoundationDeploymentTargetCreateInput'
-    AcceptedResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
-      additionalProperties: false
-    DedicatedDeploymentTargetPatch:
+      - $ref: '#/components/schemas/DedicatedDeploymentTargetCreateInput_2'
+      - $ref: '#/components/schemas/EnterpriseDeploymentTargetCreateInput_2'
+      - $ref: '#/components/schemas/FoundationDeploymentTargetCreateInput_2'
+      - $ref: '#/components/schemas/KubernetesDeploymentTargetStorageCreateInput'
+    EnterpriseDeploymentTargetCreateInput_2:
       type: object
       properties:
         type:
@@ -725,17 +754,30 @@ components:
           enum:
           - dedicated
           - enterprise
-          - local
+          - foundation
+          - kubernetes
           title: Deployment target type
-          description: The type of the deployment target.
+          description: The type of the deployment target
         name:
           type: string
           title: Deployment target name
-          description: The name of the deployment target.
-        enforced_mounts:
+          description: The name of the deployment target
+        site_urls:
           type: object
-          title: Enforced Mounts
-          description: Mounts which are always injected into pushed (e.g. enforce /var/log to be a local mount).
+          title: Site URLs
+          description: List of URLs of the site
+        ssh_hosts:
+          type: array
+          items:
+            type: string
+          title: SSH Hosts
+          description: List of SSH Hosts
+        enterprise_environments_mapping:
+          type: object
+          title: Enterprise Environments Mapping
+          description: Mapping of clusters to Enterprise applications
+          deprecated: true
+          x-stability: DEPRECATED
       required:
       - type
       - name
@@ -829,7 +871,7 @@ components:
       - type
       - name
       additionalProperties: false
-    EnterpriseDeploymentTargetCreateInput_2:
+    EnterpriseDeploymentTargetPatch_2:
       type: object
       properties:
         type:
@@ -864,131 +906,6 @@ components:
       required:
       - type
       - name
-      additionalProperties: false
-    EnterpriseDeploymentTarget_2:
-      type: object
-      properties:
-        id:
-          type: string
-          title: EnterpriseDeploymentTarget Identifier
-          description: The identifier of EnterpriseDeploymentTarget
-        type:
-          type: string
-          enum:
-          - dedicated
-          - enterprise
-          - foundation
-          - kubernetes
-          title: Deployment target type
-          description: The type of the deployment target
-        name:
-          type: string
-          title: Deployment target name
-          description: The name of the deployment target
-        deploy_host:
-          type:
-          - string
-          - 'null'
-          title: Deploy Host
-          description: The host to deploy to
-        docroots:
-          type: object
-          additionalProperties:
-            type: object
-            properties:
-              active_docroot:
-                type:
-                - string
-                - 'null'
-                title: Active docroot
-                description: The enterprise docroot, that is associated with this application/cluster.
-              docroot_versions:
-                type:
-                - array
-                - 'null'
-                items:
-                  type: string
-                title: Docroot versions
-                description: Versions of the enterprise docroot. When a new environment version is created the active_docroot is updated from these values.
-            required:
-            - active_docroot
-            - docroot_versions
-            additionalProperties: false
-          title: Docroots
-          description: Mapping of clusters to Enterprise applications
-        site_urls:
-          type: object
-          title: Site URLs
-          description: List of URLs of the site
-        ssh_hosts:
-          type: array
-          items:
-            type: string
-          title: SSH Hosts
-          description: List of SSH Hosts
-        maintenance_mode:
-          type: boolean
-          title: Maintenance Mode
-          description: Whether to perform deployments or not
-        enterprise_environments_mapping:
-          type: object
-          title: Enterprise Environments Mapping
-          description: Mapping of clusters to Enterprise applications
-          deprecated: true
-          x-stability: DEPRECATED
-      required:
-      - type
-      - name
-      - deploy_host
-      - docroots
-      - site_urls
-      - ssh_hosts
-      - maintenance_mode
-      additionalProperties: false
-    KubernetesDeploymentTargetStorage:
-      type: object
-      properties:
-        id:
-          type: string
-          title: KubernetesDeploymentTargetStorage Identifier
-          description: The identifier of KubernetesDeploymentTargetStorage
-        type:
-          type: string
-          enum:
-          - dedicated
-          - enterprise
-          - foundation
-          - kubernetes
-          title: Deployment target type
-          description: The type of the deployment target
-        name:
-          type: string
-          title: Deployment target name
-          description: The name of the deployment target
-        k8s_config:
-          type:
-          - string
-          - 'null'
-          title: K8S config
-          description: K8S config
-        bastion_nodes_user:
-          type:
-          - string
-          - 'null'
-          title: The bastion-nodes ssh user
-          description: The bastion-nodes ssh user
-        bastion_nodes_host:
-          type:
-          - string
-          - 'null'
-          title: The bastion node endpoint
-          description: The bastion node endpoint
-      required:
-      - type
-      - name
-      - k8s_config
-      - bastion_nodes_user
-      - bastion_nodes_host
       additionalProperties: false
     FoundationDeploymentTarget_2:
       type: object
@@ -1073,13 +990,7 @@ components:
       - use_dedicated_grid
       - storage_type
       additionalProperties: false
-    DeploymentTarget_2:
-      oneOf:
-      - $ref: '#/components/schemas/DedicatedDeploymentTarget_2'
-      - $ref: '#/components/schemas/EnterpriseDeploymentTarget_2'
-      - $ref: '#/components/schemas/FoundationDeploymentTarget_2'
-      - $ref: '#/components/schemas/KubernetesDeploymentTargetStorage'
-    KubernetesDeploymentTargetStoragePatch:
+    DedicatedDeploymentTargetPatch_2:
       type: object
       properties:
         type:
@@ -1095,10 +1006,20 @@ components:
           type: string
           title: Deployment target name
           description: The name of the deployment target
+        enforced_mounts:
+          type: object
+          title: Enforced Mounts
+          description: Mounts which are always injected into pushed (e.g. enforce /var/log to be a local mount)
       required:
       - type
       - name
       additionalProperties: false
+    DeploymentTarget_2:
+      oneOf:
+      - $ref: '#/components/schemas/DedicatedDeploymentTarget_2'
+      - $ref: '#/components/schemas/EnterpriseDeploymentTarget_2'
+      - $ref: '#/components/schemas/FoundationDeploymentTarget_2'
+      - $ref: '#/components/schemas/KubernetesDeploymentTargetStorage'
     DedicatedDeploymentTarget_2:
       type: object
       properties:
@@ -1286,13 +1207,7 @@ components:
       - type
       - name
       additionalProperties: false
-    DeploymentTargetPatch_2:
-      oneOf:
-      - $ref: '#/components/schemas/DedicatedDeploymentTargetPatch_2'
-      - $ref: '#/components/schemas/EnterpriseDeploymentTargetPatch_2'
-      - $ref: '#/components/schemas/FoundationDeploymentTargetPatch_2'
-      - $ref: '#/components/schemas/KubernetesDeploymentTargetStoragePatch'
-    EnterpriseDeploymentTargetPatch_2:
+    KubernetesDeploymentTargetStoragePatch:
       type: object
       properties:
         type:
@@ -1308,6 +1223,112 @@ components:
           type: string
           title: Deployment target name
           description: The name of the deployment target
+      required:
+      - type
+      - name
+      additionalProperties: false
+    KubernetesDeploymentTargetStorage:
+      type: object
+      properties:
+        id:
+          type: string
+          title: KubernetesDeploymentTargetStorage Identifier
+          description: The identifier of KubernetesDeploymentTargetStorage
+        type:
+          type: string
+          enum:
+          - dedicated
+          - enterprise
+          - foundation
+          - kubernetes
+          title: Deployment target type
+          description: The type of the deployment target
+        name:
+          type: string
+          title: Deployment target name
+          description: The name of the deployment target
+        k8s_config:
+          type:
+          - string
+          - 'null'
+          title: K8S config
+          description: K8S config
+        bastion_nodes_user:
+          type:
+          - string
+          - 'null'
+          title: The bastion-nodes ssh user
+          description: The bastion-nodes ssh user
+        bastion_nodes_host:
+          type:
+          - string
+          - 'null'
+          title: The bastion node endpoint
+          description: The bastion node endpoint
+      required:
+      - type
+      - name
+      - k8s_config
+      - bastion_nodes_user
+      - bastion_nodes_host
+      additionalProperties: false
+    DeploymentTargetPatch_2:
+      oneOf:
+      - $ref: '#/components/schemas/DedicatedDeploymentTargetPatch_2'
+      - $ref: '#/components/schemas/EnterpriseDeploymentTargetPatch_2'
+      - $ref: '#/components/schemas/FoundationDeploymentTargetPatch_2'
+      - $ref: '#/components/schemas/KubernetesDeploymentTargetStoragePatch'
+    EnterpriseDeploymentTarget_2:
+      type: object
+      properties:
+        id:
+          type: string
+          title: EnterpriseDeploymentTarget Identifier
+          description: The identifier of EnterpriseDeploymentTarget
+        type:
+          type: string
+          enum:
+          - dedicated
+          - enterprise
+          - foundation
+          - kubernetes
+          title: Deployment target type
+          description: The type of the deployment target
+        name:
+          type: string
+          title: Deployment target name
+          description: The name of the deployment target
+        deploy_host:
+          type:
+          - string
+          - 'null'
+          title: Deploy Host
+          description: The host to deploy to
+        docroots:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              active_docroot:
+                type:
+                - string
+                - 'null'
+                title: Active docroot
+                description: The enterprise docroot, that is associated with this application/cluster.
+              docroot_versions:
+                type:
+                - array
+                - 'null'
+                items:
+                  type: string
+                title: Docroot versions
+                description: Versions of the enterprise docroot. When a new environment version is created the active_docroot is updated from these values.
+            required:
+            - active_docroot
+            - docroot_versions
+            additionalProperties: false
+          title: Docroots
+          description: Mapping of clusters to Enterprise applications
         site_urls:
           type: object
           title: Site URLs
@@ -1318,6 +1339,10 @@ components:
             type: string
           title: SSH Hosts
           description: List of SSH Hosts
+        maintenance_mode:
+          type: boolean
+          title: Maintenance Mode
+          description: Whether to perform deployments or not
         enterprise_environments_mapping:
           type: object
           title: Enterprise Environments Mapping
@@ -1327,38 +1352,13 @@ components:
       required:
       - type
       - name
+      - deploy_host
+      - docroots
+      - site_urls
+      - ssh_hosts
+      - maintenance_mode
       additionalProperties: false
     DedicatedDeploymentTargetCreateInput_2:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - dedicated
-          - enterprise
-          - foundation
-          - kubernetes
-          title: Deployment target type
-          description: The type of the deployment target
-        name:
-          type: string
-          title: Deployment target name
-          description: The name of the deployment target
-        enforced_mounts:
-          type: object
-          title: Enforced Mounts
-          description: Mounts which are always injected into pushed (e.g. enforce /var/log to be a local mount)
-      required:
-      - type
-      - name
-      additionalProperties: false
-    DeploymentTargetCreateInput_2:
-      oneOf:
-      - $ref: '#/components/schemas/DedicatedDeploymentTargetCreateInput_2'
-      - $ref: '#/components/schemas/EnterpriseDeploymentTargetCreateInput_2'
-      - $ref: '#/components/schemas/FoundationDeploymentTargetCreateInput_2'
-      - $ref: '#/components/schemas/KubernetesDeploymentTargetStorageCreateInput'
-    DedicatedDeploymentTargetPatch_2:
       type: object
       properties:
         type:

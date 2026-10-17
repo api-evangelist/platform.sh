@@ -156,30 +156,6 @@ paths:
           default: https
 components:
   schemas:
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
     APIToken:
       description: ''
       type: object
@@ -219,6 +195,30 @@ components:
           id: 660aa36d-23cf-402b-8889-63af71967f2b
           name: Token for CI
           updated_at: '2019-01-29T08:17:47Z'
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
     Error_2:
       type: object
       properties:

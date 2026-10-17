@@ -267,35 +267,6 @@ paths:
         schemes:
           default: https
 components:
-  parameters:
-    OrganizationIDName:
-      in: path
-      name: organization_id
-      description: 'The ID of the organization.<br>
-
-        Prefix with name= to retrieve the organization by name instead.
-
-        '
-      required: true
-      schema:
-        type: string
-    OrganizationID:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the organization.
-      schema:
-        type: string
-        format: ulid
-    UserID:
-      name: user_id
-      in: path
-      required: true
-      description: The ID of the user.
-      schema:
-        type: string
-        example: d81c8ee2-44b3-429f-b944-a33ad7437690
-        format: uuid
   schemas:
     Link:
       type: object
@@ -305,18 +276,6 @@ components:
         href:
           type: string
           description: URL of the link
-    Permissions:
-      type: array
-      description: The organization member permissions.
-      items:
-        type: string
-        enum:
-        - admin
-        - billing
-        - members
-        - plans
-        - projects:create
-        - projects:list
     ListLinks:
       type: object
       properties:
@@ -326,6 +285,21 @@ components:
           $ref: '#/components/schemas/Link'
         next:
           $ref: '#/components/schemas/Link'
+    ArrayFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
     OrganizationMember:
       type: object
       properties:
@@ -391,21 +365,18 @@ components:
                 method:
                   type: string
                   description: The HTTP method to use.
-    ArrayFilter:
-      type: object
-      properties:
-        eq:
-          type: string
-          description: Equal
-        ne:
-          type: string
-          description: Not equal
-        in:
-          type: string
-          description: In (comma-separated list)
-        nin:
-          type: string
-          description: Not in (comma-separated list)
+    Permissions:
+      type: array
+      description: The organization member permissions.
+      items:
+        type: string
+        enum:
+        - admin
+        - billing
+        - members
+        - plans
+        - projects:create
+        - projects:list
     Error:
       description: ''
       type: object
@@ -438,6 +409,35 @@ components:
           description: Error message
       required:
       - error
+  parameters:
+    UserID:
+      name: user_id
+      in: path
+      required: true
+      description: The ID of the user.
+      schema:
+        type: string
+        example: d81c8ee2-44b3-429f-b944-a33ad7437690
+        format: uuid
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
+      schema:
+        type: string
   securitySchemes:
     OAuth2:
       type: oauth2

@@ -124,27 +124,29 @@ paths:
           default: https
 components:
   parameters:
-    filter_subscription_plan:
-      name: filter[plan]
+    record_status:
+      name: filter[status]
       in: query
-      description: The plan type of the subscription.
+      description: 'The status of the plan record. '
       schema:
         type: string
         enum:
-        - development
-        - standard
-        - medium
-        - large
-        - xlarge
-        - 2xlarge
-    page:
-      name: page
+        - active
+        - suspended
+    record_end:
+      name: filter[end]
       in: query
-      description: Page to be displayed. Defaults to 1.
-      required: false
+      description: The end of the observation period for the record. E.g. filter[end]=2018-01-01 will display all records that were active on (i.e. they started before) 2018-01-01
       schema:
-        type: integer
-        format: int32
+        type: string
+        format: date-time
+    record_start:
+      name: filter[start]
+      in: query
+      description: The start of the observation period for the record. E.g. filter[start]=2018-01-01 will display all records that were active (i.e. did not end) on 2018-01-01
+      schema:
+        type: string
+        format: date-time
     record_usage_group:
       name: filter[usage_group]
       in: query
@@ -166,27 +168,6 @@ components:
       required: true
       schema:
         type: string
-    record_ended_at:
-      name: filter[ended_at]
-      in: query
-      description: The record's end timestamp. You can use this filter to list records ended after, or before a certain time. E.g. filter[ended_at][value]=2020-01-01&filter[ended_at][operator]=>
-      schema:
-        type: string
-        format: date-time
-    record_end:
-      name: filter[end]
-      in: query
-      description: The end of the observation period for the record. E.g. filter[end]=2018-01-01 will display all records that were active on (i.e. they started before) 2018-01-01
-      schema:
-        type: string
-        format: date-time
-    filter_subscription_id:
-      name: filter[subscription_id]
-      in: query
-      description: The ID of the subscription
-      required: false
-      schema:
-        type: string
     record_started_at:
       name: filter[started_at]
       in: query
@@ -194,22 +175,41 @@ components:
       schema:
         type: string
         format: date-time
-    record_start:
-      name: filter[start]
+    filter_subscription_plan:
+      name: filter[plan]
       in: query
-      description: The start of the observation period for the record. E.g. filter[start]=2018-01-01 will display all records that were active (i.e. did not end) on 2018-01-01
-      schema:
-        type: string
-        format: date-time
-    record_status:
-      name: filter[status]
-      in: query
-      description: 'The status of the plan record. '
+      description: The plan type of the subscription.
       schema:
         type: string
         enum:
-        - active
-        - suspended
+        - development
+        - standard
+        - medium
+        - large
+        - xlarge
+        - 2xlarge
+    record_ended_at:
+      name: filter[ended_at]
+      in: query
+      description: The record's end timestamp. You can use this filter to list records ended after, or before a certain time. E.g. filter[ended_at][value]=2020-01-01&filter[ended_at][operator]=>
+      schema:
+        type: string
+        format: date-time
+    page:
+      name: page
+      in: query
+      description: Page to be displayed. Defaults to 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+    filter_subscription_id:
+      name: filter[subscription_id]
+      in: query
+      description: The ID of the subscription
+      required: false
+      schema:
+        type: string
   schemas:
     PlanRecords:
       description: The plan record object.
@@ -248,6 +248,26 @@ components:
         status:
           description: 'The status of the subscription during this record: active or suspended.'
           type: string
+      type: object
+    Usage:
+      description: The usage object.
+      properties:
+        id:
+          description: The unique ID of the usage record.
+          type: string
+        subscription_id:
+          description: The ID of the subscription.
+          type: string
+        usage_group:
+          description: The type of usage that this record represents.
+          type: string
+        quantity:
+          description: The quantity used.
+          type: number
+        start:
+          description: The start timestamp of this usage record (ISO 8601).
+          type: string
+          format: date-time
       type: object
     Link:
       type: object
@@ -290,26 +310,6 @@ components:
             field:
             - This field is required.
           title: Bad Request
-    Usage:
-      description: The usage object.
-      properties:
-        id:
-          description: The unique ID of the usage record.
-          type: string
-        subscription_id:
-          description: The ID of the subscription.
-          type: string
-        usage_group:
-          description: The type of usage that this record represents.
-          type: string
-        quantity:
-          description: The quantity used.
-          type: number
-        start:
-          description: The start timestamp of this usage record (ISO 8601).
-          type: string
-          format: date-time
-      type: object
     Error_2:
       type: object
       properties:

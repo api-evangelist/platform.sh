@@ -230,105 +230,25 @@ paths:
           default: https
 components:
   schemas:
-    EnvironmentVariableCreateInput:
+    AcceptedResponse:
       type: object
       properties:
-        name:
+        status:
           type: string
-          title: Name
-          description: Name of the variable
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        value:
-          type: string
-          title: Value
-          description: Value of the variable
-        is_json:
-          type: boolean
-          title: Is JSON
-          description: The variable is a JSON string
-        is_sensitive:
-          type: boolean
-          title: Is Sensitive
-          description: The variable is sensitive
-        visible_build:
-          type: boolean
-          title: Is visible during build
-          description: The variable is visible during build
-        visible_runtime:
-          type: boolean
-          title: Visible at runtime
-          description: The variable is visible at runtime
-        application_scope:
-          type: array
-          items:
-            type: string
-          title: Application Scope
-          description: Applications that have access to this variable
-        is_enabled:
-          type: boolean
-          title: Is enabled
-          description: The variable is enabled on this environment
-        is_inheritable:
-          type: boolean
-          title: Is inheritable
-          description: The variable is inheritable to child environments
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
       required:
-      - name
-      - value
+      - status
+      - code
       additionalProperties: false
-    EnvironmentVariablePatch:
-      type: object
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Name of the variable
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        value:
-          type: string
-          title: Value
-          description: Value of the variable
-        is_json:
-          type: boolean
-          title: Is JSON
-          description: The variable is a JSON string
-        is_sensitive:
-          type: boolean
-          title: Is Sensitive
-          description: The variable is sensitive
-        visible_build:
-          type: boolean
-          title: Is visible during build
-          description: The variable is visible during build
-        visible_runtime:
-          type: boolean
-          title: Visible at runtime
-          description: The variable is visible at runtime
-        application_scope:
-          type: array
-          items:
-            type: string
-          title: Application Scope
-          description: Applications that have access to this variable
-        is_enabled:
-          type: boolean
-          title: Is enabled
-          description: The variable is enabled on this environment
-        is_inheritable:
-          type: boolean
-          title: Is inheritable
-          description: The variable is inheritable to child environments
-      additionalProperties: false
+    EnvironmentVariableCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/EnvironmentVariable'
     EnvironmentVariable:
       type: object
       properties:
@@ -423,24 +343,104 @@ components:
       - is_enabled
       - is_inheritable
       additionalProperties: false
-    EnvironmentVariableCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/EnvironmentVariable'
-    AcceptedResponse:
+    EnvironmentVariablePatch:
       type: object
       properties:
-        status:
+        name:
           type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
+          title: Name
+          description: Name of the variable
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        value:
+          type: string
+          title: Value
+          description: Value of the variable
+        is_json:
+          type: boolean
+          title: Is JSON
+          description: The variable is a JSON string
+        is_sensitive:
+          type: boolean
+          title: Is Sensitive
+          description: The variable is sensitive
+        visible_build:
+          type: boolean
+          title: Is visible during build
+          description: The variable is visible during build
+        visible_runtime:
+          type: boolean
+          title: Visible at runtime
+          description: The variable is visible at runtime
+        application_scope:
+          type: array
+          items:
+            type: string
+          title: Application Scope
+          description: Applications that have access to this variable
+        is_enabled:
+          type: boolean
+          title: Is enabled
+          description: The variable is enabled on this environment
+        is_inheritable:
+          type: boolean
+          title: Is inheritable
+          description: The variable is inheritable to child environments
+      additionalProperties: false
+    EnvironmentVariableCreateInput:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Name of the variable
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        value:
+          type: string
+          title: Value
+          description: Value of the variable
+        is_json:
+          type: boolean
+          title: Is JSON
+          description: The variable is a JSON string
+        is_sensitive:
+          type: boolean
+          title: Is Sensitive
+          description: The variable is sensitive
+        visible_build:
+          type: boolean
+          title: Is visible during build
+          description: The variable is visible during build
+        visible_runtime:
+          type: boolean
+          title: Visible at runtime
+          description: The variable is visible at runtime
+        application_scope:
+          type: array
+          items:
+            type: string
+          title: Application Scope
+          description: Applications that have access to this variable
+        is_enabled:
+          type: boolean
+          title: Is enabled
+          description: The variable is enabled on this environment
+        is_inheritable:
+          type: boolean
+          title: Is inheritable
+          description: The variable is inheritable to child environments
       required:
-      - status
-      - code
+      - name
+      - value
       additionalProperties: false
   securitySchemes:
     OAuth2:

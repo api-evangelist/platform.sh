@@ -484,18 +484,6 @@ components:
         type: string
         example: d81c8ee2-44b3-429f-b944-a33ad7437690
         format: uuid
-    PageAfter:
-      in: query
-      name: page[after]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
-    PageBefore:
-      in: query
-      name: page[before]
-      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
-      schema:
-        type: string
     PageSizeAccess:
       in: query
       name: page[size]
@@ -505,7 +493,27 @@ components:
         minimum: 1
         maximum: 200
         default: null
+    PageBefore:
+      in: query
+      name: page[before]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
+    PageAfter:
+      in: query
+      name: page[after]
+      description: Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally.
+      schema:
+        type: string
   schemas:
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
     ProjectPermissions:
       type: array
       description: An array of project permissions.
@@ -580,14 +588,6 @@ components:
                 method:
                   type: string
                   description: The HTTP method to use.
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
     ListLinks:
       type: object
       properties:
@@ -625,6 +625,14 @@ components:
       type: string
       format: date-time
       description: The date and time when the resource was last updated.
+    Error_2:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+      - error
     UserProjectAccess_2:
       type: object
       properties:
@@ -687,23 +695,15 @@ components:
       type: string
       format: date-time
       description: The date and time when the access was granted.
-    Error_2:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-      required:
-      - error
   responses:
-    Forbidden:
-      description: Forbidden
+    NotFound:
+      description: Not Found
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error_2'
-    NotFound:
-      description: Not Found
+    Forbidden:
+      description: Forbidden
       content:
         application/problem+json:
           schema:
