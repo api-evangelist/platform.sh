@@ -62,3 +62,50 @@
     detected: '2026-10-22'
   status: not-a-workflow
   arazzo: null
+- slug: platform.sh-arch-user-repository-aur
+  label: Arch User Repository (AUR)
+  partner_name: Arch User Repository (AUR)
+  category: official CLI (Arch User Repository (AUR))
+  type: register
+  channel: package-registry
+  evidence: https://aur.archlinux.org/packages/platformsh-cli
+  source: edge
+  relationship: distribution-channel
+  contract_reference:
+    register: Arch User Repository (AUR) (public package index)
+    spec_file: null
+    packages:
+    - name: platformsh-cli
+      kind: aur
+      version: 3.68.0-1
+      released: '2021-08-23'
+      released_field: AUR LastModified
+      out_of_date: true
+      lapsed: true
+      page: https://aur.archlinux.org/packages/platformsh-cli
+      upstream: https://github.com/platformsh/platformsh-cli
+      cli: 'AUR description: Platform.sh CLI'
+      repo_leg: github-org:platformsh
+      publisher_leg: artifact-github-org:platformsh
+      matched_by: github-org
+    - name: platformsh-cli-git
+      kind: aur
+      version: 3.52.0.r0.g28172cbc-1
+      released: '2020-01-28'
+      released_field: AUR LastModified
+      out_of_date: true
+      lapsed: true
+      page: https://aur.archlinux.org/packages/platformsh-cli-git
+      upstream: https://github.com/platformsh/platformsh-cli
+      cli: 'AUR description: The unified tool for managing your Platform.sh services from the command line.'
+      repo_leg: github-org:platformsh
+      publisher_leg: artifact-github-org:platformsh
+      matched_by: github-org
+    current: false
+    signal_note: 'the provider''s own command-line tool packaged for Arch Linux (community-maintained PKGBUILD whose
+      upstream and source artifact are the provider''s): distribution, not an integration; lapsed = flagged out-of-date
+      or not updated in 24 months'
+    detected_by: sweep-aur-vendor-cli-packages.py
+    detected: '2026-10-23'
+  status: not-a-workflow
+  arazzo: null
